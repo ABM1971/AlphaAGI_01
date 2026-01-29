@@ -1,7 +1,5 @@
 <h1 align="center"> Idea2Paper: Automated Pipeline for Transforming Research Concepts into Complete Scientific Narratives </h1>
 
----
-
 <p align="center">
   <a href="https://www.python.org/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-green" />
@@ -21,9 +19,6 @@
 
 
 ## 🚀 Overview
-
----
-
 **Idea2Paper** is an end-to-end pipeline that transforms your research **Idea** into a submission-ready **Story** (Scientific Narrative Skeleton).
 
 **Pipeline**: 💡 **KG Retrieval** → 🧩 **Pattern Selection** → ✍️ **Story Generation** → 👥 **Calibrated Review** → 🔁 **Refinement** → 🧪 **Novelty Verification**
@@ -50,10 +45,7 @@
 
 </details>
 
-## 🔥 Quick Start 
-
----
-
+## 🔥 Quick Start
 ### 1. Prerequisites & Installation
 
 * Python 3.10+ (recommended)
@@ -134,10 +126,7 @@ Check `final_story.json` for the result and `pipeline_result.json` for the full 
 
 #### For advanced usage, configuration options, and troubleshooting, see our [User Guide](./Paper-KG-Pipeline/README.md).
 
-## 🗂️ Project Structure 
-
----
-
+## 🗂️ Project Structure
 ```text
 Paper-KG-Pipeline/
 ├── data/ICLR_25/               # Data source
@@ -182,9 +171,6 @@ Paper-KG-Pipeline/
 
 
 ## ⚙️ Configuration Guide (.env / i2p_config.json)
-
----
-
 ### .env (Sensitive Info + Common Toggles)
 
 - `.env` is automatically loaded when the entry script starts (no need to manually export).
@@ -203,9 +189,6 @@ Paper-KG-Pipeline/
 - Config file path can be specified via env: `I2P_CONFIG_PATH=/abs/path/to/i2p_config.json`
 
 ## 🤖 What is Multi-Agent Review (Calibrated & Traceable)?
-
----
-
 Traditional "LLM directly giving a 1~10 score" is not auditable. This project uses **Anchored MultiAgentCritic**:
 
 1. **Real Ruler from Graph Data**
@@ -227,9 +210,6 @@ Default uses "Scheme B": Calculate `q50/q75` on the full `score10` distribution 
 For a more detailed explanation, see: [MULTIAGENT_REVIEW](MULTIAGENT_REVIEW.md)
 
 ## 🧾 Logs & Debugging (Highly Recommended)
-
----
-
 Every run creates a directory: `log/run_YYYYMMDD_HHMMSS_<pid>_<rand>/`
 
 * `meta.json`: Run meta-info (idea / argv / entry point, etc.)
@@ -244,9 +224,6 @@ Every run creates a directory: `log/run_YYYYMMDD_HHMMSS_<pid>_<rand>/`
 
 
 ## 📖 More Documentation (Optional)
-
----
-
 If you need deeper implementation details:
 
 | No.   | Document                                                                     | Content                                                                          | Target Audience |
@@ -263,10 +240,9 @@ If you need deeper implementation details:
 ✅ **Flowcharts**: Uses Mermaid diagrams to clearly illustrate the architecture and workflow<br>
 ✅ **Troubleshooting**: Includes common issues and solutions<br>
 
-## 📌 Citation
-
 ---
 
+## 📌 Citation
 If you find this project useful, please consider citing our paper:
 
 ```bibtex
