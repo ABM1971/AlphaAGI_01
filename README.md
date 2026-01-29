@@ -17,6 +17,7 @@
 </p>
 
 
+---
 
 ## 🚀 Overview
 **Idea2Paper** is an end-to-end pipeline that transforms your research **Idea** into a submission-ready **Story** (Scientific Narrative Skeleton).
@@ -44,6 +45,8 @@
 - [📌 Citation](#-citation)
 
 </details>
+
+---
 
 ## 🔥 Quick Start
 ### 1. Prerequisites & Installation
@@ -126,6 +129,8 @@ Check `final_story.json` for the result and `pipeline_result.json` for the full 
 
 #### For advanced usage, configuration options, and troubleshooting, see our [User Guide](./Paper-KG-Pipeline/README.md).
 
+---
+
 ## 🗂️ Project Structure
 ```text
 Paper-KG-Pipeline/
@@ -169,6 +174,7 @@ Paper-KG-Pipeline/
 **Compatibility Layer:**
 - `Paper-KG-Pipeline/scripts/pipeline/`: Compatibility shims (Prevents old imports from breaking; new code suggested to go via `src/idea2paper`).
 
+---
 
 ## ⚙️ Configuration Guide (.env / i2p_config.json)
 ### .env (Sensitive Info + Common Toggles)
@@ -187,6 +193,8 @@ Paper-KG-Pipeline/
 - Reference and copy: `i2p_config.example.json`
 - Suitable for: Pass rules, log directories, anchor parameters, LLM url/model, etc.
 - Config file path can be specified via env: `I2P_CONFIG_PATH=/abs/path/to/i2p_config.json`
+
+---
 
 ## 🤖 What is Multi-Agent Review (Calibrated & Traceable)?
 Traditional "LLM directly giving a 1~10 score" is not auditable. This project uses **Anchored MultiAgentCritic**:
@@ -209,6 +217,8 @@ Default uses "Scheme B": Calculate `q50/q75` on the full `score10` distribution 
 
 For a more detailed explanation, see: [MULTIAGENT_REVIEW](MULTIAGENT_REVIEW.md)
 
+---
+
 ## 🧾 Logs & Debugging (Highly Recommended)
 Every run creates a directory: `log/run_YYYYMMDD_HHMMSS_<pid>_<rand>/`
 
@@ -222,6 +232,7 @@ Every run creates a directory: `log/run_YYYYMMDD_HHMMSS_<pid>_<rand>/`
 * **Score always around 6.x:** Check `pass_threshold_computed` in `events.jsonl` (The `q75` for many patterns is naturally around 6.x).
 * **Strict Mode Failure:** Check `events.jsonl` for `critic_invalid_output_*` (JSON validation failure triggers retries; if it still fails, the process terminates).
 
+---
 
 ## 📖 More Documentation (Optional)
 If you need deeper implementation details:
