@@ -1,11 +1,11 @@
 # Idea2Paper
 
-<div align="center">
+<div align="center"> 
 
 [![PyPI - Python Version](https://img.shields.io/badge/python-3.10%2B-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 [![arXiv - Idea2Story](https://img.shields.io/badge/arXiv-2601.20833-b31b1b.svg)](https://arxiv.org/abs/2601.20833)
-[![Stars](https://img.shields.io/github/stars/czstudio/Idea2Paper?style=social)](https://github.com/czstudio/Idea2Paper/stargazers)
+[![Stars](https://img.shields.io/github/stars/czstudio/Idea2Paper?style=social)](https://github.com/AgentAlphaAGI/Idea2Paper/stargazers)
 
 [English](README.md) | [中文](README-zh_CN.md)
 
