@@ -1,11 +1,15 @@
-# Idea2Paper
+
+<p align="center">
+  <img src="assets/images/logo2.png" alt="logo" width="750">
+</p>
+
 
 <div align="center">
 
 [![PyPI - Python Version](https://img.shields.io/badge/python-3.10%2B-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 [![arXiv - Idea2Story](https://img.shields.io/badge/arXiv-2601.20833-b31b1b.svg)](https://arxiv.org/abs/2601.20833)
-[![Stars](https://img.shields.io/github/stars/czstudio/Idea2Paper?style=social)](https://github.com/czstudio/Idea2Paper/stargazers)
+[![Stars](https://img.shields.io/github/stars/AgentAlphaAGI/Idea2Paper?style=social)](https://github.com/AgentAlphaAGI/Idea2Paper/stargazers)
 
 [English](README.md) | [中文](README-zh_CN.md)
 
@@ -93,11 +97,15 @@ python Paper-KG-Pipeline/scripts/idea2story_pipeline.py "your idea"
   - `Paper-KG-Pipeline/scripts/demos/` (examples)
   - Legacy paths still work (root scripts are thin wrappers)
 - **Docs**:
-  - `Paper-KG-Pipeline/docs/00_PROJECT_OVERVIEW.md`
-  - `Paper-KG-Pipeline/docs/01_KG_CONSTRUCTION.md`
-  - `Paper-KG-Pipeline/docs/02_RECALL_SYSTEM.md`
-  - `Paper-KG-Pipeline/docs/03_IDEA2STORY_PIPELINE.md`
-- **Multi-Agent details**: `MULTIAGENT_REVIEW.md`
+
+| No. | Document | Content | Target Audience |
+| ----- |--------------------------| ---------------- | ------- |
+| **0** | [Project Overview](Paper-KG-Pipeline/docs/00_PROJECT_OVERVIEW_zh.md) | Overall architecture, core modules, parameter configuration, execution workflow | Everyone |
+| **1** | [Knowledge Graph Construction](docs/01_KG_CONSTRUCTION_zh.md) | Data sources, node/edge definitions, LLM enhancement, how to run | Developers |
+| **2** | [Retrieval System](docs/02_RECALL_SYSTEM_zh.md) | Three-way retrieval strategies, similarity computation, performance optimization | Developers |
+| **3** | [Idea2Story Pipeline](docs/03_IDEA2STORY_PIPELINE_zh.md) | Pattern selection, Idea fusion, story reflection, critic review | Developers |
+
+- **Multi-Agent details**: [MULTIAGENT_REVIEW.md](MULTIAGENT_REVIEW_zh.md)
 
 ## 🤝 Contributing / License
 
@@ -111,8 +119,8 @@ python Paper-KG-Pipeline/scripts/idea2story_pipeline.py "your idea"
 
 ## 👥 贡献者 / Contributors
 
-<a href="https://github.com/czstudio/Idea2Paper/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=czstudio/Idea2Paper" />
+<a href="https://github.com/AgentAlphaAGI/Idea2Paper/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=AgentAlphaAGI/Idea2Paper" />
 </a>
 
 ## 📑 引用（Idea2Story）
