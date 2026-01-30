@@ -1,6 +1,27 @@
-# Idea2Paper
+<h1 align="center"> Idea2Paper: Automated Pipeline for Transforming Research Concepts into Complete Scientific Narratives </h1>
 
-把你的研究想法（Idea）自动变成“可投稿论文的 Story（论文叙事骨架）”的端到端流水线：**知识图谱召回 → Pattern 选择 → Story 生成 → 可标定 Multi-Agent Review（基于真实 review_stats）→ 迭代修正 → 查重验证 → 输出最终 Story**。
+---
+
+<p align="center">
+  <a href="https://www.python.org/">
+    <img src="https://img.shields.io/badge/Python-3.10%2B-green" />
+  </a>
+  <a href="https://arxiv.org/abs/2601.20833">
+    <img src="https://img.shields.io/badge/arXiv-2601.20833-b31b1b.svg" />
+  </a>
+</p>
+
+
+<p align="center">
+  <a href="./README.md">English</a>
+  &nbsp;|&nbsp;
+  <a href="./README_zh.md">简体中文</a>
+</p>
+
+
+把你的研究想法（Idea）自动变成“可投稿论文的 Story（论文叙事骨架）”的端到端流水线：<br>
+
+**知识图谱召回 → Pattern 选择 → Story 生成 → 可标定 Multi-Agent Review（基于真实 review_stats）→ 迭代修正 → 查重验证 → 输出最终 Story**。
 
 本仓库的核心实现位于 `Paper-KG-Pipeline/`，入口命令保持不变：
 `python Paper-KG-Pipeline/scripts/idea2story_pipeline.py "your idea"`
@@ -9,7 +30,6 @@
 
 - **知识图谱**：从 ICLR 2025 数据构建 `Idea/Pattern/Domain/Paper` 节点（当前导出：Idea 8,284 / Pattern 124 / Domain 98 / Paper 8,285）。
 - **三路召回 + 两阶段加速**：Idea 相似 / Domain 泛化 / Paper 相似；粗排 Jaccard + 精排 Embedding。
-- **Idea2Story 生成链路**：Pattern 选择 → Story 生成 → 评审 → 智能修正（含 Novelty 模式）→ RAG 查重与 Pivot。
 - **Anchored Multi-Agent Review（可标定）**：用图谱真实 `review_stats` 作为标尺，LLM 只输出相对判断，分数由确定性算法拟合。
 - **运行日志系统**：每次 run 独立目录，记录 events + LLM/embedding 调用输入输出，便于审计与回放。
 
@@ -70,6 +90,8 @@ python Paper-KG-Pipeline/scripts/idea2story_pipeline.py "你的研究Idea描述"
 - 本地无 key 冒烟（允许非严格兜底，更容易跑通）：在 `.env` 里设 `I2P_CRITIC_STRICT_JSON=0`
 - 质量模式（推荐）：`SILICONFLOW_API_KEY` 有效 + `I2P_CRITIC_STRICT_JSON=1`
 
+#### 有关高级用法、配置选项和故障排除，请参阅我们的[用户指南](./Paper-KG-Pipeline/README_zh.md)
+
 ---
 
 ## Multi-Agent Review（可标定、可追溯）是什么？
@@ -93,7 +115,7 @@ python Paper-KG-Pipeline/scripts/idea2story_pipeline.py "你的研究Idea描述"
 - 且 **avg ≥ q50**
 并把阈值与判定细节写入 `audit.pass` 和运行事件日志。
 
-更详细解释见：`MULTIAGENT_REVIEW.md`
+更详细解释见: [MULTIAGENT_REVIEW](MULTIAGENT_REVIEW_zh.md)
 
 ---
 
