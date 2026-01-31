@@ -225,8 +225,15 @@ class RecallSystem:
 
     def _cosine_scores(self, query_emb: np.ndarray, cand_embs: np.ndarray) -> List[float]:
         # Use float64 to minimize numeric drift vs. per-item cosine computation.
-        q = np.array(query_emb, dtype=float)
+        q = np.array(query_emb, dtype=float).reshape(-1)
         c = np.array(cand_embs, dtype=float)
+        # Edge cases:
+        # - no candidates -> empty scores
+        # - single candidate returned as 1D vector -> treat as (1, D)
+        if c.ndim == 1:
+            if c.size == 0:
+                return []
+            c = c.reshape(1, -1)
         q_norm = np.linalg.norm(q)
         c_norms = np.linalg.norm(c, axis=1)
         c_norms[c_norms == 0] = 1.0
