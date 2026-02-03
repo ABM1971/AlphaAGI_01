@@ -151,12 +151,13 @@ See the [User Guide](./Paper-KG-Pipeline/README.md) e for advanced configuration
 
 Got questions? You can contact us through any of the options listed below.
   
-  Discord: https://discord.gg/FfXtbREb
 
-  <p align="center">
-  <img src="./assets/images/idea2paper_code.jpg" width="200" /><br/>
-  <sub>Scan the QR code with WeChat to communicate</sub>
-</p>
+| WeChat Group                                                                                | Discord Channel |
+|---------------------------------------------------------------------------------------------| --- |
+| <p align="center"> <img src="./assets/images/idea2paper_code.png" width="200" /><br/>  </p> | https://discord.gg/FfXtbREb |
+
+
+
 ## 🤖 Anchored Multi‑Agent Review
 
 Instead of arbitrary scores, this project uses **anchored comparisons**. We select anchor papers with known scores, ask LLMs to compare your target against these anchors (better/tie/worse), and then deterministically fit a final numeric score. This ensures the review process is auditable and grounded in real-world data.

@@ -15,7 +15,6 @@
 
 </div>
 
-
 ## 📄 论文
 
 ### Idea2Story（Idea2Paper 的核心子模块）
@@ -27,6 +26,13 @@
 将对学术文献的理解从运行时推理（runtime reasoning）
 前移至离线的知识图谱构建阶段，从而实现更加高效、稳定且可审计的
 自主科学发现流程。*
+
+## 💬用户交流群
+
+| 微信群                                                                                         | Discord Channel |
+|---------------------------------------------------------------------------------------------| --- |
+| <p align="center"> <img src="./assets/images/idea2paper_code.png" width="200" /><br/>  </p> | https://discord.gg/FfXtbREb |
+
 
 
 ---
