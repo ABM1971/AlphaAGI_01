@@ -34,6 +34,67 @@ def _file_mtime(path: Path):
         return None
     return None
 
+def _get_embedding_build_progress(log_dir: Path) -> dict:
+    """Calculate embedding index build progress from embedding_calls.jsonl"""
+    emb_path = log_dir / "embedding_calls.jsonl"
+    if not emb_path.exists():
+        return None
+
+    try:
+        total_calls = 0
+        successful_calls = 0
+        failed_calls = 0
+
+        with emb_path.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    record = json.loads(line)
+                    response = record.get("data", {}).get("response", {})
+                    total_calls += 1
+                    if response.get("ok"):
+                        successful_calls += 1
+                    else:
+                        failed_calls += 1
+                except Exception:
+                    continue
+
+        # Calculate estimated total based on actual paper count and batch size
+        # Try to read from nodes_paper.json to get accurate count
+        batch_size = 32  # Default batch size from build_novelty_index.py
+        paper_count = 8320  # Default fallback (260 batches * 32)
+        estimated_total_batches = 260  # Default fallback
+
+        try:
+            nodes_paper_path = OUTPUT_ROOT / "nodes_paper.json"
+            if nodes_paper_path.exists():
+                import json as json_module
+                with nodes_paper_path.open("r", encoding="utf-8") as f:
+                    papers = json_module.load(f)
+                    paper_count = len(papers)
+                    estimated_total_batches = (paper_count + batch_size - 1) // batch_size  # Ceiling division
+        except Exception:
+            pass  # Use default if we can't read the file
+
+        # Calculate processed papers (successful batches * batch size, capped at total)
+        processed_papers = min(successful_calls * batch_size, paper_count)
+        progress_pct = min(100, int((processed_papers / paper_count) * 100)) if paper_count > 0 else 0
+
+        return {
+            "total_calls": total_calls,
+            "successful_calls": successful_calls,
+            "failed_calls": failed_calls,
+            "estimated_total_batches": estimated_total_batches,
+            "batch_size": batch_size,
+            "paper_count": paper_count,
+            "processed_papers": processed_papers,
+            "progress_pct": progress_pct,
+        }
+    except Exception:
+        return None
+
 def _activity_snapshot(log_dir: Path, active_window_sec: int = 120) -> dict:
     now = time.time()
     llm_path = log_dir / "llm_calls.jsonl"
@@ -59,6 +120,10 @@ def _json_response(handler: BaseHTTPRequestHandler, data: dict, status: int = 20
     handler.send_response(status)
     handler.send_header("Content-Type", "application/json; charset=utf-8")
     handler.send_header("Content-Length", str(len(body)))
+    # CORS headers
+    handler.send_header("Access-Control-Allow-Origin", "*")
+    handler.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    handler.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
     handler.end_headers()
     handler.wfile.write(body)
 
@@ -92,7 +157,7 @@ class Handler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/runs/"):
             parts = path.strip("/").split("/")
-            # /api/runs/<ui_run_id>[/result|logs.zip]
+            # /api/runs/<ui_run_id>[/result|logs.zip|events]
             if len(parts) < 3:
                 return _json_response(self, {"ok": False, "error": "invalid runs path"}, status=400)
             ui_run_id = parts[2]
@@ -100,6 +165,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._handle_result(ui_run_id)
             if len(parts) >= 4 and parts[3] == "logs.zip":
                 return self._handle_logs(ui_run_id)
+            if len(parts) >= 4 and parts[3] == "events":
+                return self._handle_events(ui_run_id)
             return self._handle_status(ui_run_id)
 
         # serve static
@@ -125,6 +192,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(data)))
+        # CORS headers for static files
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(data)
 
@@ -134,18 +203,49 @@ class Handler(BaseHTTPRequestHandler):
             return self._handle_run()
         return _json_response(self, {"ok": False, "error": "not found"}, status=404)
 
+    def do_DELETE(self):
+        """Handle DELETE requests to terminate pipeline"""
+        parsed = urlparse(self.path)
+        path = parsed.path
+        if path.startswith("/api/runs/"):
+            parts = path.strip("/").split("/")
+            if len(parts) >= 3:
+                ui_run_id = parts[2]
+                return self._handle_terminate(ui_run_id)
+        return _json_response(self, {"ok": False, "error": "not found"}, status=404)
+
+    def do_OPTIONS(self):
+        """Handle CORS preflight requests"""
+        self.send_response(200)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
     def _handle_run(self):
         payload = _read_json(self)
         if not payload or "idea" not in payload:
             return _json_response(self, {"ok": False, "error": "invalid payload"}, status=400)
 
         idea = payload.get("idea", "").strip()
+        config = payload.get("config", {}) or {}
+
+        # Legacy support for old format
         llm = payload.get("llm", {}) or {}
         toggles = payload.get("toggles", {}) or {}
 
         ui_run_id = f"ui_{int(time.time())}_{uuid.uuid4().hex[:6]}"
 
         env = os.environ.copy()
+
+        # Apply configuration from new format (config_overrides)
+        config_overrides = config.get("config_overrides", {}) or {}
+        for key, value in config_overrides.items():
+            if value is not None:
+                env[key] = str(value)
+
+        # Legacy format support
         api_key = llm.get("api_key")
         if api_key:
             env["SILICONFLOW_API_KEY"] = api_key
@@ -163,14 +263,25 @@ class Handler(BaseHTTPRequestHandler):
         env["I2P_ENABLE_LOGGING"] = "1"
         env["I2P_RESULTS_ENABLE"] = "1"
 
-        cmd = ["python", str(PIPELINE_SCRIPT), idea]
+        # Use virtual environment python
+        venv_python = REPO_ROOT / ".venv" / "bin" / "python"
+        python_cmd = str(venv_python) if venv_python.exists() else "python3"
+        cmd = [python_cmd, str(PIPELINE_SCRIPT), idea]
+
+        # Create log file for subprocess output
+        log_dir = REPO_ROOT / "frontend" / "server" / "logs"
+        log_dir.mkdir(exist_ok=True)
+        log_file = log_dir / f"{ui_run_id}.log"
+
         try:
+            log_f = open(log_file, "w")
             popen = subprocess.Popen(
                 cmd,
                 cwd=str(REPO_ROOT),
                 env=env,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
+                stdout=log_f,
+                stderr=subprocess.STDOUT,
+                start_new_session=True,  # Create new process group for proper termination
             )
         except Exception as e:
             return _json_response(self, {"ok": False, "error": str(e)}, status=500)
@@ -193,8 +304,26 @@ class Handler(BaseHTTPRequestHandler):
         log_dir = (LOG_ROOT / info.run_id) if info.run_id else None
         events_path = (log_dir / "events.jsonl") if log_dir and log_dir.exists() else None
         stage = infer_stage(events_path, info.status) if events_path else {"name": "Initializing", "progress": 0.05, "detail": "Waiting for log directory..."}
+
         if log_dir and log_dir.exists():
             stage["activity"] = _activity_snapshot(log_dir)
+
+            # Check if building index by reading the last event directly
+            if stage.get("name") == "Initializing" and events_path and events_path.exists():
+                try:
+                    with events_path.open("r", encoding="utf-8") as f:
+                        lines = f.readlines()
+                        if lines:
+                            last_event = json.loads(lines[-1].strip())
+                            event_type = last_event.get("data", {}).get("event_type")
+                            if event_type == "index_preflight_build_start":
+                                emb_progress = _get_embedding_build_progress(log_dir)
+                                if emb_progress:
+                                    stage["embedding_build_progress"] = emb_progress
+                                    stage["detail"] = f"Building novelty index: {emb_progress['processed_papers']}/{emb_progress['paper_count']} papers ({emb_progress['progress_pct']}%)"
+                                    stage["progress"] = 0.05 + (emb_progress['progress_pct'] / 100) * 0.15  # 5% to 20%
+                except Exception:
+                    pass
         else:
             stage["activity"] = {
                 "llm_active": False,
@@ -314,6 +443,81 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(data)))
         self.end_headers()
         self.wfile.write(data)
+
+    def _handle_events(self, ui_run_id: str):
+        """Return recent events from the events.jsonl log file"""
+        info = registry.get(ui_run_id)
+        if not info:
+            return _json_response(self, {"ok": False, "error": "run not found"}, status=404)
+
+        if not info.run_id:
+            return _json_response(self, {"ok": True, "events": [], "run_id": None})
+
+        log_dir = LOG_ROOT / info.run_id
+        events_path = log_dir / "events.jsonl"
+
+        if not events_path.exists():
+            return _json_response(self, {"ok": True, "events": [], "run_id": info.run_id})
+
+        # Read last N events
+        max_events = 100
+        events = []
+        try:
+            with events_path.open("r", encoding="utf-8") as f:
+                lines = f.readlines()
+                # Get last max_events lines
+                for line in lines[-max_events:]:
+                    line = line.strip()
+                    if line:
+                        try:
+                            event = json.loads(line)
+                            events.append(event)
+                        except Exception:
+                            continue
+        except Exception as e:
+            return _json_response(self, {"ok": False, "error": str(e)}, status=500)
+
+        return _json_response(self, {
+            "ok": True,
+            "run_id": info.run_id,
+            "events": events,
+            "count": len(events)
+        })
+
+    def _handle_terminate(self, ui_run_id: str):
+        """Terminate a running pipeline"""
+        info = registry.get(ui_run_id)
+        if not info:
+            return _json_response(self, {"ok": False, "error": "run not found"}, status=404)
+
+        try:
+            # Try to terminate the process group
+            if info.popen and info.popen.poll() is None:
+                import signal
+                try:
+                    # Send SIGTERM to the entire process group
+                    os.killpg(os.getpgid(info.popen.pid), signal.SIGTERM)
+                    # Wait a bit for graceful shutdown
+                    try:
+                        info.popen.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        # Force kill the entire process group if it doesn't terminate gracefully
+                        os.killpg(os.getpgid(info.popen.pid), signal.SIGKILL)
+                        info.popen.wait()
+                except ProcessLookupError:
+                    # Process already terminated
+                    pass
+
+            registry.refresh_status(info)
+            return _json_response(self, {
+                "ok": True,
+                "ui_run_id": ui_run_id,
+                "pid": info.pid,
+                "status": info.status,
+                "terminated": True
+            })
+        except Exception as e:
+            return _json_response(self, {"ok": False, "error": str(e)}, status=500)
 
 
 def main():
