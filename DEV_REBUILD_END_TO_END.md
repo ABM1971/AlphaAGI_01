@@ -318,7 +318,7 @@ python Paper-KG-Pipeline/scripts/tools/build_novelty_index.py
 ```
 
 Where it writes:
-- `Paper-KG-Pipeline/output/novelty_index__<PROFILE_ID>/...` when `I2P_INDEX_DIR_MODE=auto_profile`
+- `Paper-KG-Pipeline/output/novelty_index__<MODEL>/...` when `I2P_INDEX_DIR_MODE=auto_profile` (model name sanitized)
 - or `Paper-KG-Pipeline/output/novelty_index` in manual mode
 
 What it depends on:
@@ -334,7 +334,7 @@ python Paper-KG-Pipeline/scripts/tools/build_recall_index.py
 ```
 
 Where it writes:
-- `Paper-KG-Pipeline/output/recall_index__<PROFILE_ID>/...` when `auto_profile` is enabled
+- `Paper-KG-Pipeline/output/recall_index__<MODEL>/...` when `auto_profile` is enabled (model name sanitized)
 
 What it depends on:
 - `Paper-KG-Pipeline/output/nodes_idea.json`

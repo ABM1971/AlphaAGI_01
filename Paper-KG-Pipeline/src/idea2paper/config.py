@@ -1,4 +1,3 @@
-import hashlib
 import os
 import re
 from pathlib import Path
@@ -207,15 +206,13 @@ def _sanitize_profile_component(value: str) -> str:
     return _PROFILE_SAFE_RE.sub("_", text)
 
 
-def _compute_profile_id(provider: str, model: str, api_url: str) -> str:
-    provider_s = _sanitize_profile_component(provider)
+def _compute_profile_id(model: str) -> str:
     model_s = _sanitize_profile_component(model)
-    url_hash = hashlib.sha256(str(api_url).encode("utf-8")).hexdigest()[:8]
-    return f"{provider_s}__{model_s}__{url_hash}"
+    return model_s or "unknown_model"
 
 
 if INDEX_DIR_MODE == "auto_profile":
-    _PROFILE_ID = _compute_profile_id(EMBEDDING_PROVIDER, EMBEDDING_MODEL, EMBEDDING_API_URL)
+    _PROFILE_ID = _compute_profile_id(EMBEDDING_MODEL)
     _DEFAULT_NOVELTY_INDEX_DIR = str(OUTPUT_DIR / f"novelty_index__{_PROFILE_ID}")
     _DEFAULT_RECALL_INDEX_DIR = str(OUTPUT_DIR / f"recall_index__{_PROFILE_ID}")
 else:

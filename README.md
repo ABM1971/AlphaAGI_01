@@ -95,7 +95,7 @@ pip install -r Paper-KG-Pipeline/requirements.txt
 ```
 > **Note:** The embedding model is configurable via `EMBEDDING_MODEL` / `EMBEDDING_API_URL` (env or `i2p_config.json`). If you switch models, rebuild novelty/recall indexes or use model-specific index directories to avoid mismatch.  
 > **Constraint:** the embedding dimension must match your index; if you switch models, rebuild indexes or use model-specific index dirs.  
-> **Recommended (auto_profile):** set `I2P_INDEX_DIR_MODE=auto_profile` to auto-map each embedding config to its own index dirs: `Paper-KG-Pipeline/output/novelty_index__{provider}__{model}__{urlhash}` and `.../recall_index__...`.  
+> **Recommended (auto_profile):** set `I2P_INDEX_DIR_MODE=auto_profile` to auto-map each embedding model to its own index dirs: `Paper-KG-Pipeline/output/novelty_index__{model}` and `.../recall_index__{model}`.  
 > Explicit `I2P_NOVELTY_INDEX_DIR` / `I2P_RECALL_INDEX_DIR` (env or `i2p_config.json`) override auto_profile.  
 > **Tip (speed/stability):** set `I2P_ANCHOR_DENSIFY_ENABLE=0` to skip Adaptive Densify; otherwise Phase 3 Critic can be much slower and may fail due to strict JSON validation.  
 > **Tip (debug):** if you repeatedly hit Critic JSON errors, set `I2P_CRITIC_STRICT_JSON=0` (or `critic.strict_json=false`) to disable strict mode and allow fallback.  
@@ -113,10 +113,12 @@ If you need to use the prebuilt local index, please place the two folders in `pa
 ```text
 paper-KG-Pipeline/
 └── output/
-    ├── recall_index__{provider}__{model}__{hash}/
-    └── novelty_index__{provider}__{model}__{hash}/
+    ├── recall_index__{model}/
+    └── novelty_index__{model}/
 ```
 and make sure the embedding model matches the index you downloaded, otherwise errors may occur.
+
+> **Migration note (auto_profile naming change):** if you previously used provider/urlhash-based dirs, you can either (A) rename the old folders to `recall_index__{model}` / `novelty_index__{model}`, or (B) keep old folder names and set `I2P_RECALL_INDEX_DIR` / `I2P_NOVELTY_INDEX_DIR` explicitly to those paths.
 
 
 ### Configuration

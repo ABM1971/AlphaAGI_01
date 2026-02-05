@@ -74,7 +74,7 @@
     "packaging_force_en_query": true
   },
   "embedding": {
-    "__comment__": "Embedding endpoint/model settings (non-sensitive). Secret EMBEDDING_API_KEY should stay in .env. Recommended: set index.dir_mode=auto_profile (or env I2P_INDEX_DIR_MODE) to auto-manage per-embedding index dirs, e.g. Paper-KG-Pipeline/output/novelty_index__{provider}__{model}__<hash>.",
+    "__comment__": "Embedding endpoint/model settings (non-sensitive). Secret EMBEDDING_API_KEY should stay in .env. Recommended: set index.dir_mode=auto_profile (or env I2P_INDEX_DIR_MODE) to auto-manage per-embedding index dirs by model only, e.g. Paper-KG-Pipeline/output/novelty_index__{model}.",
     "provider": "openai_compatible",
     "api_url": "https://api.openai.com/v1/embeddings",
     "model": "text-embedding-3-large"
@@ -91,7 +91,7 @@
     "collision_threshold": 0.88
   },
   "index": {
-    "__comment__": "Auto-prepare required indexes before running the pipeline. dir_mode=manual (default) uses fixed index_dir; dir_mode=auto_profile derives dirs from embedding provider/model/url.",
+    "__comment__": "Auto-prepare required indexes before running the pipeline. dir_mode=manual (default) uses fixed index_dir; dir_mode=auto_profile derives dirs from embedding model only (sanitized).",
     "dir_mode": "auto_profile",
     "auto_prepare": true,
     "allow_build": true

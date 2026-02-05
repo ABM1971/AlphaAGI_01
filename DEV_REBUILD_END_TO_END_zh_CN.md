@@ -316,7 +316,7 @@ python Paper-KG-Pipeline/scripts/tools/build_novelty_index.py
 ```
 
 输出位置：
-- 开启 `I2P_INDEX_DIR_MODE=auto_profile` 时：`Paper-KG-Pipeline/output/novelty_index__<PROFILE_ID>/...`
+- 开启 `I2P_INDEX_DIR_MODE=auto_profile` 时：`Paper-KG-Pipeline/output/novelty_index__<MODEL>/...`（模型名会做 sanitize）
 - manual 模式：`Paper-KG-Pipeline/output/novelty_index`
 
 依赖：
@@ -332,7 +332,7 @@ python Paper-KG-Pipeline/scripts/tools/build_recall_index.py
 ```
 
 输出位置：
-- 开启 `auto_profile` 时：`Paper-KG-Pipeline/output/recall_index__<PROFILE_ID>/...`
+- 开启 `auto_profile` 时：`Paper-KG-Pipeline/output/recall_index__<MODEL>/...`（模型名会做 sanitize）
 
 依赖：
 - `Paper-KG-Pipeline/output/nodes_idea.json`

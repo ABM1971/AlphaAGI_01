@@ -117,10 +117,12 @@ python Paper-KG-Pipeline/scripts/idea2story_pipeline.py "your idea"
 ```text
 paper-KG-Pipeline/
 └── output/
-    ├── recall_index__{provider}__{model}__{hash}/
-    └── novelty_index__{provider}__{model}__{hash}/
+    ├── recall_index__{model}/
+    └── novelty_index__{model}/
 ```
 并确保 embedding 模型与下载的索引一致，否则可能会出错。
+
+> **迁移提示（auto_profile 命名变更）：** 如果你以前使用了带 provider/urlhash 的目录名，可以（A）手动把旧目录改名为 `recall_index__{model}` / `novelty_index__{model}`，或（B）继续保留旧目录名，并显式设置 `I2P_RECALL_INDEX_DIR` / `I2P_NOVELTY_INDEX_DIR` 指向旧路径。
 
 
 ### **3.配置**：
@@ -130,7 +132,7 @@ paper-KG-Pipeline/
 
 > **注意：** embedding 模型可通过 `EMBEDDING_MODEL` / `EMBEDDING_API_URL`（环境变量或 `i2p_config.json`）自由切换。切换模型后需重建 novelty/recall 索引，或使用带模型后缀的索引目录以避免不匹配。  
 > **约束：** embedding 维度必须与索引一致；若切换模型，请重建索引或使用独立索引目录。  
-> **推荐（auto_profile）：** 设置 `I2P_INDEX_DIR_MODE=auto_profile`，系统会按 embedding 配置自动切到专属索引目录：`Paper-KG-Pipeline/output/novelty_index__{provider}__{model}__{urlhash}` 和 `.../recall_index__...`。  
+> **推荐（auto_profile）：** 设置 `I2P_INDEX_DIR_MODE=auto_profile`，系统会按 embedding 模型自动切到专属索引目录：`Paper-KG-Pipeline/output/novelty_index__{model}` 和 `.../recall_index__{model}`。  
 > 若显式设置 `I2P_NOVELTY_INDEX_DIR` / `I2P_RECALL_INDEX_DIR`（环境变量或 `i2p_config.json`），会优先使用显式值。  
 > **建议（速度/稳定性）：** 建议设置 `I2P_ANCHOR_DENSIFY_ENABLE=0` 以关闭 Adaptive Densify；否则 Phase 3 的 Critic 可能会非常耗时，并且在严格 JSON 校验下更容易因为格式问题失败。  
 > **建议（排障）：** 若反复出现 Critic JSON 格式/解析错误，可设置 `I2P_CRITIC_STRICT_JSON=0`（或 `critic.strict_json=false`）关闭严格模式，允许降级继续运行。  
