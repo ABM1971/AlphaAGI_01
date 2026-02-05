@@ -94,7 +94,7 @@ reliable autonomous scientific discovery.
 pip install -r Paper-KG-Pipeline/requirements.txt
 ```
 > **Note:** The embedding model is configurable via `EMBEDDING_MODEL` / `EMBEDDING_API_URL` (env or `i2p_config.json`). If you switch models, rebuild novelty/recall indexes or use model-specific index directories to avoid mismatch.  
-> **Constraint:** the embedding model must output **4096-dimensional** vectors (same as `Qwen/Qwen3-Embedding-8B`).  
+> **Constraint:** the embedding dimension must match your index; if you switch models, rebuild indexes or use model-specific index dirs.  
 > **Recommended (auto_profile):** set `I2P_INDEX_DIR_MODE=auto_profile` to auto-map each embedding config to its own index dirs: `Paper-KG-Pipeline/output/novelty_index__{provider}__{model}__{urlhash}` and `.../recall_index__...`.  
 > Explicit `I2P_NOVELTY_INDEX_DIR` / `I2P_RECALL_INDEX_DIR` (env or `i2p_config.json`) override auto_profile.  
 > **Tip (speed/stability):** set `I2P_ANCHOR_DENSIFY_ENABLE=0` to skip Adaptive Densify; otherwise Phase 3 Critic can be much slower and may fail due to strict JSON validation.  
@@ -102,7 +102,7 @@ pip install -r Paper-KG-Pipeline/requirements.txt
 > **Tip (LLM temperature):** per-stage temperatures are configurable via `I2P_LLM_TEMPERATURE_*` or `llm.temperature.*`; defaults preserve current behavior. Critic is usually low temp for stability, while story generation can be moderate.  
 > **Tip (Idea Packaging):** optional quality boost via pattern-guided idea packaging + double recall (default off). Enable with `I2P_IDEA_PACKAGING_ENABLE=1` or `idea.packaging_enable=true`.  
 > **Tip (Subdomain taxonomy):** optional quality boost for Path2 to reduce duplicated/long-tail subdomains. Build once offline via `Paper-KG-Pipeline/scripts/tools/build_subdomain_taxonomy.py`, then enable with `I2P_SUBDOMAIN_TAXONOMY_ENABLE=1` (and optional `I2P_SUBDOMAIN_TAXONOMY_PATH`).  
-> **Supported (no code changes):** OpenAI-compatible Embeddings APIs (`/v1/embeddings`) that accept `input` as a string or a list (e.g., SiliconFlow, OpenAI, and other OpenAI-compatible providers).  
+> **Supported (no code changes):** OpenAI-compatible Embeddings APIs (`/v1/embeddings`) that accept `input` as a string or a list.  
 > **Not supported yet:** DashScope “native” embeddings endpoint (`/api/v1/services/embeddings/...`) requires an adapter.
 
 ### Dataset
@@ -113,15 +113,15 @@ If you need to use the prebuilt local index, please place the two folders in `pa
 ```text
 paper-KG-Pipeline/
 └── output/
-    ├── recall_index__siliconflow__Qwen_Qwen3-Embedding-8B__184936e8/
-    └── novelty_index__siliconflow__Qwen_Qwen3-Embedding-8B__184936e8/
+    ├── recall_index__{provider}__{model}__{hash}/
+    └── novelty_index__{provider}__{model}__{hash}/
 ```
-and make sure the embedding model is configured as **SiliconFlow `Qwen/Qwen3-Embedding-8B`**, otherwise errors may occur.
+and make sure the embedding model matches the index you downloaded, otherwise errors may occur.
 
 
 ### Configuration
 
-1. Copy `.env.example` to `.env` and fill in `SILICONFLOW_API_KEY`.
+1. Copy `.env.example` to `.env` and fill in `LLM_API_KEY` (and optionally `LLM_PROVIDER`, `LLM_BASE_URL`).
 2. (Optional) Copy `i2p_config.example.json` to `i2p_config.json` to tweak settings.
 
 ### Usage
@@ -150,7 +150,7 @@ http://127.0.0.1:8080/
 
 ### What you can do in the UI
 - Run the same pipeline entrypoint (`idea2story_pipeline.py`) from a web page.
-- Configure `SILICONFLOW_API_KEY`, `LLM_API_URL`, `LLM_MODEL` for the current run (not persisted by the server).
+- Configure `LLM_API_KEY`, `LLM_PROVIDER`, `LLM_BASE_URL`/`LLM_API_URL`, `LLM_MODEL` for the current run (not persisted by the server).
 - Toggle Novelty / Verification.
 - Download the current run logs as a zip.
 

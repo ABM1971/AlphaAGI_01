@@ -3,6 +3,8 @@ const runBtn = document.getElementById("runBtn");
 const downloadBtn = document.getElementById("downloadBtn");
 const ideaInput = document.getElementById("ideaInput");
 const apiKeyInput = document.getElementById("apiKey");
+const providerInput = document.getElementById("provider");
+const baseUrlInput = document.getElementById("baseUrl");
 const apiUrlInput = document.getElementById("apiUrl");
 const modelInput = document.getElementById("model");
 const toggleNovelty = document.getElementById("toggleNovelty");
@@ -131,6 +133,8 @@ async function startRun() {
     idea,
     llm: {
       api_key: apiKeyInput.value || "",
+      provider: providerInput.value || "",
+      base_url: baseUrlInput.value || "",
       api_url: apiUrlInput.value || "",
       model: modelInput.value || "",
     },

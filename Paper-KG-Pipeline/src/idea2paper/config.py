@@ -79,41 +79,70 @@ def _get(key: str, default, cast=None, cfg_path: list | None = None):
     return _cast(value, cast) if cast else value
 
 # ===================== LLM API 配置 =====================
-LLM_API_KEY = os.getenv("SILICONFLOW_API_KEY", "")
+# Secret: only from env/.env (do not put in i2p_config.json)
+LLM_API_KEY = os.getenv("LLM_API_KEY", "")
+LLM_PROVIDER = _get(
+    "LLM_PROVIDER",
+    "openai_compatible_chat",
+    cast=str,
+    cfg_path=["llm", "provider"],
+)
+LLM_BASE_URL = _get(
+    "LLM_BASE_URL",
+    "",
+    cast=str,
+    cfg_path=["llm", "base_url"],
+)
 LLM_API_URL = _get(
     "LLM_API_URL",
-    "https://api.siliconflow.cn/v1/chat/completions",
+    "",
     cast=str,
     cfg_path=["llm", "api_url"],
 )
 LLM_MODEL = _get(
     "LLM_MODEL",
-    "Pro/zai-org/GLM-4.7",
+    "gpt-4o-mini",
     cast=str,
     cfg_path=["llm", "model"],
 )
+LLM_ANTHROPIC_VERSION = _get(
+    "LLM_ANTHROPIC_VERSION",
+    "2023-06-01",
+    cast=str,
+    cfg_path=["llm", "anthropic_version"],
+)
+LLM_EXTRA_HEADERS = _get(
+    "LLM_EXTRA_HEADERS_JSON",
+    None,
+    cfg_path=["llm", "extra_headers"],
+)
+LLM_EXTRA_BODY = _get(
+    "LLM_EXTRA_BODY_JSON",
+    None,
+    cfg_path=["llm", "extra_body"],
+)
 
 # ===================== Embedding API 配置 =====================
-# Embedding 可独立配置；默认沿用 SiliconFlow + Qwen3-Embedding-8B。
+# Embedding 可独立配置；默认使用 OpenAI-compatible /v1/embeddings 形态。
 EMBEDDING_PROVIDER = _get(
     "EMBEDDING_PROVIDER",
-    "siliconflow",
+    "openai_compatible",
     cast=str,
     cfg_path=["embedding", "provider"],
 )
 EMBEDDING_API_URL = _get(
     "EMBEDDING_API_URL",
-    "https://api.siliconflow.cn/v1/embeddings",
+    "https://api.openai.com/v1/embeddings",
     cast=str,
     cfg_path=["embedding", "api_url"],
 )
 EMBEDDING_MODEL = _get(
     "EMBEDDING_MODEL",
-    "Qwen/Qwen3-Embedding-8B",
+    "text-embedding-3-large",
     cast=str,
     cfg_path=["embedding", "model"],
 )
-# Secret: only from env/.env; fallback to SILICONFLOW_API_KEY (LLM_API_KEY)
+# Secret: only from env/.env; fallback to LLM_API_KEY
 EMBEDDING_API_KEY = os.getenv("EMBEDDING_API_KEY", "") or LLM_API_KEY
 
 # ===================== Run Logging 配置 =====================

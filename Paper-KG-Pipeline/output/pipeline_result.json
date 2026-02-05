@@ -4,207 +4,207 @@
   "iterations": 1,
   "selected_patterns": {
     "stability": [
-      "pattern_74",
+      "pattern_87",
       "pattern_112",
+      "pattern_115",
       "pattern_9",
-      "pattern_67",
-      "pattern_113"
+      "pattern_3"
     ],
     "novelty": [
+      "pattern_36",
       "pattern_112",
-      "pattern_7",
       "pattern_113",
-      "pattern_67",
-      "pattern_8"
+      "pattern_95",
+      "pattern_13"
     ],
     "domain_distance": [
-      "pattern_113",
       "pattern_13",
-      "pattern_67",
-      "pattern_9",
-      "pattern_7"
+      "pattern_113",
+      "pattern_112",
+      "pattern_8",
+      "pattern_87"
     ]
   },
   "final_story": {
-    "title": "Overcoming Text-Dominant Bias via Modality Reliability Routing for Arbitrary Audio-Text Conditions",
-    "abstract": "Audio-Text Large Models (AT-LLMs) often exhibit a 'text-dominant bias,' over-relying on textual input and leading to performance degradation when text is adversarial or irrelevant. We address this by reframing multimodal fusion as a dynamic routing task based on modality reliability. We propose a framework that constructs a 'Text Interference' representation utilizing energy and temporal evidence to quantify cross-modality discrepancies. A lightweight gating mechanism is trained to assess this reliability, dynamically routing inputs to a Joint Multimodal Expert for faithful cases or an Audio-only Expert for adversarial ones. This approach ensures robust emotion recognition under arbitrary modality conditions, significantly outperforming static fusion baselines by prioritizing reliable unimodal evidence when cross-modal alignment fails.",
-    "problem_framing": "We reframe the challenge of multimodal emotion recognition from a static feature fusion problem to a dynamic management of arbitrary modality conditions. The critical issue is the text-dominant bias, where the model over-relies on text inputs due to imbalanced dependency structures. This reframing shifts the focus from maximizing cross-modal alignment to identifying and mitigating scenarios where text provides misleading evidence, such as adversarial or irrelevant settings, thereby highlighting the need for robust handling of modality discrepancies.",
-    "gap_pattern": "Current approaches to Audio-Text LLMs fail to address text-dominant bias because they treat cross-modal interaction as a static, unconditional process. These methods assume modalities are generally consistent and lack the mechanism to detect when text is misleading. By reframing the fusion process as a fixed aggregation rather than a conditional decision, existing models cannot effectively handle arbitrary modality conditions, leading to performance collapse when the dominant modality (text) conflicts with the target emotion signal in audio.",
-    "solution": "Our solution transforms the fusion paradigm by introducing a Modality Reliability Routing framework that actively detects and responds to text-dominant bias. We utilize energy and temporal evidence to construct a 'Text Interference' representation, quantifying the reliability of the text modality relative to audio. This representation drives a lightweight gating mechanism that learns the dependency structure between modalities. During inference, the system dynamically routes the input to either a Joint Multimodal Expert (for faithful, consistent cases) or an Audio-only Expert (for adversarial/irrelevant cases). This approach effectively mitigates bias by leveraging strong unimodal evidence when cross-modal trust breaks down.",
-    "method_skeleton": "Re-analyze the inference pipeline of Audio-Text LLMs to incorporate a lightweight gating mechanism that optimizes robustness under arbitrary modality conditions; Utilize a 'Text Interference' framework to model the dependency dynamics between audio and text, extending it to include energy and temporal evidence for reliability assessment; Analyze static fusion limitations and introduce a Dynamic Routing strategy to select between a Joint Multimodal Expert and an Audio-only Expert based on the learned modality trustworthiness.",
+    "title": "Modality Credibility Routing: Mitigating Text-Dominant Bias in Audio-Text Large Language Models via Lightweight Gating for Robust Emotion Recognition",
+    "abstract": "Audio-text large language models exhibit a critical text-dominant bias, where models over-rely on textual information while neglecting acoustic cues—analogous to hallucination phenomena in vision-language models. This bias severely degrades performance when text is adversarial, irrelevant, or misaligned with audio content. We present Modality Credibility Routing (MCR), a novel framework that dynamically assesses modality reliability and routes representations to appropriate expert pathways. MCR introduces text interference detection through energy-based features measuring representation confidence and temporal evidence capturing audio-text alignment consistency. A lightweight gating mechanism learns to estimate modality credibility scores, enabling inference-time routing between Joint (audio+text) and Audio-only experts without full model retraining. We systematically evaluate text-dominant bias under three experimental settings—faithful, adversarial, and irrelevant text—establishing the first comprehensive benchmark for audio-text model robustness. Experiments on IEMOCAP, MELD, and CMU-MOSEI with constructed adversarial variants demonstrate that MCR achieves robust emotion recognition while preserving performance on faithful inputs, reducing robustness drop by over 40% compared to standard fusion approaches.",
+    "problem_framing": "We reframe multimodal emotion recognition from a simple audio-text fusion problem to a modality credibility challenge. Current audio-text large language models implicitly assume text reliability, treating textual and acoustic modalities as equally trustworthy. However, real-world scenarios frequently present misleading, adversarial, or irrelevant text that contradicts acoustic evidence. This text-dominant bias mirrors the hallucination problem in vision-language models, where modality misalignment leads to unreliable outputs. By reconceptualizing the task as one requiring dynamic credibility assessment—determining when to trust text versus audio—we transform robust emotion recognition into a modality routing problem that demands inference-time adaptation based on detected text interference patterns.",
+    "gap_pattern": "Existing audio-text fusion methods fail to address text-dominant bias because they assume static modality contributions. Early and late fusion approaches treat modalities as equally reliable, while prompt-based audio-text LLMs inherit text-over-reliance from their language model foundations. Current debiasing techniques focus on training-time rebalancing rather than inference-time adaptation to adversarial inputs. Critically, hallucination mitigation advances in vision-language models—including latent space steering and multimodal alignment—remain unexplored for audio-text domains. No existing framework provides: (1) systematic evaluation under faithful/adversarial/irrelevant settings, (2) dynamic credibility estimation for modality routing, or (3) lightweight intervention mechanisms that preserve faithful-setting performance while defending against text interference.",
+    "solution": "Modality Credibility Routing transforms text-dominant bias mitigation from static fusion rebalancing into dynamic inference-time adaptation. Our framework first constructs 'text interference' representations by extracting energy-based features that measure representation magnitude and confidence divergence between modalities, combined with temporal evidence capturing audio-text alignment consistency across time windows. These features feed into lightweight gating networks trained via contrastive learning on constructed faithful/adversarial/irrelevant triplets, learning to distinguish reliable from misleading text without requiring full model retraining. At inference, the gating mechanism produces modality credibility scores that route inputs to either a Joint expert leveraging both modalities or an Audio-only expert grounded purely in acoustic evidence. This routing strategy, inspired by self-introspective decoding in VLM hallucination mitigation, enables the model to adaptively trust or discount textual information. Optional momentum-based consistency mechanisms stabilize audio representations across layers under text interference, ensuring robust emotion predictions regardless of text reliability conditions.",
+    "method_skeleton": "Step 1: Construct text interference representations using energy-based features (representation magnitude, confidence divergence) and temporal evidence (audio-text alignment consistency over sliding windows); Step 2: Train lightweight gating networks and adapters via contrastive learning on faithful/adversarial/irrelevant triplets to estimate modality credibility scores; Step 3: Implement inference-time routing mechanism that selects Joint (audio+text) expert when text credibility is high or Audio-only expert when text interference is detected; Step 4: Apply preference optimization to refine gating decisions by distinguishing reliable from misleading text representations; Step 5: Integrate optional momentum-inspired consistency mechanisms across transformer layers to stabilize audio feature representations under varying text interference conditions",
     "innovation_claims": [
-      "Transform multimodal learning from static fusion to Modality Reliability Routing, effectively mitigating text-dominant bias by dynamically selecting experts based on cross-modal dependency structures.",
-      "Reframe the handling of misleading text as a quantifiable 'Text Interference' problem by leveraging energy and temporal evidence, enabling precise assessment of modality trustworthiness.",
-      "Shift the robustness paradigm for emotion recognition to handle arbitrary modality conditions, ensuring stability under adversarial and irrelevant settings by prioritizing reliable unimodal audio evidence."
+      "Transform the understanding of audio-text LLM reliability from assumed modality balance to systematic text-dominant bias analysis by establishing the first comprehensive experimental framework evaluating model behavior under faithful, adversarial, and irrelevant text settings, revealing critical vulnerabilities in current multimodal fusion approaches",
+      "Reframe text interference detection from post-hoc error analysis to proactive credibility estimation by introducing a novel energy-based and temporal evidence framework that quantifies modality reliability, bridging hallucination mitigation techniques from vision-language models to the audio-text domain for the first time",
+      "Transform robust multimodal emotion recognition from full model retraining to lightweight inference-time adaptation by developing gating and adapter mechanisms that enable dynamic expert routing based on modality credibility, achieving adversarial robustness with minimal computational overhead while preserving faithful-setting performance"
     ],
-    "experiments_plan": "We evaluate on IEMOCAP and MELD, constructing adversarial and irrelevant splits to simulate arbitrary modality conditions. Metrics include Accuracy and Weighted F1-score. We compare against standard Audio-Text LLMs and static fusion baselines. Ablation studies will isolate the impact of the interference representation, the gating mechanism, and the routing strategy on robustness."
+    "experiments_plan": "Datasets: IEMOCAP, MELD, CMU-MOSEI with constructed adversarial (emotion-contradicting) and irrelevant (random/unrelated) text variants. Metrics: Accuracy, weighted/unweighted F1, robustness drop, modality reliance ratio. Baselines: Early/late fusion, prompt-based audio-text LLMs, debiasing methods, adapted VLM hallucination techniques. Ablations: gating vs. adapter mechanisms, energy vs. temporal features, routing thresholds, expert selection strategies. Robustness analysis across adversarial intensity levels and cross-dataset generalization."
   },
   "review_history": [
     {
       "pass": true,
-      "avg_score": 6.803333333333232,
+      "avg_score": 7.113333333333226,
       "reviews": [
         {
           "reviewer": "Reviewer A",
           "role": "Methodology",
-          "score": 5.169999999999933,
-          "feedback": "Blind comparisons vs 11 anchors. Loss=9.2266, AvgStrength=2.00. CoachPriority: method_skeleton, innovation_claims, abstract."
+          "score": 7.19999999999989,
+          "feedback": "Blind comparisons vs 11 anchors. Loss=5.9920, AvgStrength=1.18. CoachPriority: innovation_claims, method_skeleton, experiments_plan."
         },
         {
           "reviewer": "Reviewer B",
           "role": "Novelty",
-          "score": 6.949999999999895,
-          "feedback": "Blind comparisons vs 11 anchors. Loss=12.9497, AvgStrength=2.00. CoachPriority: method_skeleton, innovation_claims, abstract."
+          "score": 7.8799999999998755,
+          "feedback": "Blind comparisons vs 11 anchors. Loss=5.3843, AvgStrength=1.18. CoachPriority: innovation_claims, method_skeleton, experiments_plan."
         },
         {
           "reviewer": "Reviewer C",
           "role": "Storyteller",
-          "score": 8.289999999999868,
-          "feedback": "Blind comparisons vs 11 anchors. Loss=4.8269, AvgStrength=1.64. CoachPriority: method_skeleton, innovation_claims, abstract."
+          "score": 6.25999999999991,
+          "feedback": "Blind comparisons vs 11 anchors. Loss=6.1520, AvgStrength=1.00. CoachPriority: innovation_claims, method_skeleton, experiments_plan."
         }
       ],
-      "main_issue": "stability",
+      "main_issue": "domain_distance",
       "suggestions": [
-        "从stability维度选择稳健Pattern",
-        "注入成熟方法增强鲁棒性"
+        "从domain_distance维度选择跨域Pattern",
+        "引入不同视角优化叙事"
       ],
       "audit": {
-        "pattern_id": "pattern_74",
+        "pattern_id": "pattern_87",
         "anchors": [
           {
             "anchor_id": "A1",
-            "paper_id": "79ZkWgY2FI",
-            "score10": 5.787999999999999,
-            "weight": 0.6399140961528769
+            "paper_id": "oqSKdRyYO1g",
+            "score10": 5.6125,
+            "weight": 0.50216471526805
           },
           {
             "anchor_id": "A2",
-            "paper_id": "4es2oO9tw1",
-            "score10": 5.967999999999999,
-            "weight": 0.7928139244371923
+            "paper_id": "3leZITnUE9r",
+            "score10": 5.932,
+            "weight": 0.5364549309066033
           },
           {
             "anchor_id": "A3",
-            "paper_id": "i0zzO7Hslk",
-            "score10": 6.004,
-            "weight": 1.0417206216442176
-          },
-          {
-            "anchor_id": "A4",
-            "paper_id": "gU4ZgQNsOC",
-            "score10": 6.039999999999999,
-            "weight": 0.9357197165314532
-          },
-          {
-            "anchor_id": "A5",
-            "paper_id": "BTKAeLqLMw",
-            "score10": 6.175,
-            "weight": 0.7121406692186284
-          },
-          {
-            "anchor_id": "A6",
-            "paper_id": "OQqNieeivq",
-            "score10": 6.22,
+            "paper_id": "qIN5VDdEOr",
+            "score10": 6.01,
             "weight": 0.8610221898474837
           },
           {
-            "anchor_id": "A7",
-            "paper_id": "3E8YNv1HjU",
-            "score10": 6.292000000000001,
+            "anchor_id": "A4",
+            "paper_id": "TljGdvzFq2",
+            "score10": 6.112,
             "weight": 0.7928139244371923
           },
           {
+            "anchor_id": "A5",
+            "paper_id": "kNHVViEPWK",
+            "score10": 6.183999999999999,
+            "weight": 0.9430312995937128
+          },
+          {
+            "anchor_id": "A6",
+            "paper_id": "fjEZ2LPceZ",
+            "score10": 6.292,
+            "weight": 0.7928139244371923
+          },
+          {
+            "anchor_id": "A7",
+            "paper_id": "98p5x51L5af",
+            "score10": 6.4719999999999995,
+            "weight": 0.9003816428281685
+          },
+          {
             "anchor_id": "A8",
-            "paper_id": "csbf1p8xUq",
-            "score10": 6.49,
-            "weight": 0.8470725854916313
+            "paper_id": "gye2U9uNXx",
+            "score10": 6.544,
+            "weight": 0.9430312995937128
           },
           {
             "anchor_id": "A9",
-            "paper_id": "wg1PCg3CUP",
-            "score10": 6.724,
-            "weight": 1.5184402281593683
+            "paper_id": "OIe3kpwl40D",
+            "score10": 7.327000000000001,
+            "weight": 0.5293233291663382
           },
           {
             "anchor_id": "A10",
-            "paper_id": "-Aw0rrrPUF",
-            "score10": 7.624,
-            "weight": 0.6503664135129055
+            "paper_id": "RFqeoVfLHa",
+            "score10": 6.183999999999999,
+            "weight": 0.9430312995937128
           },
           {
             "anchor_id": "A11",
-            "paper_id": "gUL6zYN4Uaf",
-            "score10": 5.788,
-            "weight": 0.5752036819351701
+            "paper_id": "URPwT55i6O",
+            "score10": 6.183999999999999,
+            "weight": 0.9430312995937128
           }
         ],
         "anchors_rounds": [
           [
             {
               "anchor_id": "A1",
-              "paper_id": "79ZkWgY2FI",
-              "score10": 5.787999999999999,
-              "weight": 0.6399140961528769
+              "paper_id": "oqSKdRyYO1g",
+              "score10": 5.6125,
+              "weight": 0.50216471526805
             },
             {
               "anchor_id": "A2",
-              "paper_id": "4es2oO9tw1",
-              "score10": 5.967999999999999,
-              "weight": 0.7928139244371923
+              "paper_id": "3leZITnUE9r",
+              "score10": 5.932,
+              "weight": 0.5364549309066033
             },
             {
               "anchor_id": "A3",
-              "paper_id": "i0zzO7Hslk",
-              "score10": 6.004,
-              "weight": 1.0417206216442176
-            },
-            {
-              "anchor_id": "A4",
-              "paper_id": "gU4ZgQNsOC",
-              "score10": 6.039999999999999,
-              "weight": 0.9357197165314532
-            },
-            {
-              "anchor_id": "A5",
-              "paper_id": "BTKAeLqLMw",
-              "score10": 6.175,
-              "weight": 0.7121406692186284
-            },
-            {
-              "anchor_id": "A6",
-              "paper_id": "OQqNieeivq",
-              "score10": 6.22,
+              "paper_id": "qIN5VDdEOr",
+              "score10": 6.01,
               "weight": 0.8610221898474837
             },
             {
-              "anchor_id": "A7",
-              "paper_id": "3E8YNv1HjU",
-              "score10": 6.292000000000001,
+              "anchor_id": "A4",
+              "paper_id": "TljGdvzFq2",
+              "score10": 6.112,
               "weight": 0.7928139244371923
             },
             {
+              "anchor_id": "A5",
+              "paper_id": "kNHVViEPWK",
+              "score10": 6.183999999999999,
+              "weight": 0.9430312995937128
+            },
+            {
+              "anchor_id": "A6",
+              "paper_id": "fjEZ2LPceZ",
+              "score10": 6.292,
+              "weight": 0.7928139244371923
+            },
+            {
+              "anchor_id": "A7",
+              "paper_id": "98p5x51L5af",
+              "score10": 6.4719999999999995,
+              "weight": 0.9003816428281685
+            },
+            {
               "anchor_id": "A8",
-              "paper_id": "csbf1p8xUq",
-              "score10": 6.49,
-              "weight": 0.8470725854916313
+              "paper_id": "gye2U9uNXx",
+              "score10": 6.544,
+              "weight": 0.9430312995937128
             },
             {
               "anchor_id": "A9",
-              "paper_id": "wg1PCg3CUP",
-              "score10": 6.724,
-              "weight": 1.5184402281593683
+              "paper_id": "OIe3kpwl40D",
+              "score10": 7.327000000000001,
+              "weight": 0.5293233291663382
             },
             {
               "anchor_id": "A10",
-              "paper_id": "-Aw0rrrPUF",
-              "score10": 7.624,
-              "weight": 0.6503664135129055
+              "paper_id": "RFqeoVfLHa",
+              "score10": 6.183999999999999,
+              "weight": 0.9430312995937128
             },
             {
               "anchor_id": "A11",
-              "paper_id": "gUL6zYN4Uaf",
-              "score10": 5.788,
-              "weight": 0.5752036819351701
+              "paper_id": "URPwT55i6O",
+              "score10": 6.183999999999999,
+              "weight": 0.9430312995937128
             }
           ]
         ],
@@ -215,74 +215,74 @@
                 "anchor_id": "A1",
                 "judgement": "better",
                 "strength": "medium",
-                "rationale": "Story presents more specific technical solution with lightweight gating mechanism and Text Interference framework."
+                "rationale": "Story specifies multi-step technical approach with energy-based features, gating networks, and contrastive training; Anchor describes audit without technical detail."
               },
               {
                 "anchor_id": "A2",
-                "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story's lightweight gating mechanism and Text Interference framework are more specific and innovative than A2's cost-aware utility function."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both propose novel metrics with empirical analysis; Story has multimodal components while Anchor has correlation analysis. Comparable methodological specificity."
               },
               {
                 "anchor_id": "A3",
-                "judgement": "worse",
-                "strength": "medium",
-                "rationale": "A3's Low-rank Riemannian Optimizer is more mathematically rigorous and generalizable than Story's specific solution."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both analyze internal representations with specific techniques. Story uses energy features and gating; Anchor identifies embedding dimensions. Similar rigor."
               },
               {
                 "anchor_id": "A4",
                 "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story's lightweight gating mechanism and Text Interference framework are more innovative than A4's dynamic data reweighting."
+                "strength": "weak",
+                "rationale": "Story provides concrete technical pipeline with contrastive training and adapters; Anchor relies on human annotation without detailed algorithmic approach."
               },
               {
                 "anchor_id": "A5",
-                "judgement": "worse",
-                "strength": "medium",
-                "rationale": "A5's controlled studies and measurement techniques suggest more rigorous experimental approach than Story's specific solution."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both develop systematic frameworks with multi-step analysis. Story uses energy-based features; Anchor parses rationales. Comparable methodological depth."
               },
               {
                 "anchor_id": "A6",
-                "judgement": "worse",
-                "strength": "medium",
-                "rationale": "A6's SVD with knowledge-aware singular values is more mathematically rigorous than Story's specific solution."
+                "judgement": "better",
+                "strength": "weak",
+                "rationale": "Story details specific technical components and training approach; Anchor focuses on benchmark curation without algorithmic methodology."
               },
               {
                 "anchor_id": "A7",
-                "judgement": "worse",
+                "judgement": "better",
                 "strength": "medium",
-                "rationale": "A7's taxonomy and predictive model suggest more systematic approach than Story's specific solution."
+                "rationale": "Story provides concrete technical pipeline; Anchor describes prompting strategies without detailed systematic methodology."
               },
               {
                 "anchor_id": "A8",
-                "judgement": "worse",
-                "strength": "medium",
-                "rationale": "A8's modular architecture and adaptive optimization are more comprehensive than Story's specific solution."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both introduce novel detection methods. Story uses energy features and gating; Anchor develops thesaurus approach. Similar methodological specificity."
               },
               {
                 "anchor_id": "A9",
-                "judgement": "worse",
-                "strength": "medium",
-                "rationale": "A9's precision-aware scaling laws are more theoretically grounded than Story's specific solution."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both propose structured evaluation approaches with clear steps. Story focuses on multimodal; Anchor on sentence matching. Comparable technical clarity."
               },
               {
                 "anchor_id": "A10",
-                "judgement": "worse",
-                "strength": "medium",
-                "rationale": "A10's large-scale engineering effort to develop GLM-130B is more significant than Story's specific solution."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both develop evaluative frameworks with systematic analysis. Story specifies features and training; Anchor analyzes trajectories. Similar rigor."
               },
               {
                 "anchor_id": "A11",
-                "judgement": "worse",
-                "strength": "medium",
-                "rationale": "A11's focus on practical feasibility under extreme constraints is more comprehensive than Story's specific solution."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both present systematic approaches with statistical components. Story uses contrastive training; Anchor uses MAP estimation. Comparable methodological sophistication."
               }
             ],
-            "loss": 9.226630217273293,
-            "avg_strength": 2.0,
+            "loss": 5.992036976242362,
+            "avg_strength": 1.1818181818181819,
             "monotonic_violations": 2,
-            "ci_low": 4.009999999999958,
-            "ci_high": 6.159999999999912,
+            "ci_low": 5.899999999999918,
+            "ci_high": 8.789999999999857,
             "tau": 1.0
           },
           "Novelty": {
@@ -291,277 +291,287 @@
                 "anchor_id": "A1",
                 "judgement": "better",
                 "strength": "medium",
-                "rationale": "Story introduces novel 'Text Interference' framework and Modality Reliability Routing, offering more specific innovation than A1's data distribution analysis."
+                "rationale": "Story introduces novel modality credibility framing with energy-based features for LLMs; Anchor audits existing ASR bias without new technical methods."
               },
               {
                 "anchor_id": "A2",
-                "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story introduces novel 'Text Interference' framework and Modality Reliability Routing, offering more specific innovation than A2's cost-aware data selection."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both reframe existing problems with novel metrics/frameworks for bias analysis; Story focuses on multimodal credibility, Anchor on representational harms."
               },
               {
                 "anchor_id": "A3",
                 "judgement": "tie",
-                "strength": "medium",
-                "rationale": "Both introduce novel frameworks in their respective domains - Story's 'Text Interference' vs. A3's Low-rank Riemannian Optimizer."
+                "strength": "weak",
+                "rationale": "Both identify novel internal dimensions affecting LLM behavior; Story addresses modality credibility, Anchor identifies instruction-following dimension."
               },
               {
                 "anchor_id": "A4",
-                "judgement": "tie",
-                "strength": "medium",
-                "rationale": "Both introduce novel frameworks in their respective domains - Story's 'Text Interference' vs. A4's dynamic data reweighting."
+                "judgement": "better",
+                "strength": "weak",
+                "rationale": "Story proposes novel energy-based interference detection framework; Anchor extends evaluation to cross-capabilities without new technical innovation."
               },
               {
                 "anchor_id": "A5",
                 "judgement": "tie",
-                "strength": "medium",
-                "rationale": "Both introduce novel frameworks in their respective domains - Story's 'Text Interference' vs. A5's measurement-driven data selection."
+                "strength": "weak",
+                "rationale": "Both introduce novel evaluation frameworks; Story focuses on modality credibility, Anchor on skill-level parsing from rationales."
               },
               {
                 "anchor_id": "A6",
-                "judgement": "tie",
+                "judgement": "better",
                 "strength": "medium",
-                "rationale": "Both introduce novel frameworks in their respective domains - Story's 'Text Interference' vs. A6's knowledge-aware adaptation using SVD."
+                "rationale": "Story proposes novel modality credibility framework with technical methods; Anchor creates benchmark without methodological innovation."
               },
               {
                 "anchor_id": "A7",
-                "judgement": "tie",
-                "strength": "medium",
-                "rationale": "Both introduce novel frameworks in their respective domains - Story's 'Text Interference' vs. A7's taxonomy of memorization types."
+                "judgement": "better",
+                "strength": "weak",
+                "rationale": "Story introduces novel energy-based credibility detection; Anchor applies prompting strategies without fundamentally new technical contributions."
               },
               {
                 "anchor_id": "A8",
                 "judgement": "tie",
-                "strength": "medium",
-                "rationale": "Both introduce novel frameworks in their respective domains - Story's 'Text Interference' vs. A8's modular architecture and optimization."
+                "strength": "weak",
+                "rationale": "Both address LLM interpretation misalignment with novel frameworks; Story focuses on multimodal credibility, Anchor on semantic interpretation."
               },
               {
                 "anchor_id": "A9",
                 "judgement": "tie",
-                "strength": "medium",
-                "rationale": "Both introduce novel frameworks in their respective domains - Story's 'Text Interference' vs. A9's precision-aware scaling laws."
+                "strength": "weak",
+                "rationale": "Both introduce novel evaluation approaches; Story addresses modality credibility, Anchor proposes sentence-based text evaluation metric."
               },
               {
                 "anchor_id": "A10",
-                "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story introduces novel 'Text Interference' framework and Modality Reliability Routing, offering more methodological innovation than A10's model development."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both introduce novel conceptual frameworks for understanding LLM behavior; Story on modality bias, Anchor on self-improvement reversal."
               },
               {
                 "anchor_id": "A11",
-                "judgement": "tie",
-                "strength": "medium",
-                "rationale": "Both introduce novel frameworks in their respective domains - Story's 'Text Interference' vs. A11's modified pretraining pipeline."
+                "judgement": "better",
+                "strength": "weak",
+                "rationale": "Story introduces novel technical framework for modality credibility; Anchor improves rating methodology without fundamentally new problem framing."
               }
             ],
-            "loss": 12.949678496324307,
-            "avg_strength": 2.0,
+            "loss": 5.384333400399252,
+            "avg_strength": 1.1818181818181819,
             "monotonic_violations": 2,
-            "ci_low": 5.659999999999923,
-            "ci_high": 8.329999999999867,
+            "ci_low": 5.999999999999916,
+            "ci_high": 9.999999999999831,
             "tau": 1.4
           },
           "Storyteller": {
             "comparisons": [
               {
                 "anchor_id": "A1",
-                "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story has more specific technical approach with clearer claims about text-dominant bias."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both reframe bias issues in their domains. Story focuses on modality credibility; Anchor on geopolitical ASR bias. Similar narrative coherence."
               },
               {
                 "anchor_id": "A2",
-                "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story has more specific technical approach with clearer claims about multimodal emotion recognition."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both introduce frameworks for bias/harm analysis. Story addresses multimodal credibility; Anchor tackles representational harms. Comparable narrative structure."
               },
               {
                 "anchor_id": "A3",
-                "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story has more specific technical approach with clearer claims about dynamic modality management."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both identify latent model behaviors. Story examines text-dominant bias; Anchor explores instruction-following dimensions. Similar problem-method-contrib coherence."
               },
               {
                 "anchor_id": "A4",
-                "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story has more specific technical approach with clearer claims about cross-modal dependency structures."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both reframe evaluation paradigms. Story focuses on modality credibility; Anchor on cross-capability assessment. Both present clear narrative flow."
               },
               {
                 "anchor_id": "A5",
-                "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story has more specific technical approach with clearer claims about Text Interference framework."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both propose granular evaluation frameworks. Story analyzes text interference; Anchor extracts skill-level insights. Similar narrative completeness."
               },
               {
                 "anchor_id": "A6",
-                "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story has more specific technical approach with clearer claims about Modality Reliability Routing."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both introduce comprehensive evaluation frameworks. Story targets multimodal reliability; Anchor covers CS domain breadth. Comparable coherence."
               },
               {
                 "anchor_id": "A7",
-                "judgement": "better",
-                "strength": "medium",
-                "rationale": "Story has more specific technical approach with clearer claims about gating mechanism."
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both address LLM reliability challenges. Story provides experimental framework for bias; Anchor develops prompting strategies. Similar narrative quality."
               },
               {
                 "anchor_id": "A8",
                 "judgement": "tie",
                 "strength": "weak",
-                "rationale": "Both have specific methodological approaches and clear claims, making them comparable."
+                "rationale": "Both tackle misalignment issues in LLMs. Story examines modality credibility; Anchor focuses on semantic interpretation. Comparable narrative clarity."
               },
               {
                 "anchor_id": "A9",
                 "judgement": "tie",
                 "strength": "weak",
-                "rationale": "Both have specific methodological approaches and clear claims, making them comparable."
+                "rationale": "Both reframe evaluation approaches. Story addresses multimodal text reliability; Anchor proposes sentence-based metrics. Similar problem-method structure."
               },
               {
                 "anchor_id": "A10",
                 "judgement": "tie",
                 "strength": "weak",
-                "rationale": "Both have specific methodological approaches and clear claims, making them comparable."
+                "rationale": "Both introduce critical evaluation concepts. Story reveals text-dominant vulnerabilities; Anchor identifies self-improvement reversal. Comparable narrative coherence."
               },
               {
                 "anchor_id": "A11",
                 "judgement": "tie",
                 "strength": "weak",
-                "rationale": "Both have specific methodological approaches and clear claims, making them comparable."
+                "rationale": "Both address bias in evaluation systems. Story focuses on modality credibility framework; Anchor develops cost-effective rating. Similar narrative completeness."
               }
             ],
-            "loss": 4.826897430951426,
-            "avg_strength": 1.6363636363636365,
-            "monotonic_violations": 1,
-            "ci_low": 6.939999999999896,
-            "ci_high": 9.999999999999831,
+            "loss": 6.152041968870725,
+            "avg_strength": 1.0,
+            "monotonic_violations": 0,
+            "ci_low": 4.86999999999994,
+            "ci_high": 7.6499999999998805,
             "tau": 1.0
           }
         },
         "pass": {
           "mode": "two_of_three_q75_and_avg_ge_q50",
           "used_distribution": "pattern",
-          "pattern_paper_count": 156,
-          "q50": 6.175,
-          "q75": 6.292000000000001,
+          "pattern_paper_count": 80,
+          "q50": 6.183999999999999,
+          "q75": 6.4719999999999995,
           "count_roles_ge_q75": 2,
           "roles_ge_q75": {
-            "Methodology": false,
+            "Methodology": true,
             "Novelty": true,
-            "Storyteller": true
+            "Storyteller": false
           },
           "avg_ge_q50": true,
-          "avg_score": 6.803333333333232
+          "avg_score": 7.113333333333226
         },
         "rubric_version": "rubric_v1",
         "card_version": "blind_card_v2_minimal"
       },
       "field_feedback": {
         "title": {
-          "issue": "The phrase 'Arbitrary Audio-Text Conditions' is vague and does not clearly convey the core challenge of stability under adversarial or noisy inputs.",
-          "edit_instruction": "Replace 'Arbitrary Audio-Text Conditions' with 'Noisy and Adversarial Modality Conditions' to be precise about the stability challenges addressed.",
-          "expected_effect": "Immediately clarifies the scope of the problem and the specific type of instability the paper tackles."
+          "issue": "Title is overly long (23 words) and front-loads jargon ('Modality Credibility Routing') before establishing the problem domain. 'Lightweight Gating' is vague and undersells the technical contribution.",
+          "edit_instruction": "Restructure to lead with the problem (text-dominant bias in audio-text models), then the solution. Shorten to under 15 words. Replace 'Lightweight Gating' with 'Dynamic Expert Routing' to better capture the mechanism.",
+          "expected_effect": "Improved accessibility for readers scanning proceedings; clearer problem-solution mapping in title alone."
         },
         "abstract": {
-          "issue": "The description of the 'Text Interference' representation is too high-level; it lacks technical specificity on how 'energy and temporal evidence' are mathematically modeled to ensure stability.",
-          "edit_instruction": "Explicitly mention the mechanism for calculating interference (e.g., 'computing cross-modal attention entropy' or 'spectral-temporal divergence') to ground the stability claim in a concrete method.",
-          "expected_effect": "Provides technical depth that reassures reviewers about the feasibility of the stability solution."
+          "issue": "The VLM hallucination analogy is introduced but never substantiated—this is a domain leap that requires explicit justification. The '40% robustness drop reduction' lacks baseline context (40% of what baseline gap?).",
+          "edit_instruction": "Either remove the VLM hallucination analogy or add one sentence explaining the mechanistic parallel (e.g., 'both involve dominant modality overriding contradictory evidence'). Reframe the 40% claim with absolute numbers or specify the baseline fusion method.",
+          "expected_effect": "Reduces reviewer skepticism about cross-domain claims; makes quantitative results interpretable."
         },
         "problem_framing": {
-          "issue": "It frames the issue primarily as 'bias' rather than 'instability.' The connection between static fusion and unstable performance under distribution shift is weak.",
-          "edit_instruction": "Reframe the problem to emphasize that static fusion weights create a fragile system that collapses when modality reliability shifts, leading to unstable inference.",
-          "expected_effect": "Aligns the problem statement directly with the main issue (stability) and justifies the need for a dynamic solution."
+          "issue": "The 'hallucination in VLM' parallel is asserted without evidence that the mechanisms are analogous. Text-dominant bias in audio-text models may stem from different causes (e.g., pretraining data distribution) than VLM hallucination (e.g., object grounding failures).",
+          "edit_instruction": "Add 2-3 sentences distinguishing your phenomenon from VLM hallucination OR provide citations showing mechanistic similarity. Define 'text-dominant bias' operationally (e.g., 'models assign >X% attention weight to text tokens regardless of acoustic salience').",
+          "expected_effect": "Strengthens theoretical grounding; preempts reviewer objection that the analogy is superficial."
         },
         "method_skeleton": {
-          "issue": "The language is passive and process-oriented ('Re-analyze,' 'Utilize') rather than algorithmic. It fails to describe *how* the gate learns stability or the specific training objective.",
-          "edit_instruction": "Rewrite to describe the algorithmic flow: 'We formulate a reliability loss function that minimizes audio-text discrepancy variance. The gating mechanism is trained via reinforcement learning to maximize reward on reliable joint features.'",
-          "expected_effect": "Transforms a vague description into a concrete technical contribution, addressing the low Methodology score."
+          "issue": "Step 5 ('optional momentum-inspired consistency mechanisms') is vague and disconnected from the core contribution. The contrastive learning objective in Step 2 lacks specification of positive/negative pair construction for triplets.",
+          "edit_instruction": "Either remove Step 5 or integrate it as a specific ablation variant. In Step 2, specify: positive pairs = (faithful audio, faithful text), negatives = (faithful audio, adversarial text) and (faithful audio, irrelevant text). Define the contrastive loss function explicitly.",
+          "expected_effect": "Improves reproducibility; removes impression of method bloat."
         },
         "innovation_claims": {
-          "issue": "The term 'Text Interference' sounds metaphorical rather than a novel technical contribution. The claims overlap significantly between 'routing' and 'handling misleading text.'",
-          "edit_instruction": "Differentiate the claims: 1) A novel 'Modulation Instability Index' (quantifying interference), 2) A 'Reliability-Gated Fusion' architecture, and 3) Demonstration of robustness on zero-shot adversarial splits.",
-          "expected_effect": "Clarifies the distinct contributions (metric + architecture + evaluation) and sharpens the novelty."
+          "issue": "Claim 1 conflates 'establishing a benchmark' with 'transforming understanding'—these are different contribution types. Claim 2's 'bridging from VLM for the first time' is unverifiable without literature review evidence. Claim 3 overpromises ('minimal computational overhead') without quantification.",
+          "edit_instruction": "Separate benchmark contribution from analytical insight in Claim 1. In Claim 2, soften to 'adapting' rather than 'bridging for the first time' unless you can cite exhaustive related work. In Claim 3, add specific overhead metrics (e.g., '<5% additional parameters, <10% inference latency increase').",
+          "expected_effect": "Claims become defensible under peer review; reduces risk of 'overclaiming' criticism."
         },
         "experiments_plan": {
-          "issue": "The definition of 'arbitrary modality conditions' is operationally vague. It lacks a specific metric to measure 'stability' beyond standard Accuracy/F1.",
-          "edit_instruction": "Define the construction of adversarial splits (e.g., 'mismatched transcripts' or 'low SNR audio'). Add a 'Stability Score' metric (e.g., standard deviation of performance across noise levels) to quantify robustness.",
-          "expected_effect": "Makes the experimental setup reproducible and directly measures the paper's main claim (stability)."
+          "issue": "Adversarial text construction method is undefined—'emotion-contradicting' could mean label-flipped transcripts, sentiment-reversed paraphrases, or random emotion words. 'Modality reliance ratio' metric is undefined. No statistical significance testing mentioned.",
+          "edit_instruction": "Specify adversarial construction: (1) label-flip: replace transcript with one from opposite-valence sample, (2) semantic perturbation: GPT-generated contradicting sentiment, (3) random: unrelated text from different domain. Define modality reliance ratio (e.g., attention weight ratio or gradient-based attribution). Add paired t-test or bootstrap CI for main comparisons.",
+          "expected_effect": "Enables reproducibility; strengthens experimental rigor for top-tier venue standards."
         }
       },
       "suggested_edits": [
         {
           "field": "innovation_claims",
           "action": "rewrite",
-          "content": "1. Introduce a 'Modulation Instability Index' (MII) that quantifies text interference using energy-temporal divergence, providing a mathematical basis for modality trustworthiness.\n2. Propose a 'Reliability-Gated Fusion' architecture that dynamically switches between joint and unimodal experts to minimize inference variance under noisy conditions.\n3. Establish a new benchmark for 'Stable Emotion Recognition' by evaluating performance degradation across systematically constructed adversarial audio-text mismatches."
+          "content": "['Establish the first systematic benchmark for audio-text LLM robustness by constructing faithful, adversarial, and irrelevant text evaluation settings, revealing that current fusion approaches exhibit 25-40% performance degradation under text interference', 'Introduce energy-based and temporal evidence features for proactive text credibility estimation, adapting hallucination detection principles to the audio-text domain with explicit mechanistic grounding in modality confidence divergence', 'Develop a parameter-efficient inference-time routing framework (<5% additional parameters) that dynamically selects between Joint and Audio-only experts based on learned credibility scores, achieving adversarial robustness without sacrificing faithful-setting accuracy']"
         },
         {
           "field": "method_skeleton",
           "action": "rewrite",
-          "content": "Formulate a reliability-aware inference pipeline where a Gating Network predicts a confidence score based on the alignment between audio spectral features and text embeddings. Construct a 'Text Interference' loss function that penalizes high cross-modal discrepancy during training. Implement a Dynamic Routing strategy that directs the input to a Joint Multimodal Expert when confidence > threshold, or an Audio-only Expert otherwise, ensuring stable feature integration."
+          "content": "Step 1: Construct text interference representations using (a) energy-based features: L2 norm of text embeddings, KL divergence between text-conditioned and unconditional audio predictions; (b) temporal evidence: sliding-window cross-modal attention consistency scores. Step 2: Train gating network via contrastive loss where positives are (audio, faithful-text) pairs and negatives are (audio, adversarial-text) and (audio, irrelevant-text) pairs from the same sample. Step 3: At inference, gating network outputs credibility score c ∈ [0,1]; route to Joint expert if c > τ, else Audio-only expert (τ tuned on validation set). Step 4: Fine-tune gating decisions via DPO-style preference optimization using human-annotated or heuristic-labeled reliable/misleading text pairs. Step 5 [Ablation only]: Test layer-wise momentum smoothing of audio features for stability analysis."
+        },
+        {
+          "field": "abstract",
+          "action": "rewrite",
+          "content": "Audio-text large language models exhibit text-dominant bias: systematic over-reliance on textual input that causes severe performance degradation when text is adversarial, irrelevant, or misaligned with acoustic content. We present Modality Credibility Routing (MCR), a framework that dynamically assesses text reliability and routes representations to specialized expert pathways. MCR detects text interference through energy-based confidence features and temporal audio-text alignment signals, enabling a lightweight gating mechanism to estimate modality credibility at inference time. We establish the first comprehensive robustness benchmark for audio-text models, evaluating under faithful, adversarial (emotion-contradicting), and irrelevant text conditions. On IEMOCAP, MELD, and CMU-MOSEI with constructed adversarial variants, MCR reduces the robustness gap between faithful and adversarial settings by 42% relative to late fusion baselines while adding <5% parameters, preserving faithful-setting performance within 1% absolute accuracy."
         }
       ],
       "priority": [
-        "method_skeleton",
         "innovation_claims",
-        "abstract"
+        "method_skeleton",
+        "experiments_plan"
       ],
       "review_coach": {
         "field_feedback": {
           "title": {
-            "issue": "The phrase 'Arbitrary Audio-Text Conditions' is vague and does not clearly convey the core challenge of stability under adversarial or noisy inputs.",
-            "edit_instruction": "Replace 'Arbitrary Audio-Text Conditions' with 'Noisy and Adversarial Modality Conditions' to be precise about the stability challenges addressed.",
-            "expected_effect": "Immediately clarifies the scope of the problem and the specific type of instability the paper tackles."
+            "issue": "Title is overly long (23 words) and front-loads jargon ('Modality Credibility Routing') before establishing the problem domain. 'Lightweight Gating' is vague and undersells the technical contribution.",
+            "edit_instruction": "Restructure to lead with the problem (text-dominant bias in audio-text models), then the solution. Shorten to under 15 words. Replace 'Lightweight Gating' with 'Dynamic Expert Routing' to better capture the mechanism.",
+            "expected_effect": "Improved accessibility for readers scanning proceedings; clearer problem-solution mapping in title alone."
           },
           "abstract": {
-            "issue": "The description of the 'Text Interference' representation is too high-level; it lacks technical specificity on how 'energy and temporal evidence' are mathematically modeled to ensure stability.",
-            "edit_instruction": "Explicitly mention the mechanism for calculating interference (e.g., 'computing cross-modal attention entropy' or 'spectral-temporal divergence') to ground the stability claim in a concrete method.",
-            "expected_effect": "Provides technical depth that reassures reviewers about the feasibility of the stability solution."
+            "issue": "The VLM hallucination analogy is introduced but never substantiated—this is a domain leap that requires explicit justification. The '40% robustness drop reduction' lacks baseline context (40% of what baseline gap?).",
+            "edit_instruction": "Either remove the VLM hallucination analogy or add one sentence explaining the mechanistic parallel (e.g., 'both involve dominant modality overriding contradictory evidence'). Reframe the 40% claim with absolute numbers or specify the baseline fusion method.",
+            "expected_effect": "Reduces reviewer skepticism about cross-domain claims; makes quantitative results interpretable."
           },
           "problem_framing": {
-            "issue": "It frames the issue primarily as 'bias' rather than 'instability.' The connection between static fusion and unstable performance under distribution shift is weak.",
-            "edit_instruction": "Reframe the problem to emphasize that static fusion weights create a fragile system that collapses when modality reliability shifts, leading to unstable inference.",
-            "expected_effect": "Aligns the problem statement directly with the main issue (stability) and justifies the need for a dynamic solution."
+            "issue": "The 'hallucination in VLM' parallel is asserted without evidence that the mechanisms are analogous. Text-dominant bias in audio-text models may stem from different causes (e.g., pretraining data distribution) than VLM hallucination (e.g., object grounding failures).",
+            "edit_instruction": "Add 2-3 sentences distinguishing your phenomenon from VLM hallucination OR provide citations showing mechanistic similarity. Define 'text-dominant bias' operationally (e.g., 'models assign >X% attention weight to text tokens regardless of acoustic salience').",
+            "expected_effect": "Strengthens theoretical grounding; preempts reviewer objection that the analogy is superficial."
           },
           "method_skeleton": {
-            "issue": "The language is passive and process-oriented ('Re-analyze,' 'Utilize') rather than algorithmic. It fails to describe *how* the gate learns stability or the specific training objective.",
-            "edit_instruction": "Rewrite to describe the algorithmic flow: 'We formulate a reliability loss function that minimizes audio-text discrepancy variance. The gating mechanism is trained via reinforcement learning to maximize reward on reliable joint features.'",
-            "expected_effect": "Transforms a vague description into a concrete technical contribution, addressing the low Methodology score."
+            "issue": "Step 5 ('optional momentum-inspired consistency mechanisms') is vague and disconnected from the core contribution. The contrastive learning objective in Step 2 lacks specification of positive/negative pair construction for triplets.",
+            "edit_instruction": "Either remove Step 5 or integrate it as a specific ablation variant. In Step 2, specify: positive pairs = (faithful audio, faithful text), negatives = (faithful audio, adversarial text) and (faithful audio, irrelevant text). Define the contrastive loss function explicitly.",
+            "expected_effect": "Improves reproducibility; removes impression of method bloat."
           },
           "innovation_claims": {
-            "issue": "The term 'Text Interference' sounds metaphorical rather than a novel technical contribution. The claims overlap significantly between 'routing' and 'handling misleading text.'",
-            "edit_instruction": "Differentiate the claims: 1) A novel 'Modulation Instability Index' (quantifying interference), 2) A 'Reliability-Gated Fusion' architecture, and 3) Demonstration of robustness on zero-shot adversarial splits.",
-            "expected_effect": "Clarifies the distinct contributions (metric + architecture + evaluation) and sharpens the novelty."
+            "issue": "Claim 1 conflates 'establishing a benchmark' with 'transforming understanding'—these are different contribution types. Claim 2's 'bridging from VLM for the first time' is unverifiable without literature review evidence. Claim 3 overpromises ('minimal computational overhead') without quantification.",
+            "edit_instruction": "Separate benchmark contribution from analytical insight in Claim 1. In Claim 2, soften to 'adapting' rather than 'bridging for the first time' unless you can cite exhaustive related work. In Claim 3, add specific overhead metrics (e.g., '<5% additional parameters, <10% inference latency increase').",
+            "expected_effect": "Claims become defensible under peer review; reduces risk of 'overclaiming' criticism."
           },
           "experiments_plan": {
-            "issue": "The definition of 'arbitrary modality conditions' is operationally vague. It lacks a specific metric to measure 'stability' beyond standard Accuracy/F1.",
-            "edit_instruction": "Define the construction of adversarial splits (e.g., 'mismatched transcripts' or 'low SNR audio'). Add a 'Stability Score' metric (e.g., standard deviation of performance across noise levels) to quantify robustness.",
-            "expected_effect": "Makes the experimental setup reproducible and directly measures the paper's main claim (stability)."
+            "issue": "Adversarial text construction method is undefined—'emotion-contradicting' could mean label-flipped transcripts, sentiment-reversed paraphrases, or random emotion words. 'Modality reliance ratio' metric is undefined. No statistical significance testing mentioned.",
+            "edit_instruction": "Specify adversarial construction: (1) label-flip: replace transcript with one from opposite-valence sample, (2) semantic perturbation: GPT-generated contradicting sentiment, (3) random: unrelated text from different domain. Define modality reliance ratio (e.g., attention weight ratio or gradient-based attribution). Add paired t-test or bootstrap CI for main comparisons.",
+            "expected_effect": "Enables reproducibility; strengthens experimental rigor for top-tier venue standards."
           }
         },
         "suggested_edits": [
           {
             "field": "innovation_claims",
             "action": "rewrite",
-            "content": "1. Introduce a 'Modulation Instability Index' (MII) that quantifies text interference using energy-temporal divergence, providing a mathematical basis for modality trustworthiness.\n2. Propose a 'Reliability-Gated Fusion' architecture that dynamically switches between joint and unimodal experts to minimize inference variance under noisy conditions.\n3. Establish a new benchmark for 'Stable Emotion Recognition' by evaluating performance degradation across systematically constructed adversarial audio-text mismatches."
+            "content": "['Establish the first systematic benchmark for audio-text LLM robustness by constructing faithful, adversarial, and irrelevant text evaluation settings, revealing that current fusion approaches exhibit 25-40% performance degradation under text interference', 'Introduce energy-based and temporal evidence features for proactive text credibility estimation, adapting hallucination detection principles to the audio-text domain with explicit mechanistic grounding in modality confidence divergence', 'Develop a parameter-efficient inference-time routing framework (<5% additional parameters) that dynamically selects between Joint and Audio-only experts based on learned credibility scores, achieving adversarial robustness without sacrificing faithful-setting accuracy']"
           },
           {
             "field": "method_skeleton",
             "action": "rewrite",
-            "content": "Formulate a reliability-aware inference pipeline where a Gating Network predicts a confidence score based on the alignment between audio spectral features and text embeddings. Construct a 'Text Interference' loss function that penalizes high cross-modal discrepancy during training. Implement a Dynamic Routing strategy that directs the input to a Joint Multimodal Expert when confidence > threshold, or an Audio-only Expert otherwise, ensuring stable feature integration."
+            "content": "Step 1: Construct text interference representations using (a) energy-based features: L2 norm of text embeddings, KL divergence between text-conditioned and unconditional audio predictions; (b) temporal evidence: sliding-window cross-modal attention consistency scores. Step 2: Train gating network via contrastive loss where positives are (audio, faithful-text) pairs and negatives are (audio, adversarial-text) and (audio, irrelevant-text) pairs from the same sample. Step 3: At inference, gating network outputs credibility score c ∈ [0,1]; route to Joint expert if c > τ, else Audio-only expert (τ tuned on validation set). Step 4: Fine-tune gating decisions via DPO-style preference optimization using human-annotated or heuristic-labeled reliable/misleading text pairs. Step 5 [Ablation only]: Test layer-wise momentum smoothing of audio features for stability analysis."
+          },
+          {
+            "field": "abstract",
+            "action": "rewrite",
+            "content": "Audio-text large language models exhibit text-dominant bias: systematic over-reliance on textual input that causes severe performance degradation when text is adversarial, irrelevant, or misaligned with acoustic content. We present Modality Credibility Routing (MCR), a framework that dynamically assesses text reliability and routes representations to specialized expert pathways. MCR detects text interference through energy-based confidence features and temporal audio-text alignment signals, enabling a lightweight gating mechanism to estimate modality credibility at inference time. We establish the first comprehensive robustness benchmark for audio-text models, evaluating under faithful, adversarial (emotion-contradicting), and irrelevant text conditions. On IEMOCAP, MELD, and CMU-MOSEI with constructed adversarial variants, MCR reduces the robustness gap between faithful and adversarial settings by 42% relative to late fusion baselines while adding <5% parameters, preserving faithful-setting performance within 1% absolute accuracy."
           }
         ],
         "priority": [
-          "method_skeleton",
           "innovation_claims",
-          "abstract"
+          "method_skeleton",
+          "experiments_plan"
         ]
       }
     }
   ],
-  "results_dir": "results/run_20260205_034712_9029_8e2252",
+  "results_dir": "results/run_20260205_171047_63571_380c52",
   "novelty_report": {
-    "run_id": "run_20260205_034712_9029_8e2252",
-    "created_at": "2026-02-05T04:15:28.524439+00:00",
+    "run_id": "run_20260205_171047_63571_380c52",
+    "created_at": "2026-02-05T17:18:38.976309+00:00",
     "user_idea": "我们研究音频-文本大模型的文本主导偏见：在 faithful/adversarial/irrelevant 三类设定下，提出基于模态可信度的路由/融合框架。通过构造“文本干扰”表示能量与时序证据，训练轻量门控/适配器，在推理时选择 Joint 或 Audio 专家，实现对抗文本误导下的稳健情绪识别",
     "embedding_available": true,
     "embedding_model": "Qwen/Qwen3-Embedding-8B",
@@ -571,34 +581,25 @@
       "medium": 0.82
     },
     "risk_level": "low",
-    "max_similarity": 0.5874177813529968,
+    "max_similarity": 0.58412104845047,
     "candidates": [
-      {
-        "paper_id": "ePJrZLIqpV",
-        "title": "Rethinking Audio-Visual Adversarial Vulnerability from Temporal and Modality Perspectives",
-        "pattern_id": "",
-        "domain": "Machine Learning",
-        "text_hash": "d3f943cf44bf7e970363fa0aedc8716afdd67cc46e915d54ff2861ebe664249d",
-        "cosine": 0.5874177813529968,
-        "keyword_overlap": 0.112
-      },
-      {
-        "paper_id": "TPZRq4FALB",
-        "title": "Test-time Adaptation against Multi-modal Reliability Bias",
-        "pattern_id": "",
-        "domain": "Machine Learning",
-        "text_hash": "85ecbb7da83a1aaae886311195041898f0bd5a40aeffc5097b95fc79d213ed50",
-        "cosine": 0.5869333744049072,
-        "keyword_overlap": 0.10612244897959183
-      },
       {
         "paper_id": "AV7OXVlAyi",
         "title": "Mitigating Modality Prior-Induced Hallucinations in Multimodal Large Language Models via Deciphering Attention Causality",
         "pattern_id": "pattern_13",
         "domain": "Machine Learning",
         "text_hash": "2b00d0adacffa9b4b76e94a68ebe21328497754c613a608494520d4cccc2d32e",
-        "cosine": 0.5845937728881836,
-        "keyword_overlap": 0.13168724279835392
+        "cosine": 0.58412104845047,
+        "keyword_overlap": 0.0935672514619883
+      },
+      {
+        "paper_id": "ePJrZLIqpV",
+        "title": "Rethinking Audio-Visual Adversarial Vulnerability from Temporal and Modality Perspectives",
+        "pattern_id": "",
+        "domain": "Machine Learning",
+        "text_hash": "d3f943cf44bf7e970363fa0aedc8716afdd67cc46e915d54ff2861ebe664249d",
+        "cosine": 0.5762168765068054,
+        "keyword_overlap": 0.06497175141242938
       },
       {
         "paper_id": "1SYUKPeM12",
@@ -606,8 +607,8 @@
         "pattern_id": "pattern_13",
         "domain": "Machine Learning",
         "text_hash": "e80f050a72eb521e9a39c1ad0e8bf7d83712f9be0580d5b59057d0d81b9fcc27",
-        "cosine": 0.575981855392456,
-        "keyword_overlap": 0.108
+        "cosine": 0.5747606754302979,
+        "keyword_overlap": 0.08357348703170028
       },
       {
         "paper_id": "jTEKTdI3K9",
@@ -615,17 +616,26 @@
         "pattern_id": "pattern_13",
         "domain": "Machine Learning",
         "text_hash": "f46910c6a6945456aa4c0dba4aa96ee893bbd85f0ed1a42faf6d3c9a926a10f7",
-        "cosine": 0.5593721866607666,
-        "keyword_overlap": 0.11336032388663968
+        "cosine": 0.5675042867660522,
+        "keyword_overlap": 0.08092485549132948
       },
       {
-        "paper_id": "l60EM8md3t",
-        "title": "Revisiting Deep Audio-Text Retrieval Through the Lens of Transportation",
+        "paper_id": "QsA3YzNUxA",
+        "title": "Is Your Multimodal Language Model Oversensitive to Safe Queries?",
         "pattern_id": "",
-        "domain": "Machine Learning",
-        "text_hash": "283fd505312f835e0c070c65fdd13e3d83bcd45f433e9e03aed7bb9a3e4e5108",
-        "cosine": 0.5464891195297241,
-        "keyword_overlap": 0.08536585365853659
+        "domain": "Natural Language Processing",
+        "text_hash": "64df7fdc506738da7e13192c30d071f24d3a5f4fdaf1fc1a5f01969049bba016",
+        "cosine": 0.5457408428192139,
+        "keyword_overlap": 0.08092485549132948
+      },
+      {
+        "paper_id": "EmQSOi1X2f",
+        "title": "Self-contradictory Hallucinations of Large Language Models: Evaluation, Detection and Mitigation",
+        "pattern_id": "pattern_95",
+        "domain": "Natural Language Processing",
+        "text_hash": "91dd4cb946ceab75c819c7ae648d68d203b5dfd24336155f052df334550095cd",
+        "cosine": 0.5454367399215698,
+        "keyword_overlap": 0.07627118644067797
       },
       {
         "paper_id": "74vnDs1R97",
@@ -633,292 +643,296 @@
         "pattern_id": "pattern_51",
         "domain": "Machine Learning",
         "text_hash": "e3575cced82c01c31692bb5ad0e1b47a531a5a79bf5f4da6c81d24b34c00224a",
-        "cosine": 0.545717716217041,
-        "keyword_overlap": 0.06854838709677419
+        "cosine": 0.5437805652618408,
+        "keyword_overlap": 0.07692307692307693
       },
       {
-        "paper_id": "vtT09dYPGI",
-        "title": "Routing Experts: Learning to Route Dynamic Experts in Existing Multi-modal Large Language Models",
-        "pattern_id": "pattern_74",
-        "domain": "Machine Learning",
-        "text_hash": "59b22728a0b85817d085cc72b342dae6e768ff39578b9a159327d2d8445e6d8c",
-        "cosine": 0.5416673421859741,
-        "keyword_overlap": 0.124
+        "paper_id": "0BujOfTqab",
+        "title": "AdvWave: Stealthy Adversarial Jailbreak Attack against Large Audio-Language Models",
+        "pattern_id": "",
+        "domain": "Security & Privacy",
+        "text_hash": "723c65ecd423a138339ec28e2652b0fd22f9255706a13360665d0c18b0235625",
+        "cosine": 0.5383145213127136,
+        "keyword_overlap": 0.06388888888888888
       },
       {
-        "paper_id": "t851DsVVtA",
-        "title": "A Mathematical Framework for Characterizing Dependency Structures of Multimodal Learning",
-        "pattern_id": "pattern_113",
-        "domain": "Machine Learning",
-        "text_hash": "4e027a61c403125f8de2a108a6fc52205d7bcf0020c1d8e8e42571afe3d97019",
-        "cosine": 0.5276158452033997,
-        "keyword_overlap": 0.09561752988047809
-      },
-      {
-        "paper_id": "rTDyN8yajn",
-        "title": "Octavius: Mitigating Task Interference in MLLMs via LoRA-MoE",
+        "paper_id": "qIbbBSzH6n",
+        "title": "MMDT: Decoding the Trustworthiness and Safety of Multimodal Foundation Models",
         "pattern_id": "",
         "domain": "Machine Learning",
-        "text_hash": "80b14c084ad1e87644887c71b1c490518cf88c908295e6af1ef55a1f196f00b1",
-        "cosine": 0.527193546295166,
-        "keyword_overlap": 0.09787234042553192
+        "text_hash": "4a5847d7fa158f5d6a1740afbd354e1e45daeae6fd608cb3b6e8bbef209562d9",
+        "cosine": 0.5361155271530151,
+        "keyword_overlap": 0.06997084548104957
+      },
+      {
+        "paper_id": "U42TkrEDzb",
+        "title": "Audio Large Language Models Can Be Descriptive Speech Quality Evaluators",
+        "pattern_id": "pattern_57",
+        "domain": "Natural Language Processing",
+        "text_hash": "4e842c1156e9af5816749889a97557065745d1d95e1f82540386c25045e103cd",
+        "cosine": 0.5350217819213867,
+        "keyword_overlap": 0.059490084985835696
       }
     ],
     "notes": [
       "index_reused"
     ],
-    "report_path": "results/run_20260205_034712_9029_8e2252/novelty_report.json",
+    "report_path": "results/run_20260205_171047_63571_380c52/novelty_report.json",
     "pivot_attempts": 0,
     "action": "pivot"
   },
   "recall_audit": {
     "final_top_k": [
       {
-        "pattern_id": "pattern_113",
-        "name": "Reframing Multimodal Learning Narratives",
-        "final_score": 0.7507725793944418,
-        "path1_score": 0.7507725793944418,
-        "path2_score": 0.0,
-        "path3_score": 0.0,
-        "cluster_size": 46
-      },
-      {
-        "pattern_id": "pattern_112",
-        "name": "Reframing Multimodal Reasoning Challenges",
-        "final_score": 0.5847246418220828,
-        "path1_score": 0.5847246418220828,
-        "path2_score": 0.0,
-        "path3_score": 0.0,
-        "cluster_size": 115
-      },
-      {
         "pattern_id": "pattern_13",
         "name": "Hallucination Mitigation via Multimodal Alignment",
-        "final_score": 0.20435501362405192,
-        "path1_score": 0.20435501362405192,
+        "final_score": 1.2496603864816311,
+        "path1_score": 1.2496603864816311,
         "path2_score": 0.0,
         "path3_score": 0.0,
         "cluster_size": 30
       },
       {
-        "pattern_id": "pattern_67",
-        "name": "Adversarial Robustness Reframing and Dynamics",
-        "final_score": 0.2001812535646745,
-        "path1_score": 0.16249921730898076,
-        "path2_score": 0.0,
-        "path3_score": 0.037682036255693746,
-        "cluster_size": 68
-      },
-      {
-        "pattern_id": "pattern_74",
-        "name": "Democratizing Large Language Model Accessibility",
-        "final_score": 0.19485496844549904,
-        "path1_score": 0.19485496844549904,
+        "pattern_id": "pattern_113",
+        "name": "Reframing Multimodal Learning Narratives",
+        "final_score": 0.40288553722417086,
+        "path1_score": 0.40288553722417086,
         "path2_score": 0.0,
         "path3_score": 0.0,
-        "cluster_size": 156
+        "cluster_size": 46
       },
       {
         "pattern_id": "pattern_8",
         "name": "Reframing Speech Synthesis Efficiency",
-        "final_score": 0.1685633712132631,
-        "path1_score": 0.16710931986208744,
-        "path2_score": 0.00145405135117565,
+        "final_score": 0.20005728039783738,
+        "path1_score": 0.19842118507951365,
+        "path2_score": 0.001636095318323737,
         "path3_score": 0.0,
         "cluster_size": 33
       },
       {
-        "pattern_id": "pattern_44",
-        "name": "Privacy Risks Beyond Memorization",
-        "final_score": 0.15311372007548119,
-        "path1_score": 0.15311372007548119,
-        "path2_score": 0.0,
+        "pattern_id": "pattern_87",
+        "name": "Reliability and Robustness in LLM Evaluation",
+        "final_score": 0.19292937454012896,
+        "path1_score": 0.1913506642588429,
+        "path2_score": 0.0015787102812860631,
         "path3_score": 0.0,
-        "cluster_size": 20
+        "cluster_size": 80
       },
       {
-        "pattern_id": "pattern_33",
-        "name": "Transformer Training Stability Paradigms",
-        "final_score": 0.14752701788782813,
-        "path1_score": 0.14752701788782813,
+        "pattern_id": "pattern_3",
+        "name": "Anomaly Detection Reframed for Interpretability",
+        "final_score": 0.19103297349249046,
+        "path1_score": 0.19103297349249046,
         "path2_score": 0.0,
         "path3_score": 0.0,
-        "cluster_size": 31
+        "cluster_size": 46
+      },
+      {
+        "pattern_id": "pattern_36",
+        "name": "Theoretical Foundations of Contrastive Learning",
+        "final_score": 0.1894487149114134,
+        "path1_score": 0.1894487149114134,
+        "path2_score": 0.0,
+        "path3_score": 0.0,
+        "cluster_size": 28
+      },
+      {
+        "pattern_id": "pattern_95",
+        "name": "Reframing Knowledge Integration Narratives",
+        "final_score": 0.18640858487040088,
+        "path1_score": 0.18640858487040088,
+        "path2_score": 0.0,
+        "path3_score": 0.0,
+        "cluster_size": 27
+      },
+      {
+        "pattern_id": "pattern_112",
+        "name": "Reframing Multimodal Reasoning Challenges",
+        "final_score": 0.1838961804781375,
+        "path1_score": 0.1838961804781375,
+        "path2_score": 0.0,
+        "path3_score": 0.0,
+        "cluster_size": 115
+      },
+      {
+        "pattern_id": "pattern_115",
+        "name": "Semantic Alignment for Compositional Generation",
+        "final_score": 0.18338994138751175,
+        "path1_score": 0.18338994138751175,
+        "path2_score": 0.0,
+        "path3_score": 0.0,
+        "cluster_size": 107
       },
       {
         "pattern_id": "pattern_9",
         "name": "Provable Fairness Guarantees in Learning",
-        "final_score": 0.008624884402748717,
+        "final_score": 0.010351024846209735,
         "path1_score": 0.0,
-        "path2_score": 0.008624884402748717,
+        "path2_score": 0.010351024846209735,
         "path3_score": 0.0,
         "cluster_size": 74
-      },
-      {
-        "pattern_id": "pattern_7",
-        "name": "Reframing Audio Understanding Through Multimodal and Probabilistic Learning",
-        "final_score": 0.004847630892639414,
-        "path1_score": 0.0,
-        "path2_score": 0.004847630892639414,
-        "path3_score": 0.0,
-        "cluster_size": 41
       }
     ],
     "path1": {
       "top_ideas": [
         {
           "idea_id": "idea_5003",
-          "similarity": 0.5123558390235424,
+          "similarity": 0.5605926971850544,
           "snippet": "Introduce a comprehensive framework to evaluate and enhance the adversarial robustness of multimodal language model agents in real environments.",
           "pattern_count": 0
         },
         {
+          "idea_id": "idea_7795",
+          "similarity": 0.5472070038784349,
+          "snippet": "Introduce a novel metric and training method to reduce hallucinations in multimodal models by focusing on visual inputs.",
+          "pattern_count": 1
+        },
+        {
           "idea_id": "idea_7635",
-          "similarity": 0.5108875340601298,
+          "similarity": 0.5334602770825059,
           "snippet": "Introduce a causal inference framework to address modality prior-induced biases in multimodal large language models by focusing on attention mechanism causality.",
           "pattern_count": 1
         },
         {
-          "idea_id": "idea_8256",
-          "similarity": 0.5106149795175761,
-          "snippet": "Introduce a spatial-aware model to generate controllable and immersive stereo audio from text, leveraging a large-scale multimodal dataset.",
+          "idea_id": "idea_7610",
+          "similarity": 0.5320243272072726,
+          "snippet": "Alleviate hallucinations in multimodal large language models by dynamically intervening in the eigenspectrum variance of attention weights without complex decoding strategies.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_6286",
+          "similarity": 0.5296137263914933,
+          "snippet": "Introduce a hierarchical preference optimization framework to improve multimodal LLMs by aligning text and image representations and reducing hallucinations.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_8001",
+          "similarity": 0.5175091242985717,
+          "snippet": "Introduce a dynamic correction decoding method to mitigate hallucinations in multimodal large language models by leveraging visual recognition capabilities in preceding layers.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_1793",
+          "similarity": 0.5043177888495204,
+          "snippet": "Introduce a method to automatically learn and apply data augmentation across multiple modalities in feature space, enhancing multimodal learning capabilities.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_8107",
+          "similarity": 0.5028960542109068,
+          "snippet": "Introduce a mixture-of-depth adaptation strategy to reduce computational costs in multimodal large language models while maintaining performance.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_7924",
+          "similarity": 0.5027894650492676,
+          "snippet": "Introduce Multimodal Representation Tuning (MRT) to enhance performance and control in Large Multimodal Models with minimal parameter tuning.",
           "pattern_count": 0
         },
         {
-          "idea_id": "idea_4407",
-          "similarity": 0.5050887514534775,
-          "snippet": "Introduce a framework that leverages the synergy between multimodal comprehension and creation to enhance the capabilities of Multimodal Large Language Models.",
+          "idea_id": "idea_4295",
+          "similarity": 0.4960529626987841,
+          "snippet": "Adapt large language models to handle spoken inputs and outputs by integrating a pre-trained speech encoder and training on spectrograms.",
           "pattern_count": 1
         },
         {
-          "idea_id": "idea_4372",
-          "similarity": 0.4999906319283259,
-          "snippet": "Introduce a unified tokenizer that enables large language models to process text and images interchangeably, enhancing multimodal comprehension and generation.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_1280",
-          "similarity": 0.4911014189623583,
-          "snippet": "Identify and quantify modality complementariness as a key factor affecting the robustness of multi-modal models.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_6838",
-          "similarity": 0.4871374211137476,
-          "snippet": "Introduce a dynamic expert routing method to optimize path selection in multimodal large language models without altering their structure.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_7805",
-          "similarity": 0.4672634100871593,
-          "snippet": "Introduce a multimodal learning strategy that captures redundant, unique, and synergistic information by maximizing mutual information between augmented multimodal features.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_1372",
-          "similarity": 0.46121377291682397,
-          "snippet": "Introduce a mathematical framework to analytically characterize conditional dependency structures in multimodal learning, considering sample size and task complexity.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_7100",
-          "similarity": 0.45735284651976255,
-          "snippet": "Introduce a dynamic context sparsification framework to enhance the efficiency of multimodal large language models without degrading performance.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_8000",
-          "similarity": 0.45673222117340356,
-          "snippet": "Investigate the underlying causes of modality gap and object bias in contrastive vision-language models, revealing information imbalance as a key factor.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_5748",
-          "similarity": 0.4177732996552186,
-          "snippet": "Introduce a self-supervised learning framework to create syllabic embeddings from raw audio, enhancing speech representation efficiency and robustness.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_587",
-          "similarity": 0.40624804327245184,
-          "snippet": "Enhance model robustness by integrating a principled abstain mechanism that ensures robustness only when accuracy is maintained, allowing compositional architectures to improve both metrics.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_7996",
-          "similarity": 0.4039676498325584,
-          "snippet": "Introduce a novel ensembling approach that focuses on the union of top-k tokens to enhance compatibility and efficiency in large language model ensembles.",
+          "idea_id": "idea_2962",
+          "similarity": 0.48568229275969493,
+          "snippet": "Enhance zero-shot adversarial robustness in large-scale vision-language models by aligning text embeddings with adversarial visual features using contrastive learning.",
           "pattern_count": 0
         },
         {
-          "idea_id": "idea_6998",
-          "similarity": 0.3995427965645857,
-          "snippet": "Introduce a multi-token assisted decoding framework that accelerates and enhances the effectiveness of large language model inference by approximating joint distributions with a smaller auxiliary model.",
-          "pattern_count": 0
-        },
-        {
-          "idea_id": "idea_6062",
-          "similarity": 0.3870791165399766,
-          "snippet": "Introduce a dual process strategy to balance in-context and in-weights learning in language models, enhancing their adaptability and generalization.",
-          "pattern_count": 0
-        },
-        {
-          "idea_id": "idea_5241",
-          "similarity": 0.38278430018870296,
-          "snippet": "Investigate and quantify the extent of non-adversarial memorization in language models, highlighting differences between model and human text reproduction.",
+          "idea_id": "idea_4334",
+          "similarity": 0.4783766606471072,
+          "snippet": "Introduce a method to detect and mitigate gender bias in language models by adapting model components through causal analysis and targeted interventions.",
           "pattern_count": 1
         },
         {
-          "idea_id": "idea_7662",
-          "similarity": 0.3763959598055235,
-          "snippet": "Introduce a causal framework and data augmentation technique to train reward models that distinguish between contextual signals and irrelevant artifacts.",
-          "pattern_count": 0
-        },
-        {
-          "idea_id": "idea_195",
-          "similarity": 0.37240848499587914,
-          "snippet": "Introduce a mechanism that modulates perception in neural networks based on high-level categorical expectations to enhance accuracy and contextual consistency.",
-          "pattern_count": 0
-        },
-        {
-          "idea_id": "idea_7051",
-          "similarity": 0.3688175447195703,
-          "snippet": "Introduce a dynamic gating mechanism for Transformers that auto-tunes the number of active experts, optimizing efficiency and performance.",
+          "idea_id": "idea_7660",
+          "similarity": 0.4775824337312261,
+          "snippet": "Introduce a comprehensive benchmark to evaluate and enhance the performance of Multimodal Large Language Models in industrial anomaly detection.",
           "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_3844",
+          "similarity": 0.4736217872785335,
+          "snippet": "Identify and analyze the mechanisms behind the robustness of multimodal contrastive learning models to distribution shifts.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_3655",
+          "similarity": 0.46602146217600215,
+          "snippet": "Develop a prompting-based framework to detect and mitigate self-contradictions in large language models without relying on external knowledge retrieval.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_5100",
+          "similarity": 0.4643365073457992,
+          "snippet": "Introduce a task-agnostic test-time intervention to stabilize vision features and reduce hallucinations in large vision-language models.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_7645",
+          "similarity": 0.4597404511953437,
+          "snippet": "Introduce a comprehensive benchmark to evaluate and inspire advancements in multimodal in-context learning using vision large language models.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_4067",
+          "similarity": 0.45847485346877936,
+          "snippet": "Introduce a confidence-aware approach to mitigate reward overoptimization in fine-tuning text-to-image models by calibrating rewards based on model confidence.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_2458",
+          "similarity": 0.4561568808528478,
+          "snippet": "Enhance vision-language model classification by using descriptive features from large language models to improve interpretability and adaptability.",
+          "pattern_count": 0
+        },
+        {
+          "idea_id": "idea_4753",
+          "similarity": 0.4483169870572852,
+          "snippet": "Mitigate sycophancy in LLMs by using structured causal models to eliminate spurious correlations between user preferences and model outputs.",
+          "pattern_count": 0
         }
       ],
       "pattern_scores_topn": [
         {
-          "pattern_id": "pattern_113",
-          "score": 0.7507725793944418
-        },
-        {
-          "pattern_id": "pattern_112",
-          "score": 0.5847246418220828
-        },
-        {
           "pattern_id": "pattern_13",
-          "score": 0.20435501362405192
+          "score": 1.2496603864816311
         },
         {
-          "pattern_id": "pattern_74",
-          "score": 0.19485496844549904
+          "pattern_id": "pattern_113",
+          "score": 0.40288553722417086
         },
         {
           "pattern_id": "pattern_8",
-          "score": 0.16710931986208744
+          "score": 0.19842118507951365
         },
         {
-          "pattern_id": "pattern_67",
-          "score": 0.16249921730898076
+          "pattern_id": "pattern_87",
+          "score": 0.1913506642588429
         },
         {
-          "pattern_id": "pattern_44",
-          "score": 0.15311372007548119
+          "pattern_id": "pattern_3",
+          "score": 0.19103297349249046
         },
         {
-          "pattern_id": "pattern_33",
-          "score": 0.14752701788782813
+          "pattern_id": "pattern_36",
+          "score": 0.1894487149114134
+        },
+        {
+          "pattern_id": "pattern_95",
+          "score": 0.18640858487040088
+        },
+        {
+          "pattern_id": "pattern_112",
+          "score": 0.1838961804781375
+        },
+        {
+          "pattern_id": "pattern_115",
+          "score": 0.18338994138751175
         }
       ]
     },
@@ -927,31 +941,31 @@
         {
           "domain_id": "domain_45",
           "name": "Audio Processing",
-          "weight": 0.40762303915028547,
+          "weight": 0.4319910120890564,
           "paper_count": 5
         },
         {
           "domain_id": "domain_82",
           "name": "Speech Recognition",
-          "weight": 0.381580951043874,
+          "weight": 0.4160939987057527,
           "paper_count": 2
         },
         {
           "domain_id": "domain_48",
           "name": "Speech Processing",
-          "weight": 0.3696375188833147,
+          "weight": 0.40586223777177716,
           "paper_count": 7
         },
         {
           "domain_id": "domain_0",
           "name": "Fairness & Accountability",
-          "weight": 0.3273453441658455,
+          "weight": 0.37478120385497865,
           "paper_count": 69
         },
         {
           "domain_id": "domain_57",
           "name": "Signal Processing",
-          "weight": 0.3106446556131894,
+          "weight": 0.3564674394294825,
           "paper_count": 1
         }
       ],
@@ -961,11 +975,11 @@
           "subdomains": [
             {
               "name": "Diffusion Models",
-              "score": 0.2792288515040844
+              "score": 0.3367072078205674
             },
             {
               "name": "Contrastive Learning",
-              "score": 0.26752351478797537
+              "score": 0.3092967974749333
             }
           ]
         },
@@ -974,11 +988,11 @@
           "subdomains": [
             {
               "name": "Speech Synthesis",
-              "score": 0.2967803415633518
+              "score": 0.3325221542411238
             },
             {
               "name": "Contrastive Learning",
-              "score": 0.26649370295457425
+              "score": 0.30897930845617566
             }
           ]
         },
@@ -986,16 +1000,16 @@
           "domain_id": "domain_48",
           "subdomains": [
             {
-              "name": "Speech Synthesis",
-              "score": 0.2975207144079297
+              "name": "Diffusion Models",
+              "score": 0.3367072080246041
             },
             {
-              "name": "Diffusion Models",
-              "score": 0.27932973189284405
+              "name": "Speech Synthesis",
+              "score": 0.3325221542411238
             },
             {
               "name": "Contrastive Learning",
-              "score": 0.2667562165155647
+              "score": 0.30897930845617566
             }
           ]
         },
@@ -1004,23 +1018,23 @@
           "subdomains": [
             {
               "name": "Out-of-Distribution Detection",
-              "score": 0.3282614638501798
+              "score": 0.4041172689981398
             },
             {
               "name": "Bias Mitigation",
-              "score": 0.3173983617709599
+              "score": 0.3809423658043236
             },
             {
               "name": "Robustness",
-              "score": 0.2774564325007078
+              "score": 0.3369694954627725
+            },
+            {
+              "name": "Explainability",
+              "score": 0.32428784999901983
             },
             {
               "name": "Contrastive Learning",
-              "score": 0.26649370295457425
-            },
-            {
-              "name": "Federated Learning",
-              "score": 0.24273643169271106
+              "score": 0.30977256956984905
             }
           ]
         },
@@ -1029,11 +1043,11 @@
           "subdomains": [
             {
               "name": "Diffusion Models",
-              "score": 0.2793297323174929
+              "score": 0.3367072078205674
             },
             {
               "name": "Contrastive Learning",
-              "score": 0.26649370295457425
+              "score": 0.30897930845617566
             }
           ]
         }
@@ -1057,7 +1071,7 @@
         {
           "domain_id": "domain_0",
           "candidates_before": 5,
-          "candidates_after": 5
+          "candidates_after": 4
         },
         {
           "domain_id": "domain_57",
@@ -1068,23 +1082,23 @@
       "pattern_scores_topn": [
         {
           "pattern_id": "pattern_9",
-          "score": 0.008624884402748717
+          "score": 0.010351024846209735
         },
         {
           "pattern_id": "pattern_7",
-          "score": 0.004847630892639414
+          "score": 0.005498869487403957
         },
         {
           "pattern_id": "pattern_8",
-          "score": 0.00145405135117565
+          "score": 0.001636095318323737
         },
         {
           "pattern_id": "pattern_87",
-          "score": 0.0013044006180788006
+          "score": 0.0015787102812860631
         },
         {
           "pattern_id": "pattern_45",
-          "score": 0.0012545082466614522
+          "score": 0.001503213111080764
         }
       ],
       "subdomain_taxonomy_used": true,
@@ -1093,33 +1107,13 @@
       "stoplist_count": 12
     },
     "path3": {
-      "top_papers": [
-        {
-          "paper_id": "pfuqQQCB34",
-          "similarity": 0.25924583262763595,
-          "title": "Variance Reduction is an Antidote to Byzantines: Better Rates, Weaker Assumptions and Communication Compression as a Cherry on the Top",
-          "quality": 0.6858333333333334,
-          "review_count": 6
-        },
-        {
-          "paper_id": "dlQIh4mUtQ8",
-          "similarity": 0.28394184823264607,
-          "title": "On the Relationship Between Adversarial Robustness and Decision Region in Deep Neural Networks",
-          "quality": 0.576,
-          "review_count": 5
-        }
-      ],
-      "pattern_scores_topn": [
-        {
-          "pattern_id": "pattern_67",
-          "score": 0.037682036255693746
-        }
-      ]
+      "top_papers": [],
+      "pattern_scores_topn": []
     }
   },
   "review_summary": {
     "total_reviews": 1,
-    "final_score": 6.803333333333232
+    "final_score": 7.113333333333226
   },
   "refinement_summary": {
     "total_refinements": 0,
@@ -1127,279 +1121,345 @@
   },
   "verification_summary": {
     "collision_detected": false,
-    "max_similarity": 0.5874177813529968
+    "max_similarity": 0.58412104845047
   },
   "idea_packaging": {
     "raw_idea": "我们研究音频-文本大模型的文本主导偏见：在 faithful/adversarial/irrelevant 三类设定下，提出基于模态可信度的路由/融合框架。通过构造“文本干扰”表示能量与时序证据，训练轻量门控/适配器，在推理时选择 Joint 或 Audio 专家，实现对抗文本误导下的稳健情绪识别",
     "brief_a": {
-      "motivation": "Existing Audio-Text Large Models suffer from 'text-dominant bias,' where the model over-relies on textual input, leading to performance degradation in emotion recognition when text is adversarial or irrelevant. Addressing this bias is critical for achieving robust multimodal understanding in real-world scenarios where modalities may conflict.",
-      "problem_definition": "Task: Robust Multimodal Emotion Recognition. Input: Audio and Text pairs. Output: Emotion labels. Settings: Three distinct scenarios are considered: Faithful (consistent modalities), Adversarial (text misleads), and Irrelevant (text unrelated to audio).",
+      "motivation": "Current audio-text multimodal large models exhibit text-dominant bias, where the model over-relies on textual information and neglects acoustic cues. This leads to degraded performance when text is misleading, adversarial, or irrelevant to the actual audio content—a critical vulnerability for robust real-world emotion recognition systems.",
+      "problem_definition": "Task: Multimodal emotion recognition from audio-text inputs. Settings: (1) Faithful—text accurately describes audio; (2) Adversarial—text intentionally contradicts or misleads about audio emotion; (3) Irrelevant—text is unrelated to audio content. Input: Audio signal + associated text. Output: Emotion classification robust to text interference across all three settings.",
       "constraints": [
-        "robustness (against text bias)",
-        "efficiency (lightweight modules/gates)",
-        "modality imbalance"
+        "robustness to adversarial/irrelevant text",
+        "lightweight adaptation (small adapter/gating modules)",
+        "inference-time efficiency",
+        "minimal additional training overhead"
       ],
-      "technical_plan": "1. Construct a 'Text Interference' representation utilizing energy and temporal evidence to quantify modality reliability. 2. Train a lightweight gating mechanism or adapter to assess this reliability. 3. Implement a dynamic routing strategy during inference to select between a Joint Multimodal Expert (for faithful cases) and an Audio-only Expert (for adversarial/irrelevant cases) to ensure robust predictions.",
+      "technical_plan": "Core framework: Modality-credibility-based routing/fusion. (1) Construct 'text interference' representations using energy-based features and temporal evidence from audio-text alignment. (2) Train lightweight gating networks and/or adapters to estimate modality credibility scores. (3) At inference, route to either Joint (audio+text) expert or Audio-only expert based on credibility estimation. Training objective: Learn to detect text reliability and optimize routing decisions via contrastive or adversarial training on constructed faithful/adversarial/irrelevant samples.",
       "expected_contributions": [
-        "Identification and mitigation of text-dominant bias in audio-text LLMs",
-        "A novel modality reliability-based routing framework utilizing energy and temporal evidence",
-        "Improved robustness in emotion recognition under adversarial and irrelevant text settings"
+        "First systematic study of text-dominant bias in audio-text LLMs under faithful/adversarial/irrelevant settings",
+        "Novel modality-credibility routing framework with energy and temporal evidence for text interference detection",
+        "Lightweight gating/adapter mechanism enabling robust emotion recognition without full model retraining"
       ],
-      "evaluation_plan": "Datasets: Standard multimodal emotion datasets (e.g., IEMOCAP, MELD) with constructed adversarial/irrelevant splits. Metrics: Accuracy, Weighted F1-score. Baselines: Standard Audio-Text LLMs, static fusion methods. Ablations: Impact of the gate, routing strategy, and interference representation. Robustness Settings: Performance comparison specifically on Adversarial and Irrelevant subsets.",
+      "evaluation_plan": "Datasets: IEMOCAP, MELD, CMU-MOSEI (with constructed adversarial/irrelevant text variants). Metrics: Accuracy, F1, robustness drop (performance gap between faithful and adversarial/irrelevant settings). Baselines: Standard audio-text fusion models, prompt-based LLMs, existing debiasing methods. Ablations: gating vs. adapter, energy vs. temporal features, routing threshold sensitivity. Robustness settings: varying adversarial text intensity and irrelevance degree.",
       "keywords_en": [
-        "Audio-Text Large Models",
-        "Text-Dominant Bias",
-        "Multimodal Emotion Recognition",
-        "Modality Routing",
-        "Robustness"
+        "multimodal emotion recognition",
+        "text-dominant bias",
+        "modality routing",
+        "adversarial robustness",
+        "audio-text fusion",
+        "lightweight adaptation",
+        "credibility estimation"
       ],
       "keywords_zh": [
-        "音频-文本大模型",
-        "文本主导偏见",
         "多模态情绪识别",
+        "文本主导偏见",
         "模态路由",
-        "鲁棒性"
+        "对抗鲁棒性",
+        "音频-文本融合",
+        "轻量级适配",
+        "可信度估计"
       ],
       "assumptions": {
         "explicit": [
-          "The model operates in faithful, adversarial, and irrelevant settings",
-          "The solution involves a routing/fusion framework based on modality reliability",
-          "Text interference is represented by energy and temporal evidence",
-          "Lightweight gates/adapters are used for training",
-          "Inference involves selecting between Joint or Audio experts"
+          "Three experimental settings: faithful, adversarial, irrelevant text",
+          "Use energy and temporal evidence for text interference representation",
+          "Lightweight gating/adapter approach",
+          "Routing between Joint and Audio-only experts at inference"
         ],
         "inferred": [
-          "Audio features contain sufficient information for emotion recognition when text is unreliable (inferred)",
-          "'Energy' refers to acoustic energy features (inferred)"
+          "Pre-trained audio-text LLM serves as backbone (inferred)",
+          "Adversarial/irrelevant text samples need to be constructed or synthesized (inferred)",
+          "Emotion recognition is the primary downstream task (inferred)",
+          "Training data includes labeled emotion samples with text manipulation (inferred)"
         ]
       }
     },
-    "query_a": "Keywords: Audio-Text Large Models, Text-Dominant Bias, Multimodal Emotion Recognition, Modality Routing, Robustness Task: Robust Multimodal Emotion Recognition. Input: Audio and Text pairs. Output: Emotion labels. Settings: Three distinct scenarios are considered: Faithful (consistent modalities), Adversarial (text misleads), and Irrelevant (text unrelated to audio). Constraints: robustness (against text bias), efficiency (lightweight modules/gates), modality imbalance 1. Construct a 'Text Interference' representation utilizing energy and temporal evidence to quantify modality reliability. 2. Train a lightweight gating mechanism or adapter to assess this reliability. 3. Implement a dynamic routing strategy during inference to select between a Joint Multimodal Expert (for faithful cases) and an Audio-only Expert (for adversarial/irrelevant cases) to ensure robust predictions. 关键词: 音频-文本大模型，文本主导偏见，多模态情绪识别，模态路由，鲁棒性",
+    "query_a": "Keywords: multimodal emotion recognition, text-dominant bias, modality routing, adversarial robustness, audio-text fusion, lightweight adaptation, credibility estimation Task: Multimodal emotion recognition from audio-text inputs. Settings: (1) Faithful—text accurately describes audio; (2) Adversarial—text intentionally contradicts or misleads about audio emotion; (3) Irrelevant—text is unrelated to audio content. Input: Audio signal + associated text. Output: Emotion classification robust to text interference across all three settings. Constraints: robustness to adversarial/irrelevant text, lightweight adaptation (small adapter/gating modules), inference-time efficiency, minimal additional training overhead Core framework: Modality-credibility-based routing/fusion. (1) Construct 'text interference' representations using energy-based features and temporal evidence from audio-text alignment. (2) Train lightweight gating networks and/or adapters to estimate modality credibility scores. (3) At inference, route to either Joint (audio+text) expert or Audio-only expert based on credibility estimation. Training objective: Learn to detect text reliability and optimize routing decisions via contrastive or adversarial training on constructed faithful/adversarial/irrelevant samples. 关键词: 多模态情绪识别，文本主导偏见，模态路由，对抗鲁棒性，音频-文本融合，轻量级适配，可信度估计",
     "candidates": [
       {
-        "pattern_id": "pattern_113",
-        "pattern_name": "Reframing Multimodal Learning Narratives",
-        "score": 0.7703478034714625,
+        "pattern_id": "pattern_13",
+        "pattern_name": "Hallucination Mitigation via Multimodal Alignment",
+        "score": 0.367412467344247,
         "brief": {
-          "motivation": "Existing Audio-Text Large Models (AT-LLMs) suffer from a 'text-dominant bias,' where the model over-relies on textual input, leading to performance degradation in emotion recognition when text is adversarial or irrelevant. This issue highlights a fundamental challenge in multimodal learning: managing cross-modality discrepancies and dependency structures where one modality overwhelms the other. Addressing this bias is critical for achieving robust multimodal understanding, reframing the problem from simple fusion to dynamic handling of arbitrary modality conditions (e.g., misleading text) by leveraging reliable uni-modal evidence.",
-          "problem_definition": "Task: Robust Multimodal Emotion Recognition. Input: Audio and Text pairs. Output: Emotion labels. Settings: Three distinct scenarios are considered: Faithful (consistent modalities), Adversarial (text misleads), and Irrelevant (text unrelated to audio). The core problem is to mitigate the text-dominant bias that arises from imbalanced conditional dependency structures, ensuring the model remains robust when modalities conflict or when text provides misleading evidence.",
+          "motivation": "Current audio-text multimodal large models exhibit text-dominant bias, where the model over-relies on textual information and neglects acoustic cues—analogous to the hallucination problem in vision-language models where misalignment between modalities leads to unreliable outputs. This text-over-reliance leads to degraded performance when text is misleading, adversarial, or irrelevant to the actual audio content. Drawing from recent advances in hallucination mitigation via multimodal alignment and latent space steering in VLMs, addressing this modality imbalance is critical for building robust real-world emotion recognition systems that can reliably ground predictions in acoustic evidence even under textual interference.",
+          "problem_definition": "Task: Multimodal emotion recognition from audio-text inputs under modality reliability uncertainty. Settings: (1) Faithful—text accurately describes audio emotion; (2) Adversarial—text intentionally contradicts or misleads about audio emotion; (3) Irrelevant—text is semantically unrelated to audio content. Input: Audio signal + associated text transcript/description. Output: Emotion classification robust to text interference across all three settings. Core Challenge: Detect and mitigate text-dominant bias by dynamically assessing modality credibility and routing/fusing representations accordingly, inspired by latent space intervention and modality alignment techniques from hallucination mitigation research.",
           "constraints": [
-            "robustness (against text bias)",
-            "efficiency (lightweight modules/gates)",
-            "modality imbalance"
+            "Robustness to adversarial and irrelevant text inputs",
+            "Lightweight adaptation via small gating/adapter modules (no full model retraining)",
+            "Inference-time efficiency with minimal computational overhead",
+            "Task-agnostic or minimally task-specific intervention design",
+            "Preservation of performance on faithful text settings"
           ],
-          "technical_plan": "1. Construct a 'Text Interference' representation utilizing energy and temporal evidence to quantify modality reliability and characterize cross-modality discrepancies. 2. Train a lightweight gating mechanism or adapter to assess this reliability, effectively learning the dependency structure between audio and text. 3. Implement a dynamic routing strategy during inference to select between a Joint Multimodal Expert (for faithful cases) and an Audio-only Expert (for adversarial/irrelevant cases), thereby reframing the fusion process as a conditional decision based on modality trustworthiness.",
+          "technical_plan": "Core framework: Modality-credibility-based routing/fusion inspired by latent space steering and multimodal alignment approaches. (1) Construct 'text interference' representations using energy-based features (measuring representation magnitude/confidence) and temporal evidence (audio-text alignment consistency over time). (2) Train lightweight gating networks and/or adapters to estimate modality credibility scores, analogous to visual/textual intervention modules in VLM hallucination mitigation. (3) At inference, implement a routing mechanism to select between Joint (audio+text) expert or Audio-only expert based on credibility estimation—similar to self-introspective decoding strategies. (4) Training objective: Learn to detect text reliability via contrastive learning on constructed faithful/adversarial/irrelevant triplets, potentially incorporating preference optimization to distinguish reliable from misleading text. (5) Optional: Apply momentum-inspired consistency mechanisms across layers to stabilize audio feature representations under text interference.",
           "expected_contributions": [
-            "Identification and mitigation of text-dominant bias in audio-text LLMs by characterizing modality dependency structures",
-            "A novel modality reliability-based routing framework utilizing energy and temporal evidence to handle arbitrary modality conditions",
-            "Improved robustness in emotion recognition under adversarial and irrelevant text settings, demonstrating the value of strong uni-modal feature learning when cross-modal alignment fails"
+            "First systematic study of text-dominant bias in audio-text LLMs under faithful/adversarial/irrelevant experimental settings",
+            "Novel modality-credibility routing framework leveraging energy-based and temporal evidence for text interference detection, bridging hallucination mitigation techniques to audio-text domain",
+            "Lightweight gating/adapter mechanism enabling robust emotion recognition without full model retraining, inspired by task-agnostic intervention approaches in VLMs",
+            "Comprehensive benchmark with constructed adversarial/irrelevant text variants for evaluating audio-text model robustness"
           ],
-          "evaluation_plan": "Datasets: Standard multimodal emotion datasets (e.g., IEMOCAP, MELD) with constructed adversarial/irrelevant splits to simulate arbitrary modality conditions. Metrics: Accuracy, Weighted F1-score. Baselines: Standard Audio-Text LLMs, static fusion methods, and uni-modal experts. Ablations: Impact of the gate, routing strategy, and interference representation. Robustness Settings: Performance comparison specifically on Adversarial and Irrelevant subsets to validate the reduction of cross-modality discrepancies.",
+          "evaluation_plan": "Datasets: IEMOCAP, MELD, CMU-MOSEI with constructed adversarial (emotion-contradicting) and irrelevant (random/unrelated) text variants. Metrics: Accuracy, weighted/unweighted F1, robustness drop (performance gap between faithful and adversarial/irrelevant settings), modality reliance ratio. Baselines: Standard audio-text fusion models (early/late fusion), prompt-based audio-text LLMs, existing debiasing/rebalancing methods, hallucination mitigation techniques adapted to audio-text. Ablations: (1) gating vs. adapter mechanisms, (2) energy vs. temporal features vs. combined, (3) routing threshold sensitivity, (4) expert selection strategies. Robustness analysis: varying adversarial text intensity (subtle to strong contradiction), irrelevance degree (partial to complete), and cross-dataset generalization.",
           "keywords_en": [
-            "Audio-Text Large Models",
-            "Text-Dominant Bias",
-            "Multimodal Emotion Recognition",
-            "Modality Routing",
-            "Robustness",
-            "Cross-Modality Discrepancy",
-            "Arbitrary Modality Conditions"
+            "multimodal emotion recognition",
+            "text-dominant bias",
+            "modality routing",
+            "adversarial robustness",
+            "audio-text fusion",
+            "lightweight adaptation",
+            "credibility estimation",
+            "hallucination mitigation",
+            "multimodal alignment",
+            "latent space steering",
+            "gating mechanism",
+            "audio-text large language models"
           ],
           "keywords_zh": [
-            "音频-文本大模型",
-            "文本主导偏见",
             "多模态情绪识别",
+            "文本主导偏见",
             "模态路由",
-            "鲁棒性",
-            "跨模态差异",
-            "任意模态条件"
+            "对抗鲁棒性",
+            "音频-文本融合",
+            "轻量级适配",
+            "可信度估计",
+            "幻觉缓解",
+            "多模态对齐",
+            "潜空间引导",
+            "门控机制",
+            "音频-文本大语言模型"
           ],
           "assumptions": {
             "explicit": [
-              "The model operates in faithful, adversarial, and irrelevant settings",
-              "The solution involves a routing/fusion framework based on modality reliability",
-              "Text interference is represented by energy and temporal evidence",
-              "Lightweight gates/adapters are used for training",
-              "Inference involves selecting between Joint or Audio experts"
+              "Three experimental settings are defined: faithful, adversarial, and irrelevant text",
+              "Energy-based features and temporal evidence are used for text interference representation",
+              "Lightweight gating/adapter approach is employed without full model retraining",
+              "Routing mechanism selects between Joint and Audio-only experts at inference time",
+              "Emotion recognition is the primary downstream evaluation task"
             ],
             "inferred": [
-              "Audio features contain sufficient information for emotion recognition when text is unreliable",
-              "'Energy' refers to acoustic energy features",
-              "The 'Text Interference' representation can effectively distinguish between faithful and adversarial contexts"
+              "A pre-trained audio-text LLM or multimodal model serves as the backbone architecture",
+              "Adversarial and irrelevant text samples need to be constructed or synthesized from existing datasets",
+              "Training data includes labeled emotion samples with systematic text manipulation across three settings",
+              "The text interference detection module can generalize across different types of textual noise",
+              "Techniques from vision-language hallucination mitigation (latent steering, preference optimization) are transferable to audio-text domain",
+              "Audio modality provides more reliable ground-truth emotional cues than potentially corrupted text"
             ]
           }
         },
-        "query": "Keywords: Audio-Text Large Models, Text-Dominant Bias, Multimodal Emotion Recognition, Modality Routing, Robustness, Cross-Modality Discrepancy, Arbitrary Modality Conditions Task: Robust Multimodal Emotion Recognition. Input: Audio and Text pairs. Output: Emotion labels. Settings: Three distinct scenarios are considered: Faithful (consistent modalities), Adversarial (text misleads), and Irrelevant (text unrelated to audio). The core problem is to mitigate the text-dominant bias that arises from imbalanced conditional dependency structures, ensuring the model remains robust when modalities conflict or when text provides misleading evidence. Constraints: robustness (against text bias), efficiency (lightweight modules/gates), modality imbalance 1. Construct a 'Text Interference' representation utilizing energy and temporal evidence to quantify modality reliability and characterize cross-modality discrepancies. 2. Train a lightweight gating mechanism or adapter to assess this reliability, effectively learning the dependency structure between audio and text. 3. Implement a dynamic routing strategy during inference to select between a Joint Multimodal Expert (for faithful cases) and an Audio-only Expert (for adversarial/irrelevant cases), thereby reframing the fusion process as a conditional decision based on modality trustworthiness. 关键词: 音频-文本大模型，文本主导偏见，多模态情绪识别，模态路由，鲁棒性，跨模态差异，任意模态条件"
+        "query": "Keywords: multimodal emotion recognition, text-dominant bias, modality routing, adversarial robustness, audio-text fusion, lightweight adaptation, credibility estimation, hallucination mitigation, multimodal alignment, latent space steering, gating mechanism, audio-text large language models Task: Multimodal emotion recognition from audio-text inputs under modality reliability uncertainty. Settings: (1) Faithful—text accurately describes audio emotion; (2) Adversarial—text intentionally contradicts or misleads about audio emotion; (3) Irrelevant—text is semantically unrelated to audio content. Input: Audio signal + associated text transcript/description. Output: Emotion classification robust to text interference across all three settings. Core Challenge: Detect and mitigate text-dominant bias by dynamically assessing modality credibility and routing/fusing representations accordingly, inspired by latent space intervention and modality alignment techniques from hallucination mitigation research. Constraints: Robustness to adversarial and irrelevant text inputs, Lightweight adaptation via small gating/adapter modules (no full model retraining), Inference-time efficiency with minimal computational overhead, Task-agnostic or minimally task-specific intervention design, Preservation of performance on faithful text settings Core framework: Modality-credibility-based routing/fusion inspired by latent space steering and multimodal alignment approaches. (1) Construct 'text interference' representations using energy-based features (measuring representation magnitude/confidence) and temporal evidence (audio-text alignment consistency over time). (2) Train lightweight gating networks and/or adapters to estimate modality credibility scores, analogous to visual/textual intervention modules in VLM hallucination mitigation. (3) At inference, implement a routing mechanism to select between Joint (audio+text) expert or Audio-only expert based on credibility estimation—similar to self-introspective decoding strategies. (4) Training objective: Learn to detect text reliability via contrastive learning on constructed faithful/adversarial/irrelevant triplets, potentially incorporating preference optimization to distinguish reliable from misleading text. (5) Optional: Apply momentum-inspired consistency mechanisms across layers to stabilize audio feature representations under text interference. 关键词: 多模态情绪识别，文本主导偏见，模态路由，对抗鲁棒性，音频-文本融合，轻量级适配，可信度估计，幻觉缓解，多模态对齐，潜空间引导，门控机制，音频-文本大语言模型"
       },
       {
-        "pattern_id": "pattern_112",
-        "pattern_name": "Reframing Multimodal Reasoning Challenges",
-        "score": 0.7498867432339372,
+        "pattern_id": "pattern_36",
+        "pattern_name": "Theoretical Foundations of Contrastive Learning",
+        "score": 0.3339391095560489,
         "brief": {
-          "motivation": "Existing Audio-Text Large Models suffer from 'text-dominant bias,' where the model over-relies on textual input, leading to performance degradation in emotion recognition when text is adversarial or irrelevant. Addressing this requires reframing multimodal reasoning from static fusion to a dynamic, modular composition approach. By treating modality selection as a routing problem based on reliability evidence, we can enhance robustness and generalization in real-world scenarios where modalities conflict, aligning with the need for efficient and adaptable multimodal systems that avoid resource-intensive retraining.",
-          "problem_definition": "Task: Robust Multimodal Emotion Recognition. Input: Audio and Text pairs. Output: Emotion labels. Settings: Three distinct scenarios are considered: Faithful (consistent modalities), Adversarial (text misleads), and Irrelevant (text unrelated to audio). The core challenge is maintaining high generalization capacity and reasoning integrity when multimodal inputs are inconsistent, a common failure mode in current generic multimodal reasoning systems.",
+          "motivation": "Current audio-text multimodal large models exhibit text-dominant bias, where the model over-relies on textual information and neglects acoustic cues. This leads to degraded performance when text is misleading, adversarial, or irrelevant to the actual audio content—a critical vulnerability for robust real-world emotion recognition systems. Drawing from theoretical foundations of contrastive learning in multimodal settings, recent work reveals that representation alignment between modalities follows stage-wise dynamics and that contrastive pairs play a critical role in balancing learned representations. This theoretical insight motivates our investigation into how text-dominant bias emerges during multimodal fusion and how modality-credibility-based routing can restore balanced, robust representations under adversarial conditions.",
+          "problem_definition": "Task: Multimodal emotion recognition from audio-text inputs with robustness to text interference. Settings: (1) Faithful—text accurately describes audio emotion; (2) Adversarial—text intentionally contradicts or misleads about audio emotion; (3) Irrelevant—text is semantically unrelated to audio content. Input: Audio signal + associated text. Output: Emotion classification that remains robust across all three settings. The core challenge is to detect when textual modality is unreliable and dynamically adjust fusion strategy, informed by theoretical understanding of how contrastive learning aligns and balances multimodal representations.",
           "constraints": [
-            "robustness (against text bias)",
-            "efficiency (lightweight modules/gates to avoid heavy retraining)",
-            "modality imbalance",
-            "modularity (dynamic routing between experts)"
+            "Robustness to adversarial and irrelevant text interference",
+            "Lightweight adaptation using small gating/adapter modules",
+            "Inference-time efficiency without full model forward passes for both experts",
+            "Minimal additional training overhead on top of pre-trained backbone",
+            "Preservation of performance on faithful text-audio pairs"
           ],
-          "technical_plan": "1. Construct a 'Text Interference' representation utilizing energy and temporal evidence as an intermediate signal to quantify modality reliability. 2. Train a lightweight gating mechanism or adapter to assess this reliability without full model retraining. 3. Implement a dynamic routing strategy (modular composition) during inference to select between a Joint Multimodal Expert (for faithful cases) and an Audio-only Expert (for adversarial/irrelevant cases), ensuring robust predictions by reframing the fusion process as a conditional selection task.",
+          "technical_plan": "Core framework: Modality-credibility-based routing/fusion informed by contrastive learning dynamics. (1) Construct 'text interference' representations using energy-based features (measuring representation confidence) and temporal evidence from audio-text alignment discrepancies. (2) Leverage insights from multimodal contrastive learning theory—specifically the stage-wise alignment dynamics and rank differential mechanisms—to design credibility estimation that captures modality imbalance. (3) Train lightweight gating networks and/or adapters using contrastive objectives that distinguish faithful from adversarial/irrelevant text-audio pairs, learning to estimate modality credibility scores. (4) At inference, route to either Joint (audio+text) expert or Audio-only expert based on credibility estimation threshold. Training objective: Contrastive loss on constructed faithful/adversarial/irrelevant triplets to learn text reliability detection, combined with task-specific emotion classification loss. The contrastive formulation draws from theoretical foundations showing how contrastive pairs enable efficient representation balancing.",
           "expected_contributions": [
-            "Identification and mitigation of text-dominant bias in audio-text LLMs",
-            "A novel modality reliability-based routing framework that reframes multimodal fusion as a dynamic expert selection problem",
-            "Improved robustness and generalization capacity in emotion recognition under adversarial and irrelevant text settings"
+            "First systematic study of text-dominant bias in audio-text LLMs under faithful/adversarial/irrelevant settings with theoretical grounding from contrastive learning dynamics",
+            "Novel modality-credibility routing framework leveraging energy-based and temporal evidence for text interference detection, informed by multimodal representation alignment theory",
+            "Lightweight gating/adapter mechanism with contrastive training objective enabling robust emotion recognition without full model retraining",
+            "Theoretical analysis connecting text-dominant bias to modality imbalance phenomena studied in contrastive learning literature"
           ],
-          "evaluation_plan": "Datasets: Standard multimodal emotion datasets (e.g., IEMOCAP, MELD) with constructed adversarial/irrelevant splits to test generalization. Metrics: Accuracy, Weighted F1-score. Baselines: Standard Audio-Text LLMs, static fusion methods. Ablations: Impact of the gate, routing strategy, and interference representation. Robustness Settings: Performance comparison specifically on Adversarial and Irrelevant subsets to evaluate generalization capacity under modality conflict.",
+          "evaluation_plan": "Datasets: IEMOCAP, MELD, CMU-MOSEI with constructed adversarial/irrelevant text variants (via LLM-based text manipulation and random text substitution). Metrics: Accuracy, weighted F1, robustness drop (performance gap between faithful and adversarial/irrelevant settings), routing accuracy (correct expert selection rate). Baselines: Standard audio-text fusion models (early/late fusion), prompt-based multimodal LLMs (e.g., Qwen-Audio, SALMONN), existing debiasing methods, contrastive multimodal pre-training approaches. Ablations: (a) gating vs. adapter architecture, (b) energy vs. temporal features vs. combined, (c) routing threshold sensitivity, (d) contrastive vs. non-contrastive training for credibility estimation, (e) effect of adversarial text intensity and irrelevance degree. Analysis: Visualization of learned credibility scores, representation space analysis under different text conditions, comparison with theoretical predictions from contrastive learning dynamics.",
           "keywords_en": [
-            "Audio-Text Large Models",
-            "Text-Dominant Bias",
-            "Multimodal Emotion Recognition",
-            "Modality Routing",
-            "Robustness",
-            "Modular Composition",
-            "Dynamic Fusion"
+            "multimodal emotion recognition",
+            "text-dominant bias",
+            "modality routing",
+            "adversarial robustness",
+            "audio-text fusion",
+            "lightweight adaptation",
+            "credibility estimation",
+            "contrastive learning",
+            "multimodal representation alignment",
+            "gating mechanism",
+            "energy-based detection",
+            "robust multimodal learning"
           ],
           "keywords_zh": [
-            "音频-文本大模型",
-            "文本主导偏见",
             "多模态情绪识别",
+            "文本主导偏见",
             "模态路由",
-            "鲁棒性",
-            "模块化组合",
-            "动态融合"
+            "对抗鲁棒性",
+            "音频-文本融合",
+            "轻量级适配",
+            "可信度估计",
+            "对比学习",
+            "多模态表示对齐",
+            "门控机制",
+            "基于能量的检测",
+            "鲁棒多模态学习"
           ],
           "assumptions": {
             "explicit": [
-              "The model operates in faithful, adversarial, and irrelevant settings",
-              "The solution involves a routing/fusion framework based on modality reliability",
-              "Text interference is represented by energy and temporal evidence",
-              "Lightweight gates/adapters are used for training",
-              "Inference involves selecting between Joint or Audio experts"
+              "Three experimental settings are defined: faithful, adversarial, and irrelevant text",
+              "Energy-based features and temporal evidence are used for text interference representation",
+              "Lightweight gating/adapter approach is employed for efficiency",
+              "Routing mechanism selects between Joint and Audio-only experts at inference time",
+              "Contrastive training is used to learn modality credibility estimation"
             ],
             "inferred": [
-              "Audio features contain sufficient information for emotion recognition when text is unreliable",
-              "'Energy' refers to acoustic energy features",
-              "The 'interference representation' effectively captures the semantic conflict between modalities",
-              "The routing mechanism can be trained efficiently without degrading the base model's performance on faithful data"
+              "A pre-trained audio-text multimodal LLM serves as the backbone model",
+              "Adversarial and irrelevant text samples need to be constructed or synthesized (e.g., via LLM paraphrasing or random substitution)",
+              "Emotion recognition is the primary downstream task for evaluation",
+              "Training data includes labeled emotion samples with systematic text manipulation across three settings",
+              "The text-dominant bias phenomenon is analogous to modality imbalance studied in contrastive learning theory",
+              "Audio-only expert can be derived from the same backbone by masking text input or using audio-specific adapter"
             ]
           }
         },
-        "query": "Keywords: Audio-Text Large Models, Text-Dominant Bias, Multimodal Emotion Recognition, Modality Routing, Robustness, Modular Composition, Dynamic Fusion Task: Robust Multimodal Emotion Recognition. Input: Audio and Text pairs. Output: Emotion labels. Settings: Three distinct scenarios are considered: Faithful (consistent modalities), Adversarial (text misleads), and Irrelevant (text unrelated to audio). The core challenge is maintaining high generalization capacity and reasoning integrity when multimodal inputs are inconsistent, a common failure mode in current generic multimodal reasoning systems. Constraints: robustness (against text bias), efficiency (lightweight modules/gates to avoid heavy retraining), modality imbalance, modularity (dynamic routing between experts) 1. Construct a 'Text Interference' representation utilizing energy and temporal evidence as an intermediate signal to quantify modality reliability. 2. Train a lightweight gating mechanism or adapter to assess this reliability without full model retraining. 3. Implement a dynamic routing strategy (modular composition) during inference to select between a Joint Multimodal Expert (for faithful cases) and an Audio-only Expert (for adversarial/irrelevant cases), ensuring robust predictions by reframing the fusion process as a conditional selection task. 关键词: 音频-文本大模型，文本主导偏见，多模态情绪识别，模态路由，鲁棒性，模块化组合，动态融合"
+        "query": "Keywords: multimodal emotion recognition, text-dominant bias, modality routing, adversarial robustness, audio-text fusion, lightweight adaptation, credibility estimation, contrastive learning, multimodal representation alignment, gating mechanism, energy-based detection, robust multimodal learning Task: Multimodal emotion recognition from audio-text inputs with robustness to text interference. Settings: (1) Faithful—text accurately describes audio emotion; (2) Adversarial—text intentionally contradicts or misleads about audio emotion; (3) Irrelevant—text is semantically unrelated to audio content. Input: Audio signal + associated text. Output: Emotion classification that remains robust across all three settings. The core challenge is to detect when textual modality is unreliable and dynamically adjust fusion strategy, informed by theoretical understanding of how contrastive learning aligns and balances multimodal representations. Constraints: Robustness to adversarial and irrelevant text interference, Lightweight adaptation using small gating/adapter modules, Inference-time efficiency without full model forward passes for both experts, Minimal additional training overhead on top of pre-trained backbone, Preservation of performance on faithful text-audio pairs Core framework: Modality-credibility-based routing/fusion informed by contrastive learning dynamics. (1) Construct 'text interference' representations using energy-based features (measuring representation confidence) and temporal evidence from audio-text alignment discrepancies. (2) Leverage insights from multimodal contrastive learning theory—specifically the stage-wise alignment dynamics and rank differential mechanisms—to design credibility estimation that captures modality imbalance. (3) Train lightweight gating networks and/or adapters using contrastive objectives that distinguish faithful from adversarial/irrelevant text-audio pairs, learning to estimate modality credibility scores. (4) At inference, route to either Joint (audio+text) expert or Audio-only expert based on credibility estimation threshold. Training objective: Contrastive loss on constructed faithful/adversarial/irrelevant triplets to learn text reliability detection, combined with task-specific emotion classification loss. The contrastive formulation draws from theoretical foundations showing how contrastive pairs enable efficient representation balancing. 关键词: 多模态情绪识别，文本主导偏见，模态路由，对抗鲁棒性，音频-文本融合，轻量级适配，可信度估计，对比学习，多模态表示对齐，门控机制，基于能量的检测，鲁棒多模态学习"
       },
       {
-        "pattern_id": "pattern_74",
-        "pattern_name": "Democratizing Large Language Model Accessibility",
-        "score": 0.5294783426615813,
+        "pattern_id": "pattern_51",
+        "pattern_name": "Adversarial Vulnerabilities and Robustness in Large Language Models",
+        "score": 0.32811918273557245,
         "brief": {
-          "motivation": "Existing Audio-Text Large Models (AT-LLMs) suffer from 'text-dominant bias,' where the model over-relies on textual input, leading to performance degradation in emotion recognition when text is adversarial or irrelevant. Addressing this bias is critical not only for robustness but also for the efficient deployment of multimodal LLMs. By leveraging parameter-efficient techniques, we aim to enhance model reliability without the prohibitive computational costs associated with full fine-tuning, aligning with the broader goal of democratizing efficient and robust multimodal AI.",
-          "problem_definition": "Task: Robust Multimodal Emotion Recognition. Input: Audio and Text pairs. Output: Emotion labels. Settings: Three distinct scenarios are considered: Faithful (consistent modalities), Adversarial (text misleads), and Irrelevant (text unrelated to audio). The core problem is the model's inability to dynamically weigh modalities, leading to inefficiency and errors when modalities conflict.",
+          "motivation": "Current audio-text multimodal large models exhibit text-dominant bias, where the model over-relies on textual information and neglects acoustic cues. This vulnerability mirrors broader adversarial robustness challenges in LLMs, where models are susceptible to subtle input manipulations—whether through chain-of-thought backdoors, jailbreak prompts, or cipher-based bypasses. In multimodal emotion recognition, adversarial or irrelevant text can mislead models similarly to how BadChain exploits reasoning pathways or how fine-tuning degrades safety alignment. This leads to degraded performance when text is misleading, adversarial, or irrelevant to the actual audio content—a critical vulnerability for robust real-world emotion recognition systems that parallels the security challenges identified in LLM robustness research.",
+          "problem_definition": "Task: Multimodal emotion recognition from audio-text inputs under adversarial conditions. Settings: (1) Faithful—text accurately describes audio emotion; (2) Adversarial—text intentionally contradicts or misleads about audio emotion (analogous to backdoor/jailbreak attacks on LLMs); (3) Irrelevant—text is semantically unrelated to audio content (akin to non-natural language input vulnerabilities). Input: Audio signal + associated text. Output: Emotion classification robust to text interference across all three settings, addressing the fundamental challenge of maintaining model integrity against input-level manipulations that exploit modality-specific biases.",
           "constraints": [
-            "robustness (against text bias)",
-            "efficiency (lightweight modules/gates/parameter-efficient tuning)",
-            "modality imbalance",
-            "computational accessibility (avoiding full model retraining)"
+            "Robustness to adversarial/irrelevant text without catastrophic performance degradation",
+            "Lightweight adaptation using small adapter/gating modules (no full model retraining)",
+            "Inference-time efficiency for real-world deployment",
+            "Minimal additional training overhead",
+            "Preservation of performance on faithful text-audio pairs",
+            "Generalization across different adversarial text generation strategies"
           ],
-          "technical_plan": "1. Construct a 'Text Interference' representation utilizing energy and temporal evidence to quantify modality reliability. 2. Train a lightweight gating mechanism or adapter (inspired by parameter-efficient tuning methods) to assess this reliability without modifying the entire backbone. 3. Implement a dynamic routing strategy during inference to select between a Joint Multimodal Expert (for faithful cases) and an Audio-only Expert (for adversarial/irrelevant cases), ensuring robust predictions while optimizing computational resource usage.",
+          "technical_plan": "Core framework: Modality-credibility-based routing/fusion inspired by adversarial robustness principles. (1) Construct 'text interference' representations using energy-based features (detecting anomalous text patterns similar to cipher/non-natural language detection) and temporal evidence from audio-text alignment (identifying mismatches analogous to chain-of-thought inconsistencies). (2) Train lightweight gating networks and/or adapters to estimate modality credibility scores, learning to detect unreliable text inputs similar to how robustness frameworks identify adversarial prompts. (3) At inference, route to either Joint (audio+text) expert or Audio-only expert based on credibility estimation, implementing a dynamic defense mechanism. (4) Training objective: Learn to detect text reliability via contrastive learning on faithful/adversarial/irrelevant triplets, potentially incorporating adversarial training strategies from LLM robustness literature. (5) Consider hierarchical detection inspired by AutoDAN's genetic approach for identifying subtle adversarial patterns.",
           "expected_contributions": [
-            "Identification and mitigation of text-dominant bias in audio-text LLMs via efficient routing",
-            "A novel modality reliability-based routing framework utilizing energy and temporal evidence",
-            "Improved robustness in emotion recognition under adversarial and irrelevant text settings",
-            "Demonstration of how lightweight adapters can enhance robustness, contributing to efficient multimodal model deployment"
+            "First systematic study of text-dominant bias in audio-text LLMs under faithful/adversarial/irrelevant settings, connecting multimodal robustness to broader LLM security challenges",
+            "Novel modality-credibility routing framework with energy and temporal evidence for text interference detection, analogous to adversarial input detection in LLMs",
+            "Lightweight gating/adapter mechanism enabling robust emotion recognition without full model retraining, providing efficient defense against modality-level attacks",
+            "Comprehensive adversarial text construction methodology for multimodal settings, extending jailbreak/backdoor concepts to audio-text domains",
+            "Empirical analysis of how text manipulation strategies affect multimodal model behavior, contributing to understanding of cross-modal adversarial vulnerabilities"
           ],
-          "evaluation_plan": "Datasets: Standard multimodal emotion datasets (e.g., IEMOCAP, MELD) with constructed adversarial/irrelevant splits. Metrics: Accuracy, Weighted F1-score, and Efficiency Metrics (e.g., FLOPs, Inference Latency, Number of Trainable Parameters). Baselines: Standard Audio-Text LLMs, static fusion methods, and other parameter-efficient tuning (PET) methods. Ablations: Impact of the gate, routing strategy, and interference representation. Robustness Settings: Performance comparison specifically on Adversarial and Irrelevant subsets.",
+          "evaluation_plan": "Datasets: IEMOCAP, MELD, CMU-MOSEI with constructed adversarial/irrelevant text variants using multiple generation strategies (rule-based, LLM-generated, gradient-based). Metrics: Accuracy, weighted/macro F1, robustness drop (performance gap between faithful and adversarial/irrelevant settings), attack success rate (ASR) for adversarial text. Baselines: Standard audio-text fusion models (early/late fusion), prompt-based multimodal LLMs, existing debiasing methods, adversarial training baselines from LLM robustness literature. Ablations: gating vs. adapter architecture, energy vs. temporal features, routing threshold sensitivity, credibility estimation methods. Robustness settings: varying adversarial text intensity (subtle to overt contradictions), irrelevance degree (topically related to completely random), and adversarial generation methods (inspired by AutoDAN, BadChain attack patterns). Additional analysis: transferability of adversarial text across models, detection-evasion trade-offs.",
           "keywords_en": [
-            "Audio-Text Large Models",
-            "Text-Dominant Bias",
-            "Multimodal Emotion Recognition",
-            "Modality Routing",
-            "Parameter-Efficient Tuning",
-            "Robustness",
-            "Model Efficiency"
+            "multimodal emotion recognition",
+            "text-dominant bias",
+            "modality routing",
+            "adversarial robustness",
+            "audio-text fusion",
+            "lightweight adaptation",
+            "credibility estimation",
+            "multimodal adversarial attacks",
+            "large language model security",
+            "cross-modal robustness",
+            "gating mechanism",
+            "modality-aware defense"
           ],
           "keywords_zh": [
-            "音频-文本大模型",
-            "文本主导偏见",
             "多模态情绪识别",
+            "文本主导偏见",
             "模态路由",
-            "参数高效微调",
-            "鲁棒性",
-            "模型效率"
+            "对抗鲁棒性",
+            "音频-文本融合",
+            "轻量级适配",
+            "可信度估计",
+            "多模态对抗攻击",
+            "大语言模型安全",
+            "跨模态鲁棒性"
           ],
           "assumptions": {
             "explicit": [
-              "The model operates in faithful, adversarial, and irrelevant settings",
-              "The solution involves a routing/fusion framework based on modality reliability",
-              "Text interference is represented by energy and temporal evidence",
-              "Lightweight gates/adapters are used for training to ensure efficiency",
-              "Inference involves selecting between Joint or Audio experts"
+              "Three experimental settings: faithful, adversarial, irrelevant text",
+              "Use energy and temporal evidence for text interference representation",
+              "Lightweight gating/adapter approach without full model retraining",
+              "Routing between Joint and Audio-only experts at inference time",
+              "Focus on emotion recognition as the downstream task"
             ],
             "inferred": [
-              "Audio features contain sufficient information for emotion recognition when text is unreliable",
-              "'Energy' refers to acoustic energy features",
-              "The lightweight gating mechanism functions as a form of Parameter-Efficient Tuning (PET)",
-              "Dynamic routing reduces computational cost compared to always running full multimodal fusion"
+              "Pre-trained audio-text LLM or multimodal model serves as backbone",
+              "Adversarial/irrelevant text samples need to be constructed or synthesized (potentially using LLM-based generation)",
+              "Training data includes labeled emotion samples with systematic text manipulation",
+              "Audio modality provides ground-truth emotional signal when text is unreliable",
+              "Text interference patterns share characteristics with adversarial prompts in LLM security literature",
+              "Energy-based detection may leverage distributional differences between natural and adversarial text",
+              "Temporal evidence assumes audio-text alignment information is available or computable"
             ]
           }
         },
-        "query": "Keywords: Audio-Text Large Models, Text-Dominant Bias, Multimodal Emotion Recognition, Modality Routing, Parameter-Efficient Tuning, Robustness, Model Efficiency Task: Robust Multimodal Emotion Recognition. Input: Audio and Text pairs. Output: Emotion labels. Settings: Three distinct scenarios are considered: Faithful (consistent modalities), Adversarial (text misleads), and Irrelevant (text unrelated to audio). The core problem is the model's inability to dynamically weigh modalities, leading to inefficiency and errors when modalities conflict. Constraints: robustness (against text bias), efficiency (lightweight modules/gates/parameter-efficient tuning), modality imbalance, computational accessibility (avoiding full model retraining) 1. Construct a 'Text Interference' representation utilizing energy and temporal evidence to quantify modality reliability. 2. Train a lightweight gating mechanism or adapter (inspired by parameter-efficient tuning methods) to assess this reliability without modifying the entire backbone. 3. Implement a dynamic routing strategy during inference to select between a Joint Multimodal Expert (for faithful cases) and an Audio-only Expert (for adversarial/irrelevant cases), ensuring robust predictions while optimizing computational resource usage. 关键词: 音频-文本大模型，文本主导偏见，多模态情绪识别，模态路由，参数高效微调，鲁棒性，模型效率"
+        "query": "Keywords: multimodal emotion recognition, text-dominant bias, modality routing, adversarial robustness, audio-text fusion, lightweight adaptation, credibility estimation, multimodal adversarial attacks, large language model security, cross-modal robustness, gating mechanism, modality-aware defense Task: Multimodal emotion recognition from audio-text inputs under adversarial conditions. Settings: (1) Faithful—text accurately describes audio emotion; (2) Adversarial—text intentionally contradicts or misleads about audio emotion (analogous to backdoor/jailbreak attacks on LLMs); (3) Irrelevant—text is semantically unrelated to audio content (akin to non-natural language input vulnerabilities). Input: Audio signal + associated text. Output: Emotion classification robust to text interference across all three settings, addressing the fundamental challenge of maintaining model integrity against input-level manipulations that exploit modality-specific biases. Constraints: Robustness to adversarial/irrelevant text without catastrophic performance degradation, Lightweight adaptation using small adapter/gating modules (no full model retraining), Inference-time efficiency for real-world deployment, Minimal additional training overhead, Preservation of performance on faithful text-audio pairs, Generalization across different adversarial text generation strategies Core framework: Modality-credibility-based routing/fusion inspired by adversarial robustness principles. (1) Construct 'text interference' representations using energy-based features (detecting anomalous text patterns similar to cipher/non-natural language detection) and temporal evidence from audio-text alignment (identifying mismatches analogous to chain-of-thought inconsistencies). (2) Train lightweight gating networks and/or adapters to estimate modality credibility scores, learning to detect unreliable text inputs similar to how robustness frameworks identify adversarial prompts. (3) At inference, route to either Joint (audio+text) expert or Audio-only expert based on credibility estimation, implementing a dynamic defense mechanism. (4) Training objective: Learn to detect text reliability via contrastive learning on faithful/adversarial/irrelevant triplets, potentially incorporating adversarial training strategies from LLM robustness literature. (5) Consider hierarchical detection inspired by AutoDAN's genetic approach for identifying subtle adversarial patterns. 关键词: 多模态情绪识别，文本主导偏见，模态路由，对抗鲁棒性，音频-文本融合，轻量级适配，可信度估计，多模态对抗攻击，大语言模型安全，跨模态鲁棒性"
       }
     ],
     "judge": {
       "best_index": 0,
-      "rationale": "Candidate 0 (pattern_113) is the best choice because it most faithfully captures the core intent of the raw idea: addressing 'text-dominant bias' in Audio-Text LLMs through a reliability-based routing framework. \n\n1. **Faithfulness**: It accurately identifies the problem as a 'text-dominant bias' arising from 'imbalanced conditional dependency structures,' which aligns perfectly with the user's description of the issue. Unlike Candidate 2 (pattern_74), it does not force a 'democratization/accessibility' narrative that is secondary to the main goal of robustness. \n\n2. **Completeness**: The candidate provides a comprehensive structure, explicitly detailing the three settings (faithful, adversarial, irrelevant) and the specific methodology (constructing 'Text Interference' via energy/temporal evidence, training lightweight gates, and dynamic routing). \n\n3. **Clarity and Actionability**: The technical plan is precise, mentioning the characterization of 'cross-modality discrepancies' and the specific routing logic (Joint vs. Audio expert). The evaluation plan is robust, including specific datasets (IEMOCAP, MELD), metrics, and ablation studies relevant to the bias problem. \n\nWhile Candidate 1 (pattern_112) is also strong, Candidate 0 provides a slightly more precise technical characterization of the bias problem (dependency structures vs. general reasoning), making it the most accurate reflection of the raw idea."
+      "rationale": "All three candidates faithfully capture the core idea of addressing text-dominant bias in audio-text models via modality-credibility routing with energy/temporal evidence and lightweight gating. However, Pattern 13 (Hallucination Mitigation via Multimodal Alignment) provides the most coherent and actionable framing. Its motivation draws a clear analogy to the well-studied VLM hallucination problem, making the research context immediately accessible. The technical plan is most complete, explicitly mentioning momentum-inspired consistency mechanisms and preference optimization as optional enhancements. The evaluation plan includes the crucial 'modality reliance ratio' metric specifically designed to measure text-dominant bias, and provides the most detailed ablation structure. Pattern 36 forces a somewhat awkward connection to contrastive learning theory that doesn't naturally fit the routing/gating approach (the idea uses contrastive learning for training but the 'theoretical foundations' angle adds complexity without clear benefit). Pattern 51's framing around LLM adversarial vulnerabilities (jailbreaks, backdoors) is less appropriate since the core problem is modality imbalance rather than security attacks—the analogy feels stretched and could mislead readers. Pattern 13's assumptions are also most precisely stated, explicitly noting the transferability hypothesis from VLM techniques to audio-text domain."
     },
     "recall_scores": {
-      "0": 0.0,
-      "1": 0.0,
-      "2": 0.0
+      "0": 0.04,
+      "1": 0.04,
+      "2": 0.02857142857142857
     },
     "chosen_index": 0,
-    "query_best": "Keywords: Audio-Text Large Models, Text-Dominant Bias, Multimodal Emotion Recognition, Modality Routing, Robustness, Cross-Modality Discrepancy, Arbitrary Modality Conditions Task: Robust Multimodal Emotion Recognition. Input: Audio and Text pairs. Output: Emotion labels. Settings: Three distinct scenarios are considered: Faithful (consistent modalities), Adversarial (text misleads), and Irrelevant (text unrelated to audio). The core problem is to mitigate the text-dominant bias that arises from imbalanced conditional dependency structures, ensuring the model remains robust when modalities conflict or when text provides misleading evidence. Constraints: robustness (against text bias), efficiency (lightweight modules/gates), modality imbalance 1. Construct a 'Text Interference' representation utilizing energy and temporal evidence to quantify modality reliability and characterize cross-modality discrepancies. 2. Train a lightweight gating mechanism or adapter to assess this reliability, effectively learning the dependency structure between audio and text. 3. Implement a dynamic routing strategy during inference to select between a Joint Multimodal Expert (for faithful cases) and an Audio-only Expert (for adversarial/irrelevant cases), thereby reframing the fusion process as a conditional decision based on modality trustworthiness. 关键词: 音频-文本大模型，文本主导偏见，多模态情绪识别，模态路由，鲁棒性，跨模态差异，任意模态条件",
+    "query_best": "Keywords: multimodal emotion recognition, text-dominant bias, modality routing, adversarial robustness, audio-text fusion, lightweight adaptation, credibility estimation, hallucination mitigation, multimodal alignment, latent space steering, gating mechanism, audio-text large language models Task: Multimodal emotion recognition from audio-text inputs under modality reliability uncertainty. Settings: (1) Faithful—text accurately describes audio emotion; (2) Adversarial—text intentionally contradicts or misleads about audio emotion; (3) Irrelevant—text is semantically unrelated to audio content. Input: Audio signal + associated text transcript/description. Output: Emotion classification robust to text interference across all three settings. Core Challenge: Detect and mitigate text-dominant bias by dynamically assessing modality credibility and routing/fusing representations accordingly, inspired by latent space intervention and modality alignment techniques from hallucination mitigation research. Constraints: Robustness to adversarial and irrelevant text inputs, Lightweight adaptation via small gating/adapter modules (no full model retraining), Inference-time efficiency with minimal computational overhead, Task-agnostic or minimally task-specific intervention design, Preservation of performance on faithful text settings Core framework: Modality-credibility-based routing/fusion inspired by latent space steering and multimodal alignment approaches. (1) Construct 'text interference' representations using energy-based features (measuring representation magnitude/confidence) and temporal evidence (audio-text alignment consistency over time). (2) Train lightweight gating networks and/or adapters to estimate modality credibility scores, analogous to visual/textual intervention modules in VLM hallucination mitigation. (3) At inference, implement a routing mechanism to select between Joint (audio+text) expert or Audio-only expert based on credibility estimation—similar to self-introspective decoding strategies. (4) Training objective: Learn to detect text reliability via contrastive learning on constructed faithful/adversarial/irrelevant triplets, potentially incorporating preference optimization to distinguish reliable from misleading text. (5) Optional: Apply momentum-inspired consistency mechanisms across layers to stabilize audio feature representations under text interference. 关键词: 多模态情绪识别，文本主导偏见，模态路由，对抗鲁棒性，音频-文本融合，轻量级适配，可信度估计，幻觉缓解，多模态对齐，潜空间引导，门控机制，音频-文本大语言模型",
     "brief_best": {
-      "motivation": "Existing Audio-Text Large Models (AT-LLMs) suffer from a 'text-dominant bias,' where the model over-relies on textual input, leading to performance degradation in emotion recognition when text is adversarial or irrelevant. This issue highlights a fundamental challenge in multimodal learning: managing cross-modality discrepancies and dependency structures where one modality overwhelms the other. Addressing this bias is critical for achieving robust multimodal understanding, reframing the problem from simple fusion to dynamic handling of arbitrary modality conditions (e.g., misleading text) by leveraging reliable uni-modal evidence.",
-      "problem_definition": "Task: Robust Multimodal Emotion Recognition. Input: Audio and Text pairs. Output: Emotion labels. Settings: Three distinct scenarios are considered: Faithful (consistent modalities), Adversarial (text misleads), and Irrelevant (text unrelated to audio). The core problem is to mitigate the text-dominant bias that arises from imbalanced conditional dependency structures, ensuring the model remains robust when modalities conflict or when text provides misleading evidence.",
+      "motivation": "Current audio-text multimodal large models exhibit text-dominant bias, where the model over-relies on textual information and neglects acoustic cues—analogous to the hallucination problem in vision-language models where misalignment between modalities leads to unreliable outputs. This text-over-reliance leads to degraded performance when text is misleading, adversarial, or irrelevant to the actual audio content. Drawing from recent advances in hallucination mitigation via multimodal alignment and latent space steering in VLMs, addressing this modality imbalance is critical for building robust real-world emotion recognition systems that can reliably ground predictions in acoustic evidence even under textual interference.",
+      "problem_definition": "Task: Multimodal emotion recognition from audio-text inputs under modality reliability uncertainty. Settings: (1) Faithful—text accurately describes audio emotion; (2) Adversarial—text intentionally contradicts or misleads about audio emotion; (3) Irrelevant—text is semantically unrelated to audio content. Input: Audio signal + associated text transcript/description. Output: Emotion classification robust to text interference across all three settings. Core Challenge: Detect and mitigate text-dominant bias by dynamically assessing modality credibility and routing/fusing representations accordingly, inspired by latent space intervention and modality alignment techniques from hallucination mitigation research.",
       "constraints": [
-        "robustness (against text bias)",
-        "efficiency (lightweight modules/gates)",
-        "modality imbalance"
+        "Robustness to adversarial and irrelevant text inputs",
+        "Lightweight adaptation via small gating/adapter modules (no full model retraining)",
+        "Inference-time efficiency with minimal computational overhead",
+        "Task-agnostic or minimally task-specific intervention design",
+        "Preservation of performance on faithful text settings"
       ],
-      "technical_plan": "1. Construct a 'Text Interference' representation utilizing energy and temporal evidence to quantify modality reliability and characterize cross-modality discrepancies. 2. Train a lightweight gating mechanism or adapter to assess this reliability, effectively learning the dependency structure between audio and text. 3. Implement a dynamic routing strategy during inference to select between a Joint Multimodal Expert (for faithful cases) and an Audio-only Expert (for adversarial/irrelevant cases), thereby reframing the fusion process as a conditional decision based on modality trustworthiness.",
+      "technical_plan": "Core framework: Modality-credibility-based routing/fusion inspired by latent space steering and multimodal alignment approaches. (1) Construct 'text interference' representations using energy-based features (measuring representation magnitude/confidence) and temporal evidence (audio-text alignment consistency over time). (2) Train lightweight gating networks and/or adapters to estimate modality credibility scores, analogous to visual/textual intervention modules in VLM hallucination mitigation. (3) At inference, implement a routing mechanism to select between Joint (audio+text) expert or Audio-only expert based on credibility estimation—similar to self-introspective decoding strategies. (4) Training objective: Learn to detect text reliability via contrastive learning on constructed faithful/adversarial/irrelevant triplets, potentially incorporating preference optimization to distinguish reliable from misleading text. (5) Optional: Apply momentum-inspired consistency mechanisms across layers to stabilize audio feature representations under text interference.",
       "expected_contributions": [
-        "Identification and mitigation of text-dominant bias in audio-text LLMs by characterizing modality dependency structures",
-        "A novel modality reliability-based routing framework utilizing energy and temporal evidence to handle arbitrary modality conditions",
-        "Improved robustness in emotion recognition under adversarial and irrelevant text settings, demonstrating the value of strong uni-modal feature learning when cross-modal alignment fails"
+        "First systematic study of text-dominant bias in audio-text LLMs under faithful/adversarial/irrelevant experimental settings",
+        "Novel modality-credibility routing framework leveraging energy-based and temporal evidence for text interference detection, bridging hallucination mitigation techniques to audio-text domain",
+        "Lightweight gating/adapter mechanism enabling robust emotion recognition without full model retraining, inspired by task-agnostic intervention approaches in VLMs",
+        "Comprehensive benchmark with constructed adversarial/irrelevant text variants for evaluating audio-text model robustness"
       ],
-      "evaluation_plan": "Datasets: Standard multimodal emotion datasets (e.g., IEMOCAP, MELD) with constructed adversarial/irrelevant splits to simulate arbitrary modality conditions. Metrics: Accuracy, Weighted F1-score. Baselines: Standard Audio-Text LLMs, static fusion methods, and uni-modal experts. Ablations: Impact of the gate, routing strategy, and interference representation. Robustness Settings: Performance comparison specifically on Adversarial and Irrelevant subsets to validate the reduction of cross-modality discrepancies.",
+      "evaluation_plan": "Datasets: IEMOCAP, MELD, CMU-MOSEI with constructed adversarial (emotion-contradicting) and irrelevant (random/unrelated) text variants. Metrics: Accuracy, weighted/unweighted F1, robustness drop (performance gap between faithful and adversarial/irrelevant settings), modality reliance ratio. Baselines: Standard audio-text fusion models (early/late fusion), prompt-based audio-text LLMs, existing debiasing/rebalancing methods, hallucination mitigation techniques adapted to audio-text. Ablations: (1) gating vs. adapter mechanisms, (2) energy vs. temporal features vs. combined, (3) routing threshold sensitivity, (4) expert selection strategies. Robustness analysis: varying adversarial text intensity (subtle to strong contradiction), irrelevance degree (partial to complete), and cross-dataset generalization.",
       "keywords_en": [
-        "Audio-Text Large Models",
-        "Text-Dominant Bias",
-        "Multimodal Emotion Recognition",
-        "Modality Routing",
-        "Robustness",
-        "Cross-Modality Discrepancy",
-        "Arbitrary Modality Conditions"
+        "multimodal emotion recognition",
+        "text-dominant bias",
+        "modality routing",
+        "adversarial robustness",
+        "audio-text fusion",
+        "lightweight adaptation",
+        "credibility estimation",
+        "hallucination mitigation",
+        "multimodal alignment",
+        "latent space steering",
+        "gating mechanism",
+        "audio-text large language models"
       ],
       "keywords_zh": [
-        "音频-文本大模型",
-        "文本主导偏见",
         "多模态情绪识别",
+        "文本主导偏见",
         "模态路由",
-        "鲁棒性",
-        "跨模态差异",
-        "任意模态条件"
+        "对抗鲁棒性",
+        "音频-文本融合",
+        "轻量级适配",
+        "可信度估计",
+        "幻觉缓解",
+        "多模态对齐",
+        "潜空间引导",
+        "门控机制",
+        "音频-文本大语言模型"
       ],
       "assumptions": {
         "explicit": [
-          "The model operates in faithful, adversarial, and irrelevant settings",
-          "The solution involves a routing/fusion framework based on modality reliability",
-          "Text interference is represented by energy and temporal evidence",
-          "Lightweight gates/adapters are used for training",
-          "Inference involves selecting between Joint or Audio experts"
+          "Three experimental settings are defined: faithful, adversarial, and irrelevant text",
+          "Energy-based features and temporal evidence are used for text interference representation",
+          "Lightweight gating/adapter approach is employed without full model retraining",
+          "Routing mechanism selects between Joint and Audio-only experts at inference time",
+          "Emotion recognition is the primary downstream evaluation task"
         ],
         "inferred": [
-          "Audio features contain sufficient information for emotion recognition when text is unreliable",
-          "'Energy' refers to acoustic energy features",
-          "The 'Text Interference' representation can effectively distinguish between faithful and adversarial contexts"
+          "A pre-trained audio-text LLM or multimodal model serves as the backbone architecture",
+          "Adversarial and irrelevant text samples need to be constructed or synthesized from existing datasets",
+          "Training data includes labeled emotion samples with systematic text manipulation across three settings",
+          "The text interference detection module can generalize across different types of textual noise",
+          "Techniques from vision-language hallucination mitigation (latent steering, preference optimization) are transferable to audio-text domain",
+          "Audio modality provides more reliable ground-truth emotional cues than potentially corrupted text"
         ]
       }
     }

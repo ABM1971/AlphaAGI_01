@@ -117,19 +117,19 @@ python Paper-KG-Pipeline/scripts/idea2story_pipeline.py "your idea"
 ```text
 paper-KG-Pipeline/
 └── output/
-    ├── recall_index__siliconflow__Qwen_Qwen3-Embedding-8B__184936e8/
-    └── novelty_index__siliconflow__Qwen_Qwen3-Embedding-8B__184936e8/
+    ├── recall_index__{provider}__{model}__{hash}/
+    └── novelty_index__{provider}__{model}__{hash}/
 ```
-并确保 embedding 模型配置为 **SiliconFlow Qwen/Qwen3-Embedding-8B**，否则可能会出错。
+并确保 embedding 模型与下载的索引一致，否则可能会出错。
 
 
 ### **3.配置**：
 
-   - 复制 `.env.example` -> `.env`，填写 `SILICONFLOW_API_KEY` 等敏感键（不要提交）
+   - 复制 `.env.example` -> `.env`，填写 `LLM_API_KEY` 等敏感键（不要提交）
    - 可选：复制 `i2p_config.example.json` -> `i2p_config.json` 调整阈值/anchors 等
 
 > **注意：** embedding 模型可通过 `EMBEDDING_MODEL` / `EMBEDDING_API_URL`（环境变量或 `i2p_config.json`）自由切换。切换模型后需重建 novelty/recall 索引，或使用带模型后缀的索引目录以避免不匹配。  
-> **约束：** embedding 模型必须输出 **4096 维**向量（与默认 `Qwen/Qwen3-Embedding-8B` 一致）。  
+> **约束：** embedding 维度必须与索引一致；若切换模型，请重建索引或使用独立索引目录。  
 > **推荐（auto_profile）：** 设置 `I2P_INDEX_DIR_MODE=auto_profile`，系统会按 embedding 配置自动切到专属索引目录：`Paper-KG-Pipeline/output/novelty_index__{provider}__{model}__{urlhash}` 和 `.../recall_index__...`。  
 > 若显式设置 `I2P_NOVELTY_INDEX_DIR` / `I2P_RECALL_INDEX_DIR`（环境变量或 `i2p_config.json`），会优先使用显式值。  
 > **建议（速度/稳定性）：** 建议设置 `I2P_ANCHOR_DENSIFY_ENABLE=0` 以关闭 Adaptive Densify；否则 Phase 3 的 Critic 可能会非常耗时，并且在严格 JSON 校验下更容易因为格式问题失败。  
@@ -137,7 +137,7 @@ paper-KG-Pipeline/
 > **建议（温度配置）：** 支持通过 `I2P_LLM_TEMPERATURE_*` 或 `llm.temperature.*` 配置各阶段温度，默认保持不变；critic 建议低温更稳，story 生成可中温。  
 > **建议（Idea Packaging）：** 可选的质量增强（默认关闭），开启后会进行 pattern 引导的 idea 包装与二次召回：`I2P_IDEA_PACKAGING_ENABLE=1` 或 `idea.packaging_enable=true`。  
 > **建议（Subdomain Taxonomy）：** 可选质量增强，用于减少 Path2 子领域重复与长尾影响。先离线生成一次：`Paper-KG-Pipeline/scripts/tools/build_subdomain_taxonomy.py`，再启用 `I2P_SUBDOMAIN_TAXONOMY_ENABLE=1`（可选 `I2P_SUBDOMAIN_TAXONOMY_PATH`）。  
-> **当前可直接适配（无需改代码）：** 兼容 OpenAI Embeddings API 的 `/v1/embeddings`（要求 `input` 支持字符串或数组，例如 SiliconFlow、OpenAI 及其它 OpenAI-compatible 服务）。  
+> **当前可直接适配（无需改代码）：** 兼容 OpenAI Embeddings API 的 `/v1/embeddings`（要求 `input` 支持字符串或数组）。  
 > **暂不直接支持：** DashScope/百炼原生 embeddings 接口（`/api/v1/services/embeddings/...`），需要额外适配层。
 
 ### **4. 运行**：
@@ -165,7 +165,7 @@ http://127.0.0.1:8080/
 
 ### 你可以在 UI 中做什么
 - 从网页运行同一个 pipeline 入口 (`idea2story_pipeline.py`) 。
-- 为本次运行配置 `SILICONFLOW_API_KEY`, `LLM_API_URL`, `LLM_MODEL` （服务端不会持久化保存）。
+- 为本次运行配置 `LLM_API_KEY`, `LLM_PROVIDER`, `LLM_BASE_URL/LLM_API_URL`, `LLM_MODEL` （服务端不会持久化保存）。
 - 开关 Novelty / Verification.
 - 一键下载本次运行的日志（zip）。
 

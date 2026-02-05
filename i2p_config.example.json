@@ -1,5 +1,5 @@
 {
-  "__comment__": "Copy this file to `i2p_config.json` (repo root). It is for NON-sensitive settings. Priority: shell env > .env > i2p_config.json > defaults. Secrets (e.g. SILICONFLOW_API_KEY) should go to `.env`, not here.",
+  "__comment__": "Copy this file to `i2p_config.json` (repo root). It is for NON-sensitive settings. Priority: shell env > .env > i2p_config.json > defaults. Secrets (e.g. LLM_API_KEY) should go to `.env`, not here.",
   "logging": {
     "__comment__": "Run logging writes a folder per run: log/run_YYYYMMDD_HHMMSS_<pid>_<rand>/. Set enable=false to disable logging entirely.",
     "enable": true,
@@ -39,9 +39,14 @@
     "densify_enable": false
   },
   "llm": {
-    "__comment__": "LLM endpoint/model settings. The API key is read from env var SILICONFLOW_API_KEY in `.env` (do not put it here).",
-    "api_url": "https://api.siliconflow.cn/v1/chat/completions",
-    "model": "Pro/zai-org/GLM-4.7",
+    "__comment__": "LLM endpoint/model settings. The API key is read from env var LLM_API_KEY in `.env` (do not put it here).",
+    "provider": "openai_compatible_chat",
+    "base_url": "https://api.openai.com/v1",
+    "api_url": "",
+    "model": "gpt-4o-mini",
+    "anthropic_version": "2023-06-01",
+    "extra_headers": {},
+    "extra_body": {},
     "temperature": {
       "__comment__": "Optional per-stage LLM temperatures. Defaults preserve current behavior.",
       "default": 0.7,
@@ -69,10 +74,10 @@
     "packaging_force_en_query": true
   },
   "embedding": {
-    "__comment__": "Embedding endpoint/model settings (non-sensitive). Secret EMBEDDING_API_KEY should stay in .env. Recommended: set index.dir_mode=auto_profile (or env I2P_INDEX_DIR_MODE) to auto-manage per-embedding index dirs, e.g. Paper-KG-Pipeline/output/novelty_index__siliconflow__Qwen_Qwen3-Embedding-8B__<hash>.",
-    "provider": "siliconflow",
-    "api_url": "https://api.siliconflow.cn/v1/embeddings",
-    "model": "Qwen/Qwen3-Embedding-8B"
+    "__comment__": "Embedding endpoint/model settings (non-sensitive). Secret EMBEDDING_API_KEY should stay in .env. Recommended: set index.dir_mode=auto_profile (or env I2P_INDEX_DIR_MODE) to auto-manage per-embedding index dirs, e.g. Paper-KG-Pipeline/output/novelty_index__{provider}__{model}__<hash>.",
+    "provider": "openai_compatible",
+    "api_url": "https://api.openai.com/v1/embeddings",
+    "model": "text-embedding-3-large"
   },
   "results": {
     "__comment__": "Aggregate final artifacts to repo-root results/run_.../ for better UX. Results are always copied (no symlinks).",
