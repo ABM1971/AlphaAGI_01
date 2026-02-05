@@ -122,16 +122,20 @@ StoryCard 与 PaperCard 同构字段（建议视为“公开给 LLM 的唯一信
 - `problem`
 - `method`
 - `contrib`
-- `experiments_plan`
-- `domain`
-- `sub_domains`
-- `application`
-- `notes`
 - `card_version`
+
+设计说明：
+- 仅展示稳定且普遍可得的字段，避免 “unknown/缺失” 变成决定性负面证据。
+- `experiments_plan`、`domain/sub_domains/application`、`notes` 不进入 judge prompt。
+- 对三字段强制长度裁剪，避免“写得更长就赢”：
+  - `problem` ≤ 220 字符
+  - `method` ≤ 280 字符
+  - `contrib` ≤ 320 字符
 
 实现：
 - `cards.py:build_story_card(...)`
 - `cards.py:build_paper_card(...)`
+当前 `CARD_VERSION`：`blind_card_v2_minimal`（更改后必须重新拟合 τ）。
 
 重要：Card **不包含** `paper_id/title/url/score/score10/pattern_id`，从源头避免泄露。
 
@@ -298,7 +302,7 @@ Score Layer 完成后再调用一次 LLM，输出结构化改稿建议：
 ### 8.2 “S=10” 的解释（不是 LLM 直出）
 
 当某个 role 对当前 anchors 给出近乎全 `better`（y≈1）时，在我们的模型下最优 S 会被推到网格上界 10。  
-这通常意味着 anchors 的 `score10` 分布偏低或 anchor cards 信息不足（例如 experiments_plan 经常是 unknown），导致 judge 很容易判 “Story 更好”。
+这通常意味着 anchors 的 `score10` 分布偏低，或 anchor cards 内容过于概括（缺少可区分的细节），导致 judge 更容易判 “Story 更好”。
 
 ### 8.3 结构化运行日志
 

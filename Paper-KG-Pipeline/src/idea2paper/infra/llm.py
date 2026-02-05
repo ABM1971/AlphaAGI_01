@@ -33,7 +33,7 @@ def _create_session_with_retries():
 
     return session
 
-def call_llm(prompt: str, temperature: float = 0.7, max_tokens: int = 2000, timeout: int = 120) -> str:
+def call_llm(prompt: str, temperature: float = 0.7, max_tokens: int = 4096, timeout: int = 120) -> str:
     """
     调用 LLM API（支持重试和延长超时）
 

@@ -689,7 +689,7 @@ class PipelineConfig:
     )
     CRITIC_COACH_MAX_TOKENS = _get(
         "I2P_CRITIC_COACH_MAX_TOKENS",
-        900,
+        4096,
         cast=int,
         cfg_path=["critic", "coach_max_tokens"],
     )

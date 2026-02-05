@@ -14,13 +14,10 @@ FORBIDDEN_TERMS = ("score", "score10", "paper_id", "title", "author", "link", "d
 
 def _format_card(card: Dict) -> str:
     lines = []
-    for key in ["problem", "method", "contrib", "experiments_plan", "domain", "sub_domains", "application"]:
+    for key in ["problem", "method", "contrib"]:
         value = card.get(key, "")
         if value:
             lines.append(f"- {key}: {value}")
-    notes = card.get("notes") or []
-    if notes:
-        lines.append(f"- notes: {', '.join(notes)}")
     return "\n".join(lines) if lines else "- (empty)"
 
 
@@ -50,6 +47,8 @@ class BlindJudge:
 You are a strict reviewer focused on **{role}**.
 You MUST NOT output any numeric score, paper title, author, link, paper_id, or any real-world identifiers.
 You are given a Story card and multiple anonymous Anchor cards. Compare the Story against each Anchor on the rubric.
+Do NOT treat missing/shorter text as evidence of lower quality. If evidence is insufficient, prefer tie (weak).
+Do NOT award "better" solely because one card is more detailed/longer; cite substantive quality differences.
 
 Rubric ({role}):
 {rubric}
@@ -85,6 +84,7 @@ Rules:
 4) judgement must be one of: better|tie|worse.
 5) strength must be one of: weak|medium|strong.
 6) rationale must be <= 25 words and MUST NOT mention scores or identifiers.
+7) Do NOT use missing/shorter text as the sole reason for better; if evidence is insufficient, prefer tie.
 
 Previous output:
 {previous_text[:6000]}
@@ -153,7 +153,7 @@ Return ONLY the corrected JSON:
         response = call_llm(
             prompt,
             temperature=PipelineConfig.LLM_TEMPERATURE_CRITIC_MAIN,
-            max_tokens=800,
+            max_tokens=4096,
             timeout=180,
         )
         result = parse_json_from_llm(response)
@@ -180,7 +180,7 @@ Return ONLY the corrected JSON:
             response = call_llm(
                 prompt,
                 temperature=PipelineConfig.LLM_TEMPERATURE_CRITIC_REPAIR,
-                max_tokens=800,
+                max_tokens=4096,
                 timeout=180,
             )
             result = parse_json_from_llm(response)

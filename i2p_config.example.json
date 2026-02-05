@@ -17,7 +17,7 @@
     "tau_storyteller": 1.0,
     "coach_enable": true,
     "coach_temperature": 0.3,
-    "coach_max_tokens": 900
+    "coach_max_tokens": 4096
   },
   "pass": {
     "__comment__": "Pattern-aware pass rule based on the pattern's full real score10 distribution (NOT anchors). Default scheme: 2 of 3 roles >= q75 and avg >= q50.",
@@ -36,7 +36,7 @@
     "grid_step": 0.01,
     "densify_loss_threshold": 0.05,
     "densify_min_avg_conf": 0.35,
-    "densify_enable": true
+    "densify_enable": false
   },
   "llm": {
     "__comment__": "LLM endpoint/model settings. The API key is read from env var SILICONFLOW_API_KEY in `.env` (do not put it here).",

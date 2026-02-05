@@ -93,7 +93,7 @@ class StoryGenerator:
         response = call_llm(
             prompt,
             temperature=PipelineConfig.LLM_TEMPERATURE_STORY_GENERATOR,
-            max_tokens=1500,
+            max_tokens=4096,
             timeout=180,
         )
 
@@ -745,7 +745,7 @@ Output ONLY a JSON format (no other text):
             response = call_llm(
                 prompt,
                 temperature=PipelineConfig.LLM_TEMPERATURE_STORY_GENERATOR_REWRITE,
-                max_tokens=1000,
+                max_tokens=4096,
                 timeout=180,
             )
             cn_story = parse_json_from_llm(response)

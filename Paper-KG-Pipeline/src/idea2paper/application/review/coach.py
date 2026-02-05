@@ -70,7 +70,7 @@ Return JSON ONLY with this schema:
         response = call_llm(
             prompt,
             temperature=getattr(PipelineConfig, "CRITIC_COACH_TEMPERATURE", 0.3),
-            max_tokens=getattr(PipelineConfig, "CRITIC_COACH_MAX_TOKENS", 900),
+            max_tokens=getattr(PipelineConfig, "CRITIC_COACH_MAX_TOKENS", 4096),
             timeout=180,
         )
         result = parse_json_from_llm(response)
@@ -107,7 +107,7 @@ Previous output:
             response = call_llm(
                 repair_prompt,
                 temperature=PipelineConfig.LLM_TEMPERATURE_CRITIC_REPAIR,
-                max_tokens=getattr(PipelineConfig, "CRITIC_COACH_MAX_TOKENS", 900),
+                max_tokens=getattr(PipelineConfig, "CRITIC_COACH_MAX_TOKENS", 4096),
                 timeout=180,
             )
             result = parse_json_from_llm(response)

@@ -1894,7 +1894,7 @@ Storyteller: 7.0/10 ✅
 **解决**:
 ```python
 # 1. 降低 LLM 温度
-response = call_llm(prompt, temperature=0.6, max_tokens=1500)
+response = call_llm(prompt, temperature=0.6, max_tokens=4096)
 
 # 2. 增强 Prompt 约束
 tricks_instruction = "【极重要：技术重构指令】\n"
@@ -2395,7 +2395,7 @@ def _enhance_patterns_with_llm(self, clusters: List[Dict]):
         prompt = self._build_llm_prompt_for_pattern(pattern_node, exemplars)
 
         # 调用LLM生成归纳性总结（每个类型1句话）
-        llm_response = call_llm(prompt, temperature=0.3, max_tokens=1500)
+        llm_response = call_llm(prompt, temperature=0.3, max_tokens=4096)
 
         # 添加到pattern_node['llm_enhanced_summary']
         if llm_response:
@@ -10841,4 +10841,3 @@ If you received 【Conceptual Innovation from Idea Fusion】 above, this is THE 
 2. ✅ 显示融合概念标题和新颖性声明
 3. ✅ 显示反思建议的策略类型
 4. ✅ 终稿生成后才进入 Critic 评审
-

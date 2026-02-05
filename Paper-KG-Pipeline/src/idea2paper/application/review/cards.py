@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-CARD_VERSION = "blind_card_v1"
+CARD_VERSION = "blind_card_v2_minimal"
+
+# Field length caps for blind judge (characters)
+PROBLEM_MAX_LEN = 220
+METHOD_MAX_LEN = 280
+CONTRIB_MAX_LEN = 320
 
 
 def _stable_string(value: Any) -> str:
@@ -39,10 +44,6 @@ def build_story_card(story: Dict[str, Any]) -> Dict[str, Any]:
     problem = story.get("problem_framing") or story.get("problem_definition") or ""
     method = story.get("method_skeleton", "")
     contrib = story.get("innovation_claims", story.get("claims", ""))
-    experiments = story.get("experiments_plan", "")
-    domain = story.get("domain", "")
-    sub_domains = story.get("sub_domains", "")
-    application = story.get("application", "")
 
     notes: List[str] = []
     if not problem:
@@ -51,17 +52,10 @@ def build_story_card(story: Dict[str, Any]) -> Dict[str, Any]:
         notes.append("method:missing")
     if not contrib:
         notes.append("contrib:missing")
-    if not experiments:
-        notes.append("experiments_plan:missing")
-
     return {
-        "problem": _clean_text(_to_str(problem)),
-        "method": _clean_text(_to_str(method)),
-        "contrib": _clean_text(_to_str(contrib)),
-        "experiments_plan": _clean_text(_to_str(experiments)),
-        "domain": _clean_text(_to_str(domain)),
-        "sub_domains": _clean_text(_to_str(sub_domains)),
-        "application": _clean_text(_to_str(application)),
+        "problem": _clean_text(_to_str(problem), max_len=PROBLEM_MAX_LEN),
+        "method": _clean_text(_to_str(method), max_len=METHOD_MAX_LEN),
+        "contrib": _clean_text(_to_str(contrib), max_len=CONTRIB_MAX_LEN),
         "notes": notes,
         "card_version": CARD_VERSION,
     }
@@ -69,20 +63,15 @@ def build_story_card(story: Dict[str, Any]) -> Dict[str, Any]:
 
 def build_paper_card(paper: Dict[str, Any], review_summary: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     pattern_details = paper.get("pattern_details", {}) or {}
-    problem = pattern_details.get("base_problem", "")
-    method = pattern_details.get("solution_pattern", "")
     story = pattern_details.get("story", "")
     idea = paper.get("idea", "")
+    problem = pattern_details.get("base_problem", "") or story or idea
+    method = pattern_details.get("solution_pattern", "") or story
     contrib = ""
     if review_summary:
         contrib = review_summary.get("contribution") or review_summary.get("strengths") or ""
     if not contrib:
         contrib = " ".join([_to_str(idea), _to_str(story)]).strip()
-    experiments = review_summary.get("experiments_plan") if review_summary else ""
-    experiments = experiments or "unknown"
-    domain = paper.get("domain", "")
-    sub_domains = paper.get("sub_domains", "")
-    application = pattern_details.get("application", "")
 
     notes: List[str] = []
     if not problem:
@@ -91,17 +80,11 @@ def build_paper_card(paper: Dict[str, Any], review_summary: Optional[Dict[str, A
         notes.append("method:missing")
     if not contrib:
         notes.append("contrib:missing")
-    if experiments == "unknown":
-        notes.append("experiments_plan:unknown")
 
     return {
-        "problem": _clean_text(_to_str(problem)),
-        "method": _clean_text(_to_str(method)),
-        "contrib": _clean_text(_to_str(contrib)),
-        "experiments_plan": _clean_text(_to_str(experiments)),
-        "domain": _clean_text(_to_str(domain)),
-        "sub_domains": _clean_text(_to_str(sub_domains)),
-        "application": _clean_text(_to_str(application)),
+        "problem": _clean_text(_to_str(problem), max_len=PROBLEM_MAX_LEN),
+        "method": _clean_text(_to_str(method), max_len=METHOD_MAX_LEN),
+        "contrib": _clean_text(_to_str(contrib), max_len=CONTRIB_MAX_LEN),
         "notes": notes,
         "card_version": CARD_VERSION,
     }

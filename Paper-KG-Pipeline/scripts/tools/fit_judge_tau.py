@@ -69,13 +69,10 @@ def build_pair_prompt(role: str, card_a: Dict, card_b: Dict) -> str:
     rubric = get_rubric(role)
     def fmt(card):
         lines = []
-        for key in ["problem", "method", "contrib", "experiments_plan", "domain", "sub_domains", "application"]:
+        for key in ["problem", "method", "contrib"]:
             val = card.get(key, "")
             if val:
                 lines.append(f"- {key}: {val}")
-        notes = card.get("notes") or []
-        if notes:
-            lines.append(f"- notes: {', '.join(notes)}")
         return "\n".join(lines) if lines else "- (empty)"
 
     return f"""
@@ -97,6 +94,7 @@ Output judgement of Paper A relative to Paper B:
 - judgement: better | tie | worse
 - strength: weak | medium | strong
 - rationale: <= 25 words, only use card content, no identifiers.
+Do NOT treat missing/shorter text as evidence of lower quality; if evidence is insufficient, prefer tie.
 
 Return JSON ONLY:
 {{
@@ -201,7 +199,7 @@ def main():
             card_a = build_paper_card(a)
             card_b = build_paper_card(b)
             prompt = build_pair_prompt(args.role, card_a, card_b)
-            resp = call_llm(prompt, temperature=0.0, max_tokens=400, timeout=120)
+            resp = call_llm(prompt, temperature=0.0, max_tokens=4096, timeout=120)
             judgement, strength = parse_judge_response(resp)
             if not judgement:
                 continue

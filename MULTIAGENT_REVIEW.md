@@ -122,16 +122,20 @@ StoryCard and PaperCard share identical fields (treat this as the *only* informa
 - `problem`
 - `method`
 - `contrib`
-- `experiments_plan`
-- `domain`
-- `sub_domains`
-- `application`
-- `notes`
 - `card_version`
+
+Design choices:
+- Only stable, widely available fields are shown to the judge to avoid “unknown” becoming a decisive negative signal.
+- Fields like `experiments_plan`, `domain/sub_domains/application`, and `notes` are **not** rendered into judge prompts.
+- Length caps are enforced on all three fields to prevent “longer = better” bias:
+  - `problem` ≤ 220 chars
+  - `method` ≤ 280 chars
+  - `contrib` ≤ 320 chars
 
 Implementation:
 - `cards.py:build_story_card(...)`
 - `cards.py:build_paper_card(...)`
+Current `CARD_VERSION`: `blind_card_v2_minimal` (changing it requires re-fitting τ).
 
 Crucially, cards do **not** include `paper_id/title/url/score/score10/pattern_id`.
 
