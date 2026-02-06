@@ -101,7 +101,7 @@ pip install -r Paper-KG-Pipeline/requirements.txt
 > **Tip (debug):** if you repeatedly hit Critic JSON errors, set `I2P_CRITIC_STRICT_JSON=0` (or `critic.strict_json=false`) to disable strict mode and allow fallback.  
 > **Tip (LLM temperature):** per-stage temperatures are configurable via `I2P_LLM_TEMPERATURE_*` or `llm.temperature.*`; defaults preserve current behavior. Critic is usually low temp for stability, while story generation can be moderate.  
 > **Tip (Idea Packaging):** optional quality boost via pattern-guided idea packaging + double recall (default off). Enable with `I2P_IDEA_PACKAGING_ENABLE=1` or `idea.packaging_enable=true`.  
-> **Tip (Subdomain taxonomy):** optional quality boost for Path2 to reduce duplicated/long-tail subdomains. Build once offline via `Paper-KG-Pipeline/scripts/tools/build_subdomain_taxonomy.py`, then enable with `I2P_SUBDOMAIN_TAXONOMY_ENABLE=1` (and optional `I2P_SUBDOMAIN_TAXONOMY_PATH`).  
+> **Tip (Subdomain taxonomy):** optional quality boost for Path2 to reduce duplicated/long-tail subdomains. When enabled, the pipeline auto-detects and (if `I2P_INDEX_ALLOW_BUILD=1`) auto-builds `subdomain_taxonomy.json` under `recall_index_dir` (recommended: leave `I2P_SUBDOMAIN_TAXONOMY_PATH` empty). First build uses batched embeddings; you can also build manually via `Paper-KG-Pipeline/scripts/tools/build_subdomain_taxonomy.py`.  
 > **Supported (no code changes):** OpenAI-compatible Embeddings APIs (`/v1/embeddings`) that accept `input` as a string or a list.  
 > **Not supported yet:** DashScope “native” embeddings endpoint (`/api/v1/services/embeddings/...`) requires an adapter.
 
