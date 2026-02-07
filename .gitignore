@@ -23,6 +23,7 @@ __pycache__/
 .installed.cfg
 
 # Large generated indexes
+Paper-KG-Pipeline/output/novelty_index/
 Paper-KG-Pipeline/output/novelty_index__*/
 Paper-KG-Pipeline/output/recall_index__*/
 
