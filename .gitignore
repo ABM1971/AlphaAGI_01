@@ -5,7 +5,6 @@ log_from_config/
 .env
 .env.local
 *.env
-i2p_config.json
 
 # System
 .DS_Store
