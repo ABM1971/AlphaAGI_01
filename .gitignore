@@ -11,6 +11,7 @@ log_from_config/
 Thumbs.db
 
 # Python
+venv/
 __pycache__/
 *.pyc
 *.py[cod]
