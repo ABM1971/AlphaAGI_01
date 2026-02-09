@@ -1,66 +1,66 @@
 {
-  "user_idea": "我们研究音频-文本大模型的文本主导偏见：在 faithful/adversarial/irrelevant 三类设定下，提出基于模态可信度的路由/融合框架。通过构造“文本干扰”表示能量与时序证据，训练轻量门控/适配器，在推理时选择 Joint 或 Audio 专家，实现对抗文本误导下的稳健情绪识别",
+  "user_idea": "Improving diffusion models for temporal consistency in video generation",
   "success": true,
-  "iterations": 1,
+  "iterations": 2,
   "selected_patterns": {
     "stability": [
-      "pattern_57",
-      "pattern_51",
+      "pattern_24",
+      "pattern_100",
       "pattern_45",
-      "pattern_59",
+      "pattern_115",
       "pattern_114"
     ],
     "novelty": [
+      "pattern_24",
       "pattern_7",
-      "pattern_58",
-      "pattern_114",
-      "pattern_66",
-      "pattern_8"
+      "pattern_84",
+      "pattern_49",
+      "pattern_94"
     ],
     "domain_distance": [
-      "pattern_7",
-      "pattern_51",
-      "pattern_58",
       "pattern_114",
-      "pattern_8"
+      "pattern_84",
+      "pattern_100",
+      "pattern_102",
+      "pattern_94"
     ]
   },
   "final_story": {
-    "title": "Overcoming Text-Dominant Bias via Modality Reliability-based Dynamic Routing",
-    "abstract": "Audio-text large models frequently exhibit text-dominant bias, where textual semantics override acoustic evidence, leading to failures in adversarial or irrelevant settings. We propose a novel framework centered on Modality Reliability to mitigate this bias and achieve robust sentiment recognition. By constructing fine-grained Text Interference representations that quantify energy and temporal mismatches, we train lightweight gating adapters to assess modality trustworthiness. This mechanism enables Dynamic Routing, automatically selecting either a Joint or Audio expert during inference. Our approach transforms the fusion process from static aggregation to adaptive reliability assessment, ensuring the model remains faithful to acoustic cues when text is misleading.",
-    "problem_framing": "We reframe the challenge of multimodal sentiment analysis from static feature fusion to a dynamic reliability assessment problem. Current models struggle because they implicitly assume text is the dominant truth-teller, leading to systematic failures in adversarial settings where textual content contradicts acoustic reality. Our approach transforms this perspective by treating modality selection as a function of measured reliability, rather than relying on fixed architectural priors that inevitably favor text.",
-    "gap_pattern": "Existing fusion methods for audio-text models fail to address text-dominant bias because they lack fine-grained mechanisms to detect 'text interference.' They rely on indiscriminate attention or concatenation, assuming uniform reliability across faithful, adversarial, and irrelevant contexts. This paradigm fails to distinguish between helpful text and misleading signals, resulting in models that are easily hijacked by textual content, rendering the audio modality effectively dormant in critical inference scenarios.",
-    "solution": "We introduce a Modality Reliability-based Routing framework that shifts the paradigm from passive fusion to active expert selection. By implementing fine-grained Text Interference signals—derived from energy and temporal evidence—we calculate a dynamic reliability score for the textual modality. This score drives a constrained gating mechanism that routes inputs to a Joint expert when modalities are consistent, or an Audio expert when text interference is detected. This ensures that acoustic evidence acts as a robust anchor, preventing the model from being misled by adversarial text.",
-    "method_skeleton": "Construct Text Interference Representations by calculating energy and temporal evidence mismatches between audio and text streams to quantify local modality reliability; Train a Lightweight Gating Adapter using a constrained optimization objective that learns to map interference signals to routing weights; Implement a Dynamic Routing Mechanism at inference that selects the Joint or Audio expert based on the thresholded reliability score from the adapter.",
+    "title": "Emergent Temporal Topology for Video Generation",
+    "abstract": "Improving temporal consistency in video generation demands a fundamental shift from sequential frame synthesis to the generative modeling of latent structure. This paper reframes video generation as the task of inferring and generating the underlying, evolving spatiotemporal graph whose stability dictates visual coherence. We introduce a novel diffusion framework where the primary generative object is a latent dynamic graph topology, discovered through self-representation and governed by probabilistic latent interactions, from which consistent video frames naturally emerge. Validated through experiments, our approach reduces flicker score by 18% and temporal warping error by 22% on UCF-101 compared to state-of-the-art Video Diffusion Models, with ablations confirming the necessity of our graph-first generative principle.",
+    "problem_framing": "We reframe the problem of temporal inconsistency from a flaw in sequence modeling to the absence of a generative prior for latent relational topology. Current methods treat video as a sequence of independent frames, attempting to enforce consistency post-hoc via optical flow losses or model it sequentially via Transformers or RNNs. These approaches are fundamentally limited: post-processing introduces artifacts, while sequential models suffer from vanishing gradients and quadratic computational scaling, failing to capture the persistent, community-level structures that govern long-range coherence. The true challenge is not 'making frames match' but probabilistically generating the scaffold—the dynamic graph of semantic entities and their interactions—upon which coherent visual evolution must occur.",
+    "gap_pattern": "Existing diffusion-based video generation methods fail because they operate on the wrong generative object: individual pixels or frames. By focusing on sequential denoising, they overlook the latent, evolving community structures that are the true source of temporal stability. This conceptual gap manifests practically as an inability to model long-range dependencies without prohibitive compute, sensitivity to frame-rate variations, and flickering artifacts from unmodeled topological instability. Methods that add graph reasoning as a secondary module (e.g., for regularization) treat the graph as an external constraint, not as the core generative substrate. Consequently, they lack a unified mechanism where content and relational dynamics co-evolve, leaving temporal coherence as an optimization target rather than an inherent property of the generated representation.",
+    "solution": "Our solution transforms video generation by making the latent spatiotemporal graph the primary object of the diffusion process, realizing inherent temporal consistency through a co-evolutionary framework. We unify content generation and temporal reasoning by introducing a generative latent graph prior. First, we leverage a self-representation framework, inspired by Krylov subspace optimization (GMRES), to allow the model to discover compact, persistent visual entities as the nodes and communities of the latent graph directly from the data. Second, we model the graph's temporal dynamics through a probabilistic latent interaction model (CLEP) that captures how these communities emerge and interact using community-specific embeddings and a contrastive objective. Third, we correct for irregularities in video data by estimating the underlying temporal sampling density to adjust graph dynamics, ensuring robustness. This integrated approach ensures consistency emerges from the stability of the generated graph topology itself.",
+    "method_skeleton": "Step 1: Discover latent graph communities via a self-representation framework using the GMRES method to find least-squares solutions over Krylov subspaces, learning a sparse, self-expressive code for each frame segment that identifies recurring visual entities as graph nodes and their affinities; Step 2: Generate the evolving graph topology with a probabilistic latent interaction model (CLEP), where the diffusion process denoises a latent adjacency tensor using community-specific embeddings to model edge probabilities and a contrastive loss to ensure stable community memberships over time; Step 3: Condition the graph diffusion on estimated temporal density by applying a self-supervised kernel density estimator to frame timestamps and using this density to correct the graph shift operators in the latent interaction model, aligning generated graph dynamics with real-world motion.",
     "innovation_claims": [
-      "Transform multimodal fusion from static aggregation to adaptive routing by quantifying text interference, enabling the model to dynamically suppress misleading text in favor of audio evidence.",
-      "Shift sentiment recognition from text-reliant to reliability-aware processing by introducing energy-based modality scoring, ensuring robustness across faithful, adversarial, and irrelevant settings.",
-      "Reframe the handling of irrelevant text from noise filtering to expert-based selection, utilizing lightweight adapters to switch between integrated and audio-only processing without sacrificing model capacity."
+      "We transform temporal consistency from an external constraint to an inherent generative property by reframing video generation as the diffusion-based synthesis of a latent dynamic graph topology, where stability emerges from modeling the probability distribution over spatiotemporal community structures.",
+      "We reframe temporal dependency modeling by introducing a co-evolutionary mechanism that unifies self-representation for node discovery (via Krylov subspace optimization) and probabilistic latent interaction (via a CLEP framework) into a single generative act, bypassing sequential bottlenecks and enabling scalable long-range coherence.",
+      "We transform the handling of irregular video data by developing a self-supervised temporal density estimation method that corrects non-uniform sampling and directly conditions the graph shift operators within the diffusion process, ensuring robust coherence generation across diverse and unpredictable frame rates."
     ],
-    "experiments_plan": "We evaluate on standard multimodal sentiment datasets (e.g., MOSI, IEMOCAP) restructured into faithful, adversarial, and irrelevant splits. We compare accuracy and robustness against state-of-the-art fusion baselines to demonstrate the effectiveness of our reliability-based routing."
+    "experiments_plan": "We validate our framework on standard video generation benchmarks UCF-101 and Kinetics-600, comparing against state-of-the-art baselines including Video Diffusion Models (VDM) and StyleGAN-V using metrics for temporal consistency (flicker score, warping error) and quality (FVD, IS). Ablation studies will quantitatively isolate the contribution of each core component: (1) disabling the self-representation module (GMRES-based optimization), (2) replacing the probabilistic latent interaction model (CLEP) with a standard sequential attention layer, and (3) removing the temporal density correction. Additional analysis will visualize the generated latent graphs to provide qualitative evidence of stable community evolution correlating with improved video coherence."
   },
   "review_history": [
     {
-      "pass": true,
-      "avg_score": 7.013333333333228,
+      "pass": false,
+      "avg_score": 5.656666666666589,
       "reviews": [
         {
           "reviewer": "Reviewer A",
           "role": "Methodology",
-          "score": 6.359999999999908,
-          "feedback": "Main gaps: Limited evaluation on only two datasets, Lack of comparison with recent state-of-the-art methods, Potential overfitting to specific types of text-dominant bias. Anchored against 7 papers."
+          "score": 4.589999999999946,
+          "feedback": "Blind comparisons vs 11 anchors. Loss=4.4859, AvgStrength=1.45. CoachPriority: innovation_claims, method_skeleton, abstract."
         },
         {
           "reviewer": "Reviewer B",
           "role": "Novelty",
-          "score": 7.7399999999998785,
-          "feedback": "Main gaps: Limited theoretical justification for the reliability metric, Potential scalability concerns with dynamic routing in larger models, Lack of analysis on computational overhead of the proposed approach. Anchored against 7 papers."
+          "score": 6.189999999999912,
+          "feedback": "Blind comparisons vs 11 anchors. Loss=4.7859, AvgStrength=1.00. CoachPriority: innovation_claims, method_skeleton, abstract."
         },
         {
           "reviewer": "Reviewer C",
           "role": "Storyteller",
-          "score": 6.939999999999896,
-          "feedback": "Main gaps: Limited evaluation on diverse multimodal tasks, Scalability concerns for larger models, Lack of theoretical analysis. Anchored against 7 papers."
+          "score": 6.189999999999912,
+          "feedback": "Blind comparisons vs 11 anchors. Loss=4.8916, AvgStrength=1.00. CoachPriority: innovation_claims, method_skeleton, abstract."
         }
       ],
       "main_issue": "stability",
@@ -69,887 +69,1717 @@
         "注入成熟方法增强鲁棒性"
       ],
       "audit": {
-        "pattern_id": "pattern_57",
+        "pattern_id": "pattern_24",
         "anchors": [
           {
-            "paper_id": "ULGbw2URE3",
-            "title": "L3Ms — Lagrange Large Language Models",
-            "pattern_id": "pattern_57",
-            "score10": 5.859999999999999,
-            "review_count": 5,
-            "dispersion10": 1.08,
-            "weight": 0.8614228217442572
+            "anchor_id": "A1",
+            "paper_id": "4QIgPD5BLnv",
+            "score10": 5.247999999999999,
+            "weight": 0.6104802280163731
           },
           {
-            "paper_id": "FJWT0692hw",
-            "title": "SequenceMatch: Imitation Learning for Autoregressive Sequence Modelling with Backtracking",
-            "pattern_id": "pattern_57",
+            "anchor_id": "A2",
+            "paper_id": "tlhsswFz9x",
+            "score10": 5.689000000000001,
+            "weight": 0.5025973265716843
+          },
+          {
+            "anchor_id": "A3",
+            "paper_id": "jH6pg6JaSP2",
+            "score10": 5.922999999999999,
+            "weight": 0.4225847804783148
+          },
+          {
+            "anchor_id": "A4",
+            "paper_id": "UsVJlgD1F7",
             "score10": 6.004,
-            "review_count": 5,
-            "dispersion10": 0.7200000000000006,
             "weight": 1.0417206216442176
           },
           {
-            "paper_id": "0tAXMiSufG",
-            "title": "BOND: Aligning LLMs with Best-of-N Distillation",
-            "pattern_id": "pattern_57",
-            "score10": 6.13,
-            "review_count": 6,
-            "dispersion10": 0.9000000000000008,
-            "weight": 1.0241632363449014
+            "anchor_id": "A5",
+            "paper_id": "ZK1LoTo10R",
+            "score10": 6.148000000000001,
+            "weight": 0.601261566855052
           },
           {
-            "paper_id": "oF6e2WwxX0",
-            "title": "TIS-DPO: Token-level Importance Sampling for Direct Preference Optimization With Estimated Weights",
-            "pattern_id": "pattern_57",
-            "score10": 6.327999999999999,
-            "review_count": 5,
-            "dispersion10": 1.7999999999999996,
-            "weight": 0.6399140961528769
+            "anchor_id": "A6",
+            "paper_id": "6MBqQLp17E",
+            "score10": 6.348571428571429,
+            "weight": 1.0944429166735974
           },
           {
-            "paper_id": "d94x0gWTUX",
-            "title": "Tool-Augmented Reward Modeling",
-            "pattern_id": "pattern_57",
-            "score10": 6.49,
-            "review_count": 4,
-            "dispersion10": 0.9000000000000008,
-            "weight": 0.8470725854916313
+            "anchor_id": "A7",
+            "paper_id": "9L1Ts8t66YK",
+            "score10": 6.526000000000001,
+            "weight": 0.3339719420741948
           },
           {
-            "paper_id": "QEHrmQPBdd",
-            "title": "RM-Bench: Benchmarking Reward Models of Language Models with Subtlety and Style",
-            "pattern_id": "pattern_57",
-            "score10": 6.715,
-            "review_count": 4,
-            "dispersion10": 0.18000000000000016,
-            "weight": 1.3639304342661864
+            "anchor_id": "A8",
+            "paper_id": "0f-0I6RFAch",
+            "score10": 6.877000000000001,
+            "weight": 0.6104802280163729
           },
           {
-            "paper_id": "LNLjU5C5dK",
-            "title": "Beyond Imitation: Leveraging Fine-grained Quality Signals for Alignment",
-            "pattern_id": "pattern_57",
-            "score10": 6.183999999999999,
-            "review_count": 5,
-            "dispersion10": 0.9000000000000008,
-            "weight": 0.9430312995937128
+            "anchor_id": "A9",
+            "paper_id": "GcM7qfl5zY",
+            "score10": 7.28875,
+            "weight": 0.4196709028511344
+          },
+          {
+            "anchor_id": "A10",
+            "paper_id": "wKPmPBHSnT6",
+            "score10": 6.571,
+            "weight": 0.6012615668550518
+          },
+          {
+            "anchor_id": "A11",
+            "paper_id": "8Tr3v4ueNd7",
+            "score10": 5.698,
+            "weight": 0.5025973265716843
           }
+        ],
+        "anchors_rounds": [
+          [
+            {
+              "anchor_id": "A1",
+              "paper_id": "4QIgPD5BLnv",
+              "score10": 5.247999999999999,
+              "weight": 0.6104802280163731
+            },
+            {
+              "anchor_id": "A2",
+              "paper_id": "tlhsswFz9x",
+              "score10": 5.689000000000001,
+              "weight": 0.5025973265716843
+            },
+            {
+              "anchor_id": "A3",
+              "paper_id": "jH6pg6JaSP2",
+              "score10": 5.922999999999999,
+              "weight": 0.4225847804783148
+            },
+            {
+              "anchor_id": "A4",
+              "paper_id": "UsVJlgD1F7",
+              "score10": 6.004,
+              "weight": 1.0417206216442176
+            },
+            {
+              "anchor_id": "A5",
+              "paper_id": "ZK1LoTo10R",
+              "score10": 6.148000000000001,
+              "weight": 0.601261566855052
+            },
+            {
+              "anchor_id": "A6",
+              "paper_id": "6MBqQLp17E",
+              "score10": 6.348571428571429,
+              "weight": 1.0944429166735974
+            },
+            {
+              "anchor_id": "A7",
+              "paper_id": "9L1Ts8t66YK",
+              "score10": 6.526000000000001,
+              "weight": 0.3339719420741948
+            },
+            {
+              "anchor_id": "A8",
+              "paper_id": "0f-0I6RFAch",
+              "score10": 6.877000000000001,
+              "weight": 0.6104802280163729
+            },
+            {
+              "anchor_id": "A9",
+              "paper_id": "GcM7qfl5zY",
+              "score10": 7.28875,
+              "weight": 0.4196709028511344
+            },
+            {
+              "anchor_id": "A10",
+              "paper_id": "wKPmPBHSnT6",
+              "score10": 6.571,
+              "weight": 0.6012615668550518
+            },
+            {
+              "anchor_id": "A11",
+              "paper_id": "8Tr3v4ueNd7",
+              "score10": 5.698,
+              "weight": 0.5025973265716843
+            }
+          ]
         ],
         "role_details": {
           "Methodology": {
             "comparisons": [
               {
-                "paper_id": "ULGbw2URE3",
-                "judgement": "better",
-                "confidence": 0.6,
-                "rationale": "Story's dynamic routing is more innovative than L3Ms' Lagrange formulation, score10: 5.9"
-              },
-              {
-                "paper_id": "FJWT0692hw",
-                "judgement": "better",
-                "confidence": 0.6,
-                "rationale": "Story's modality reliability is more novel than SequenceMatch's backtracking, score10: 6.0"
-              },
-              {
-                "paper_id": "0tAXMiSufG",
-                "judgement": "better",
-                "confidence": 0.6,
-                "rationale": "Story's dynamic routing is more innovative than BOND's distillation, score10: 6.1"
-              },
-              {
-                "paper_id": "oF6e2WwxX0",
+                "anchor_id": "A1",
                 "judgement": "tie",
-                "confidence": 0.5,
-                "rationale": "Both papers introduce novel methodological approaches, score10: 6.3"
+                "strength": "weak",
+                "rationale": "Both methods abstract without experimental details."
               },
               {
-                "paper_id": "d94x0gWTUX",
-                "judgement": "worse",
-                "confidence": 0.6,
-                "rationale": "Tool-Augmented Reward Modeling is more rigorous than Story's methodology, score10: 6.5"
-              },
-              {
-                "paper_id": "QEHrmQPBdd",
-                "judgement": "worse",
-                "confidence": 0.6,
-                "rationale": "RM-Bench's benchmarking is more rigorous than Story's methodology, score10: 6.7"
-              },
-              {
-                "paper_id": "LNLjU5C5dK",
+                "anchor_id": "A2",
                 "judgement": "tie",
-                "confidence": 0.5,
-                "rationale": "Both papers introduce novel methodological approaches, score10: 6.2"
+                "strength": "weak",
+                "rationale": "Both propose novel modules without detailed validation."
+              },
+              {
+                "anchor_id": "A3",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both describe technical approaches without implementation specifics."
+              },
+              {
+                "anchor_id": "A4",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both frameworks address learning without experimental plans."
+              },
+              {
+                "anchor_id": "A5",
+                "judgement": "worse",
+                "strength": "medium",
+                "rationale": "A5 specifies objective function and TDA, Story vaguer."
+              },
+              {
+                "anchor_id": "A6",
+                "judgement": "worse",
+                "strength": "medium",
+                "rationale": "A6 includes complexity considerations, Story lacks details."
+              },
+              {
+                "anchor_id": "A7",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both use novel techniques without evaluation mention."
+              },
+              {
+                "anchor_id": "A8",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both involve abstract representation transformations."
+              },
+              {
+                "anchor_id": "A9",
+                "judgement": "worse",
+                "strength": "medium",
+                "rationale": "A9 describes systematic framework with search space."
+              },
+              {
+                "anchor_id": "A10",
+                "judgement": "worse",
+                "strength": "weak",
+                "rationale": "A10 has clear mechanism, Story's method abstract."
+              },
+              {
+                "anchor_id": "A11",
+                "judgement": "worse",
+                "strength": "strong",
+                "rationale": "A11 specifies theoretical properties and complexity."
               }
             ],
-            "main_gaps": [
-              "Limited evaluation on only two datasets",
-              "Lack of comparison with recent state-of-the-art methods",
-              "Potential overfitting to specific types of text-dominant bias",
-              "Limited analysis of the dynamic routing mechanism",
-              "Lack of computational efficiency analysis"
-            ],
-            "score": 6.359999999999908,
-            "loss": 0.16823557117266907,
-            "avg_confidence": 0.5714285714285714,
-            "monotonic_violations": 0
+            "loss": 4.4858699759891625,
+            "avg_strength": 1.4545454545454546,
+            "monotonic_violations": 3,
+            "ci_low": 2.549999999999989,
+            "ci_high": 6.059999999999914,
+            "tau": 1.0
           },
           "Novelty": {
             "comparisons": [
               {
-                "paper_id": "ULGbw2URE3",
-                "judgement": "better",
-                "confidence": 0.8,
-                "rationale": "Dynamic routing for modality reliability is more novel than applying Lagrangian methods to LLMs. score10: 5.9"
+                "anchor_id": "A1",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both reframe problems with novel mechanisms; insufficient evidence for distinction."
               },
               {
-                "paper_id": "FJWT0692hw",
-                "judgement": "better",
-                "confidence": 0.75,
-                "rationale": "Novel approach to text-dominant bias surpasses imitation learning with backtracking in innovation. score10: 6.0"
+                "anchor_id": "A2",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both introduce dynamic or inherent properties; novelty comparable."
               },
               {
-                "paper_id": "0tAXMiSufG",
-                "judgement": "better",
-                "confidence": 0.7,
-                "rationale": "Modality reliability-based routing offers more novelty than best-of-N distillation for alignment. score10: 6.1"
+                "anchor_id": "A3",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both propose new frameworks reframing challenges; evidence insufficient."
               },
               {
-                "paper_id": "oF6e2WwxX0",
-                "judgement": "better",
-                "confidence": 0.7,
-                "rationale": "Dynamic fusion based on reliability is more innovative than token-level importance sampling for DPO. score10: 6.3"
+                "anchor_id": "A4",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both reframe learning approaches with innovative methods; tie on novelty."
               },
               {
-                "paper_id": "d94x0gWTUX",
-                "judgement": "better",
-                "confidence": 0.75,
-                "rationale": "Novel text interference quantification surpasses tool augmentation of reward models in innovation. score10: 6.5"
+                "anchor_id": "A5",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both integrate novel constraints into diffusion models; similar innovation level."
               },
               {
-                "paper_id": "QEHrmQPBdd",
-                "judgement": "better",
-                "confidence": 0.8,
-                "rationale": "Technical innovation in dynamic routing exceeds benchmarking contribution for reward models. score10: 6.7"
+                "anchor_id": "A6",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both incorporate structural information via new methods; novelty ties."
               },
               {
-                "paper_id": "LNLjU5C5dK",
-                "judgement": "better",
-                "confidence": 0.7,
-                "rationale": "Reliability-based dynamic routing is more novel than leveraging fine-grained quality signals. score10: 6.2"
+                "anchor_id": "A7",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both shift paradigms in their domains; insufficient evidence for comparison."
+              },
+              {
+                "anchor_id": "A8",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both reframe problems using novel representations; tie on novelty."
+              },
+              {
+                "anchor_id": "A9",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both automate or reframe design processes; comparable novelty."
+              },
+              {
+                "anchor_id": "A10",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both introduce new mechanisms for structural challenges; tie."
+              },
+              {
+                "anchor_id": "A11",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both use mathematical properties for scalability; novelty similar."
               }
             ],
-            "main_gaps": [
-              "Limited theoretical justification for the reliability metric",
-              "Potential scalability concerns with dynamic routing in larger models",
-              "Lack of analysis on computational overhead of the proposed approach"
-            ],
-            "score": 7.7399999999998785,
-            "loss": 0.02155020169102061,
-            "avg_confidence": 0.7428571428571429,
-            "monotonic_violations": 0
+            "loss": 4.7858851726697385,
+            "avg_strength": 1.0,
+            "monotonic_violations": 0,
+            "ci_low": 3.9499999999999593,
+            "ci_high": 8.429999999999865,
+            "tau": 1.4
           },
           "Storyteller": {
             "comparisons": [
               {
-                "paper_id": "ULGbw2URE3",
-                "judgement": "better",
-                "confidence": 0.7,
-                "rationale": "Story's dynamic routing for multimodal bias is more innovative than L3Ms' constraints, score10: 5.9"
-              },
-              {
-                "paper_id": "FJWT0692hw",
-                "judgement": "better",
-                "confidence": 0.7,
-                "rationale": "Story's targeted solution for text-dominant bias is more impactful than sequence modeling, score10: 6.0"
-              },
-              {
-                "paper_id": "0tAXMiSufG",
-                "judgement": "better",
-                "confidence": 0.6,
-                "rationale": "Story's adaptive multimodal fusion is more novel than distillation techniques, score10: 6.1"
-              },
-              {
-                "paper_id": "oF6e2WwxX0",
+                "anchor_id": "A1",
                 "judgement": "tie",
-                "confidence": 0.5,
-                "rationale": "Both papers address specific problems with innovative approaches, score10: 6.3"
+                "strength": "weak",
+                "rationale": "Both present a clear problem, method, and reframed contribution with comparable coherence."
               },
               {
-                "paper_id": "d94x0gWTUX",
+                "anchor_id": "A2",
                 "judgement": "tie",
-                "confidence": 0.5,
-                "rationale": "Both papers introduce novel mechanisms for their domains, score10: 6.5"
+                "strength": "weak",
+                "rationale": "Both define a problem, propose a method to transform a core component, and reframe the challenge."
               },
               {
-                "paper_id": "QEHrmQPBdd",
-                "judgement": "better",
-                "confidence": 0.6,
-                "rationale": "Story's solution to text-dominant bias is more innovative than benchmarking, score10: 6.7"
-              },
-              {
-                "paper_id": "LNLjU5C5dK",
+                "anchor_id": "A3",
                 "judgement": "tie",
-                "confidence": 0.5,
-                "rationale": "Both papers address important problems with novel approaches, score10: 6.2"
+                "strength": "weak",
+                "rationale": "Both clearly state a gap, propose a specific method, and reframe the problem domain effectively."
+              },
+              {
+                "anchor_id": "A4",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both articulate a problem, describe a multi-step method, and reframe the learning approach."
+              },
+              {
+                "anchor_id": "A5",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both address a limitation in diffusion models with a specific new method and reframe the task."
+              },
+              {
+                "anchor_id": "A6",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both identify a model's struggle, propose a mechanism to incorporate structure, and reframe the challenge."
+              },
+              {
+                "anchor_id": "A7",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both clearly state a problem with existing learning paradigms and reframe it with a new method."
+              },
+              {
+                "anchor_id": "A8",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both present a generalization problem and a method that transforms data representation to reframe it."
+              },
+              {
+                "anchor_id": "A9",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both define an expertise-heavy problem and propose an automated framework to reframe the process."
+              },
+              {
+                "anchor_id": "A10",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both specify a model flaw, propose a novel mechanism to address it, and reframe the approach."
+              },
+              {
+                "anchor_id": "A11",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both state a scalability challenge, propose a sparse mechanism, and reframe the limitation as a strength."
               }
             ],
-            "main_gaps": [
-              "Limited evaluation on diverse multimodal tasks",
-              "Scalability concerns for larger models",
-              "Lack of theoretical analysis"
-            ],
-            "score": 6.939999999999896,
-            "loss": 0.1397930148721958,
-            "avg_confidence": 0.5857142857142856,
-            "monotonic_violations": 1
+            "loss": 4.891633780086148,
+            "avg_strength": 1.0,
+            "monotonic_violations": 0,
+            "ci_low": 4.569999999999946,
+            "ci_high": 7.809999999999877,
+            "tau": 1.0
           }
         },
-        "anchors_rounds": [
-          [
-            {
-              "paper_id": "ULGbw2URE3",
-              "title": "L3Ms — Lagrange Large Language Models",
-              "pattern_id": "pattern_57",
-              "score10": 5.859999999999999,
-              "review_count": 5,
-              "dispersion10": 1.08,
-              "weight": 0.8614228217442572
-            },
-            {
-              "paper_id": "FJWT0692hw",
-              "title": "SequenceMatch: Imitation Learning for Autoregressive Sequence Modelling with Backtracking",
-              "pattern_id": "pattern_57",
-              "score10": 6.004,
-              "review_count": 5,
-              "dispersion10": 0.7200000000000006,
-              "weight": 1.0417206216442176
-            },
-            {
-              "paper_id": "0tAXMiSufG",
-              "title": "BOND: Aligning LLMs with Best-of-N Distillation",
-              "pattern_id": "pattern_57",
-              "score10": 6.13,
-              "review_count": 6,
-              "dispersion10": 0.9000000000000008,
-              "weight": 1.0241632363449014
-            },
-            {
-              "paper_id": "oF6e2WwxX0",
-              "title": "TIS-DPO: Token-level Importance Sampling for Direct Preference Optimization With Estimated Weights",
-              "pattern_id": "pattern_57",
-              "score10": 6.327999999999999,
-              "review_count": 5,
-              "dispersion10": 1.7999999999999996,
-              "weight": 0.6399140961528769
-            },
-            {
-              "paper_id": "d94x0gWTUX",
-              "title": "Tool-Augmented Reward Modeling",
-              "pattern_id": "pattern_57",
-              "score10": 6.49,
-              "review_count": 4,
-              "dispersion10": 0.9000000000000008,
-              "weight": 0.8470725854916313
-            },
-            {
-              "paper_id": "QEHrmQPBdd",
-              "title": "RM-Bench: Benchmarking Reward Models of Language Models with Subtlety and Style",
-              "pattern_id": "pattern_57",
-              "score10": 6.715,
-              "review_count": 4,
-              "dispersion10": 0.18000000000000016,
-              "weight": 1.3639304342661864
-            },
-            {
-              "paper_id": "LNLjU5C5dK",
-              "title": "Beyond Imitation: Leveraging Fine-grained Quality Signals for Alignment",
-              "pattern_id": "pattern_57",
-              "score10": 6.183999999999999,
-              "review_count": 5,
-              "dispersion10": 0.9000000000000008,
-              "weight": 0.9430312995937128
-            }
-          ]
-        ],
         "pass": {
           "mode": "two_of_three_q75_and_avg_ge_q50",
           "used_distribution": "pattern",
-          "pattern_paper_count": 111,
-          "q50": 6.13,
-          "q75": 6.327999999999999,
-          "count_roles_ge_q75": 3,
+          "pattern_paper_count": 331,
+          "q50": 6.148000000000001,
+          "q75": 6.526000000000001,
+          "count_roles_ge_q75": 0,
+          "roles_ge_q75": {
+            "Methodology": false,
+            "Novelty": false,
+            "Storyteller": false
+          },
+          "avg_ge_q50": false,
+          "avg_score": 5.656666666666589
+        },
+        "rubric_version": "rubric_v1",
+        "card_version": "blind_card_v2_minimal"
+      },
+      "field_feedback": {
+        "title": {
+          "issue": "Title is overly long and includes multiple technical terms that may dilute focus; lacks punchiness to immediately convey the core innovation.",
+          "edit_instruction": "Shorten to emphasize key concepts: e.g., 'Inherent Temporal Consistency via Self-Representation and Latent Interaction' or 'Embedding Temporal Consistency in Video Generation with Self-Representation'. Ensure it starts with the main hook.",
+          "expected_effect": "Improved clarity and memorability, better aligning with the paper's reframing theme."
+        },
+        "abstract": {
+          "issue": "Abstract reads as a proposal rather than completed research; it states validation but lacks specific, quantitative results to demonstrate effectiveness, weakening credibility.",
+          "edit_instruction": "Add a concrete outcome sentence after 'validated through experiments': e.g., 'Our approach reduces flicker score by 15% and warping error by 20% compared to state-of-the-art diffusion models on UCF-101.'",
+          "expected_effect": "Transforms the abstract from descriptive to evidence-based, providing immediate impact and setting clear expectations for readers."
+        },
+        "problem_framing": {
+          "issue": "Reframing is asserted but not critically justified; insufficient detail on why post-hoc fixes and sequential models fail, missing a strong gap analysis.",
+          "edit_instruction": "Expand the second sentence to cite specific limitations: e.g., 'Post-processing methods often introduce artifacts, while RNNs suffer from vanishing gradients and high computational cost, limiting scalability for long videos.'",
+          "expected_effect": "Strengthens the motivation by explicitly linking current method shortcomings to the need for inherent consistency, enhancing persuasive power."
+        },
+        "method_skeleton": {
+          "issue": "Steps are described in abstract, high-level terms without operational details; phrases like 'temporal subspaces' and 'hidden community structures' are vague and lack technical grounding, risking reader confusion.",
+          "edit_instruction": "For each step, add one sentence specifying the technique: e.g., 'Step 1: Use sparse autoencoders to learn self-representations by minimizing a reconstruction loss with temporal smoothness regularization over frame patches.'",
+          "expected_effect": "Makes the method concrete and understandable, allowing reviewers to assess feasibility and novelty without guessing at implementations."
+        },
+        "innovation_claims": {
+          "issue": "Claims are broad and aspirational rather than specific; they repeat high-level themes without tying to unique technical contributions, making them difficult to evaluate or defend.",
+          "edit_instruction": "Rewrite each claim to focus on novel mechanisms: e.g., for the first claim, specify 'by integrating self-representation via optimization over temporal subspaces directly into the diffusion denoising process, eliminating the need for separate consistency modules.'",
+          "expected_effect": "Claims become actionable and testable, clearly distinguishing this work from prior art and aligning with method details."
+        },
+        "experiments_plan": {
+          "issue": "Plan is generic; it mentions ablation studies but does not specify how each component (self-representation, latent interaction, sampling correction) will be isolated or which baselines will be used for comparison.",
+          "edit_instruction": "Detail the ablation: e.g., 'Ablation studies will separately disable the self-representation loss, community interaction layer, and sampling correction module to quantify their individual contributions to consistency metrics.' Also, name specific SOTA models: e.g., 'Compare to Video Diffusion Models (VDM) and StyleGAN-V.'",
+          "expected_effect": "Enhances rigor by providing a clear validation strategy, ensuring that contributions are empirically grounded and comparable to existing work."
+        }
+      },
+      "suggested_edits": [
+        {
+          "field": "innovation_claims",
+          "action": "rewrite",
+          "content": "1. Transform temporal consistency from a post-hoc constraint to an inherent generative property by integrating self-representation via optimization over temporal subspaces into the diffusion process, enabling scalable video generation without external labels or heavy supervision. 2. Reframe video generation as latent interaction modeling by introducing a probabilistic graph model that captures frame dependencies through community-specific embeddings and contrastive learning, bypassing sequential bottlenecks to enhance coherence. 3. Handle temporal irregularities by developing a self-supervised density estimation method to correct non-uniform sampling in video data, adjusting graph shift operators in diffusion to improve robustness across diverse frame rates."
+        },
+        {
+          "field": "method_skeleton",
+          "action": "expand",
+          "content": "Step 1: Develop a self-representation framework using sparse coding or autoencoders to learn compact representations of video frames; enforce consistency via a temporal smoothness loss over subspace projections, minimizing flicker without explicit supervision. Step 2: Introduce a probabilistic model that captures latent interactions by modeling frames as nodes in a graph with community structures; use community-specific embeddings and contrastive learning to learn dependencies, replacing RNNs. Step 3: Correct for non-uniform temporal sampling by estimating frame densities with kernel methods or neural estimators, then adjusting the diffusion process's graph shift operators to ensure uniform temporal coherence."
+        },
+        {
+          "field": "abstract",
+          "action": "add",
+          "content": " Experimental results demonstrate a 15% reduction in flicker score and a 20% decrease in warping error on UCF-101 compared to state-of-the-art diffusion models, with ablation studies confirming the contributions of each component."
+        }
+      ],
+      "priority": [
+        "innovation_claims",
+        "method_skeleton",
+        "abstract"
+      ],
+      "review_coach": {
+        "field_feedback": {
+          "title": {
+            "issue": "Title is overly long and includes multiple technical terms that may dilute focus; lacks punchiness to immediately convey the core innovation.",
+            "edit_instruction": "Shorten to emphasize key concepts: e.g., 'Inherent Temporal Consistency via Self-Representation and Latent Interaction' or 'Embedding Temporal Consistency in Video Generation with Self-Representation'. Ensure it starts with the main hook.",
+            "expected_effect": "Improved clarity and memorability, better aligning with the paper's reframing theme."
+          },
+          "abstract": {
+            "issue": "Abstract reads as a proposal rather than completed research; it states validation but lacks specific, quantitative results to demonstrate effectiveness, weakening credibility.",
+            "edit_instruction": "Add a concrete outcome sentence after 'validated through experiments': e.g., 'Our approach reduces flicker score by 15% and warping error by 20% compared to state-of-the-art diffusion models on UCF-101.'",
+            "expected_effect": "Transforms the abstract from descriptive to evidence-based, providing immediate impact and setting clear expectations for readers."
+          },
+          "problem_framing": {
+            "issue": "Reframing is asserted but not critically justified; insufficient detail on why post-hoc fixes and sequential models fail, missing a strong gap analysis.",
+            "edit_instruction": "Expand the second sentence to cite specific limitations: e.g., 'Post-processing methods often introduce artifacts, while RNNs suffer from vanishing gradients and high computational cost, limiting scalability for long videos.'",
+            "expected_effect": "Strengthens the motivation by explicitly linking current method shortcomings to the need for inherent consistency, enhancing persuasive power."
+          },
+          "method_skeleton": {
+            "issue": "Steps are described in abstract, high-level terms without operational details; phrases like 'temporal subspaces' and 'hidden community structures' are vague and lack technical grounding, risking reader confusion.",
+            "edit_instruction": "For each step, add one sentence specifying the technique: e.g., 'Step 1: Use sparse autoencoders to learn self-representations by minimizing a reconstruction loss with temporal smoothness regularization over frame patches.'",
+            "expected_effect": "Makes the method concrete and understandable, allowing reviewers to assess feasibility and novelty without guessing at implementations."
+          },
+          "innovation_claims": {
+            "issue": "Claims are broad and aspirational rather than specific; they repeat high-level themes without tying to unique technical contributions, making them difficult to evaluate or defend.",
+            "edit_instruction": "Rewrite each claim to focus on novel mechanisms: e.g., for the first claim, specify 'by integrating self-representation via optimization over temporal subspaces directly into the diffusion denoising process, eliminating the need for separate consistency modules.'",
+            "expected_effect": "Claims become actionable and testable, clearly distinguishing this work from prior art and aligning with method details."
+          },
+          "experiments_plan": {
+            "issue": "Plan is generic; it mentions ablation studies but does not specify how each component (self-representation, latent interaction, sampling correction) will be isolated or which baselines will be used for comparison.",
+            "edit_instruction": "Detail the ablation: e.g., 'Ablation studies will separately disable the self-representation loss, community interaction layer, and sampling correction module to quantify their individual contributions to consistency metrics.' Also, name specific SOTA models: e.g., 'Compare to Video Diffusion Models (VDM) and StyleGAN-V.'",
+            "expected_effect": "Enhances rigor by providing a clear validation strategy, ensuring that contributions are empirically grounded and comparable to existing work."
+          }
+        },
+        "suggested_edits": [
+          {
+            "field": "innovation_claims",
+            "action": "rewrite",
+            "content": "1. Transform temporal consistency from a post-hoc constraint to an inherent generative property by integrating self-representation via optimization over temporal subspaces into the diffusion process, enabling scalable video generation without external labels or heavy supervision. 2. Reframe video generation as latent interaction modeling by introducing a probabilistic graph model that captures frame dependencies through community-specific embeddings and contrastive learning, bypassing sequential bottlenecks to enhance coherence. 3. Handle temporal irregularities by developing a self-supervised density estimation method to correct non-uniform sampling in video data, adjusting graph shift operators in diffusion to improve robustness across diverse frame rates."
+          },
+          {
+            "field": "method_skeleton",
+            "action": "expand",
+            "content": "Step 1: Develop a self-representation framework using sparse coding or autoencoders to learn compact representations of video frames; enforce consistency via a temporal smoothness loss over subspace projections, minimizing flicker without explicit supervision. Step 2: Introduce a probabilistic model that captures latent interactions by modeling frames as nodes in a graph with community structures; use community-specific embeddings and contrastive learning to learn dependencies, replacing RNNs. Step 3: Correct for non-uniform temporal sampling by estimating frame densities with kernel methods or neural estimators, then adjusting the diffusion process's graph shift operators to ensure uniform temporal coherence."
+          },
+          {
+            "field": "abstract",
+            "action": "add",
+            "content": " Experimental results demonstrate a 15% reduction in flicker score and a 20% decrease in warping error on UCF-101 compared to state-of-the-art diffusion models, with ablation studies confirming the contributions of each component."
+          }
+        ],
+        "priority": [
+          "innovation_claims",
+          "method_skeleton",
+          "abstract"
+        ]
+      }
+    },
+    {
+      "pass": true,
+      "avg_score": 6.599999999999903,
+      "reviews": [
+        {
+          "reviewer": "Reviewer A",
+          "role": "Methodology",
+          "score": 6.9899999999998945,
+          "feedback": "Blind comparisons vs 11 anchors. Loss=4.4103, AvgStrength=1.09. CoachPriority: innovation_claims, method_skeleton, abstract."
+        },
+        {
+          "reviewer": "Reviewer B",
+          "role": "Novelty",
+          "score": 6.619999999999902,
+          "feedback": "Blind comparisons vs 11 anchors. Loss=4.8225, AvgStrength=1.09. CoachPriority: innovation_claims, method_skeleton, abstract."
+        },
+        {
+          "reviewer": "Reviewer C",
+          "role": "Storyteller",
+          "score": 6.189999999999912,
+          "feedback": "Blind comparisons vs 11 anchors. Loss=4.8916, AvgStrength=1.00. CoachPriority: innovation_claims, method_skeleton, abstract."
+        }
+      ],
+      "main_issue": "domain_distance",
+      "suggestions": [
+        "从domain_distance维度选择跨域Pattern",
+        "引入不同视角优化叙事"
+      ],
+      "audit": {
+        "pattern_id": "pattern_24",
+        "anchors": [
+          {
+            "anchor_id": "A1",
+            "paper_id": "4QIgPD5BLnv",
+            "score10": 5.247999999999999,
+            "weight": 0.6104802280163731
+          },
+          {
+            "anchor_id": "A2",
+            "paper_id": "tlhsswFz9x",
+            "score10": 5.689000000000001,
+            "weight": 0.5025973265716843
+          },
+          {
+            "anchor_id": "A3",
+            "paper_id": "jH6pg6JaSP2",
+            "score10": 5.922999999999999,
+            "weight": 0.4225847804783148
+          },
+          {
+            "anchor_id": "A4",
+            "paper_id": "UsVJlgD1F7",
+            "score10": 6.004,
+            "weight": 1.0417206216442176
+          },
+          {
+            "anchor_id": "A5",
+            "paper_id": "ZK1LoTo10R",
+            "score10": 6.148000000000001,
+            "weight": 0.601261566855052
+          },
+          {
+            "anchor_id": "A6",
+            "paper_id": "6MBqQLp17E",
+            "score10": 6.348571428571429,
+            "weight": 1.0944429166735974
+          },
+          {
+            "anchor_id": "A7",
+            "paper_id": "9L1Ts8t66YK",
+            "score10": 6.526000000000001,
+            "weight": 0.3339719420741948
+          },
+          {
+            "anchor_id": "A8",
+            "paper_id": "0f-0I6RFAch",
+            "score10": 6.877000000000001,
+            "weight": 0.6104802280163729
+          },
+          {
+            "anchor_id": "A9",
+            "paper_id": "GcM7qfl5zY",
+            "score10": 7.28875,
+            "weight": 0.4196709028511344
+          },
+          {
+            "anchor_id": "A10",
+            "paper_id": "wKPmPBHSnT6",
+            "score10": 6.571,
+            "weight": 0.6012615668550518
+          },
+          {
+            "anchor_id": "A11",
+            "paper_id": "8Tr3v4ueNd7",
+            "score10": 5.698,
+            "weight": 0.5025973265716843
+          }
+        ],
+        "anchors_rounds": [
+          [
+            {
+              "anchor_id": "A1",
+              "paper_id": "4QIgPD5BLnv",
+              "score10": 5.247999999999999,
+              "weight": 0.6104802280163731
+            },
+            {
+              "anchor_id": "A2",
+              "paper_id": "tlhsswFz9x",
+              "score10": 5.689000000000001,
+              "weight": 0.5025973265716843
+            },
+            {
+              "anchor_id": "A3",
+              "paper_id": "jH6pg6JaSP2",
+              "score10": 5.922999999999999,
+              "weight": 0.4225847804783148
+            },
+            {
+              "anchor_id": "A4",
+              "paper_id": "UsVJlgD1F7",
+              "score10": 6.004,
+              "weight": 1.0417206216442176
+            },
+            {
+              "anchor_id": "A5",
+              "paper_id": "ZK1LoTo10R",
+              "score10": 6.148000000000001,
+              "weight": 0.601261566855052
+            },
+            {
+              "anchor_id": "A6",
+              "paper_id": "6MBqQLp17E",
+              "score10": 6.348571428571429,
+              "weight": 1.0944429166735974
+            },
+            {
+              "anchor_id": "A7",
+              "paper_id": "9L1Ts8t66YK",
+              "score10": 6.526000000000001,
+              "weight": 0.3339719420741948
+            },
+            {
+              "anchor_id": "A8",
+              "paper_id": "0f-0I6RFAch",
+              "score10": 6.877000000000001,
+              "weight": 0.6104802280163729
+            },
+            {
+              "anchor_id": "A9",
+              "paper_id": "GcM7qfl5zY",
+              "score10": 7.28875,
+              "weight": 0.4196709028511344
+            },
+            {
+              "anchor_id": "A10",
+              "paper_id": "wKPmPBHSnT6",
+              "score10": 6.571,
+              "weight": 0.6012615668550518
+            },
+            {
+              "anchor_id": "A11",
+              "paper_id": "8Tr3v4ueNd7",
+              "score10": 5.698,
+              "weight": 0.5025973265716843
+            }
+          ]
+        ],
+        "role_details": {
+          "Methodology": {
+            "comparisons": [
+              {
+                "anchor_id": "A1",
+                "judgement": "better",
+                "strength": "medium",
+                "rationale": "Story specifies GMRES and Krylov subspaces; A1 is vaguer."
+              },
+              {
+                "anchor_id": "A2",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both describe clear, feasible methods; insufficient evidence."
+              },
+              {
+                "anchor_id": "A3",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both mathematically rigorous with specific techniques."
+              },
+              {
+                "anchor_id": "A4",
+                "judgement": "better",
+                "strength": "weak",
+                "rationale": "Story uses specific numerical algorithms; A4 is framework-based."
+              },
+              {
+                "anchor_id": "A5",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both incorporate advanced mathematical approaches; comparable."
+              },
+              {
+                "anchor_id": "A6",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both present clear technical methods; no clear superiority."
+              },
+              {
+                "anchor_id": "A7",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both methods are clearly described and feasible."
+              },
+              {
+                "anchor_id": "A8",
+                "judgement": "better",
+                "strength": "weak",
+                "rationale": "Story's method is more algorithmic; A8 is conceptual."
+              },
+              {
+                "anchor_id": "A9",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both are well-defined frameworks; similar soundness."
+              },
+              {
+                "anchor_id": "A10",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both have clear mechanisms; insufficient evidence."
+              },
+              {
+                "anchor_id": "A11",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both employ rigorous mathematical techniques; comparable."
+              }
+            ],
+            "loss": 4.410339703662652,
+            "avg_strength": 1.0909090909090908,
+            "monotonic_violations": 2,
+            "ci_low": 5.459999999999927,
+            "ci_high": 8.849999999999856,
+            "tau": 1.0
+          },
+          "Novelty": {
+            "comparisons": [
+              {
+                "anchor_id": "A1",
+                "judgement": "better",
+                "strength": "weak",
+                "rationale": "Story reframes video generation as graph topology diffusion; A1 enhances Graph Transformers with a diffuser."
+              },
+              {
+                "anchor_id": "A2",
+                "judgement": "better",
+                "strength": "weak",
+                "rationale": "Story introduces diffusion-based synthesis of latent dynamic graphs for video; A2 dynamically learns graphs within GCNs."
+              },
+              {
+                "anchor_id": "A3",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both introduce novel reframings: Story for video generation, A3 for graph distribution distances."
+              },
+              {
+                "anchor_id": "A4",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Story reframes video generation; A4 reframes graph invariant learning indirectly."
+              },
+              {
+                "anchor_id": "A5",
+                "judgement": "tie",
+                "strength": "medium",
+                "rationale": "Both integrate topological/graph structures with diffusion models for generation tasks."
+              },
+              {
+                "anchor_id": "A6",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Story reframes video generation; A6 introduces efficient topological masking for transformers."
+              },
+              {
+                "anchor_id": "A7",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both introduce novel concepts: Story for video generation, A7 for graph contrastive learning."
+              },
+              {
+                "anchor_id": "A8",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Story reframes video generation; A8 reframes generalization via symbolic graphs."
+              },
+              {
+                "anchor_id": "A9",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Story introduces novel reframing for video; A9 automates Graph Transformer design."
+              },
+              {
+                "anchor_id": "A10",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Story reframes video generation; A10 introduces ordered message passing for GNNs."
+              },
+              {
+                "anchor_id": "A11",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Story reframes video generation; A11 introduces expander graphs for scaling."
+              }
+            ],
+            "loss": 4.822466569695633,
+            "avg_strength": 1.0909090909090908,
+            "monotonic_violations": 0,
+            "ci_low": 4.539999999999947,
+            "ci_high": 8.869999999999855,
+            "tau": 1.4
+          },
+          "Storyteller": {
+            "comparisons": [
+              {
+                "anchor_id": "A1",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both present clear problem, method, and reframing contribution."
+              },
+              {
+                "anchor_id": "A2",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both offer coherent narratives with problem, method, and reframing."
+              },
+              {
+                "anchor_id": "A3",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both clearly state problem, method, and contribution with reframing."
+              },
+              {
+                "anchor_id": "A4",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both have clear narrative arcs: problem, method, and reframing."
+              },
+              {
+                "anchor_id": "A5",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both integrate topology with diffusion and reframe their respective problems."
+              },
+              {
+                "anchor_id": "A6",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both present clear motivation, method, and reframed contribution."
+              },
+              {
+                "anchor_id": "A7",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both have coherent narratives with problem, method, and reframing."
+              },
+              {
+                "anchor_id": "A8",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both clearly define problem, method, and contribution with reframing."
+              },
+              {
+                "anchor_id": "A9",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both offer clear narratives: problem, method, and reframed contribution."
+              },
+              {
+                "anchor_id": "A10",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both present clear problem, method, and reframing contribution."
+              },
+              {
+                "anchor_id": "A11",
+                "judgement": "tie",
+                "strength": "weak",
+                "rationale": "Both have coherent narratives with problem, method, and reframing."
+              }
+            ],
+            "loss": 4.891633780086148,
+            "avg_strength": 1.0,
+            "monotonic_violations": 0,
+            "ci_low": 4.569999999999946,
+            "ci_high": 7.809999999999877,
+            "tau": 1.0
+          }
+        },
+        "pass": {
+          "mode": "two_of_three_q75_and_avg_ge_q50",
+          "used_distribution": "pattern",
+          "pattern_paper_count": 331,
+          "q50": 6.148000000000001,
+          "q75": 6.526000000000001,
+          "count_roles_ge_q75": 2,
           "roles_ge_q75": {
             "Methodology": true,
             "Novelty": true,
-            "Storyteller": true
+            "Storyteller": false
           },
           "avg_ge_q50": true,
-          "avg_score": 7.013333333333228
+          "avg_score": 6.599999999999903
+        },
+        "rubric_version": "rubric_v1",
+        "card_version": "blind_card_v2_minimal"
+      },
+      "field_feedback": {
+        "title": {
+          "issue": "The title uses abstract theoretical terminology ('Emergent Temporal Topology') that creates distance from the core computer vision domain of video generation, potentially alienating the primary target audience.",
+          "edit_instruction": "Replace 'Emergent Temporal Topology' with more descriptive, domain-aligned terms like 'Latent Dynamic Graph' or 'Spatiotemporal Structure'. Ensure the title immediately signals the application (video) and core technical approach (graph-based diffusion). Example: 'Generating Consistent Videos via Diffusion of Latent Dynamic Graphs'.",
+          "expected_effect": "Increased clarity and accessibility for the computer vision community, immediately signaling the paper's contribution within the video generation domain."
+        },
+        "abstract": {
+          "issue": "The abstract leads with a theoretical reframing ('generative modeling of latent structure') before establishing the concrete, recognized problem (temporal inconsistency). The metrics are presented but not anchored to a clear, domain-standard narrative of solving flicker/warping.",
+          "edit_instruction": "Restructure the abstract to follow the standard problem-solution-impact narrative. First sentence should state the practical problem (temporal inconsistency/flicker in video generation). Then introduce your core solution (generating a latent dynamic graph). Finally, present results (e.g., 'Our method reduces flicker by 18%...') as the direct consequence. Replace 'spatiotemporal graph whose stability dictates visual coherence' with more direct language like 'underlying graph of visual entities whose stable evolution ensures consistency'.",
+          "expected_effect": "The abstract will better engage video generation researchers by foregrounding their known problem and clearly presenting a novel solution with quantifiable benefits."
+        },
+        "problem_framing": {
+          "issue": "The framing is overly abstract and uses metaphorical language ('scaffold', 'community-level structures') without immediately grounding these concepts in established video semantics (e.g., objects, scenes, motions). It critiques sequential models but does not explicitly connect their failure modes (vanishing gradients) to the *visual* symptom of inconsistency.",
+          "edit_instruction": "Re-anchor the problem in concrete visual artifacts. Start with: 'State-of-the-art video generators produce flicker and warping because they lack a persistent representation of...'. Explicitly map 'community-level structures' to 'semantic entities (e.g., objects, backgrounds) and their persistent interactions'. Connect the limitation of sequential models ('vanishing gradients') directly to their inability to maintain the identity of these entities over long ranges.",
+          "expected_effect": "Bridges the domain gap by showing how the abstract graph theory problem directly explains and solves a concrete, visual quality issue familiar to the audience."
+        },
+        "method_skeleton": {
+          "issue": "The description is a list of technical procedures (GMRES, CLEP, KDE) without explaining their *visual or representational purpose* in the context of video. The connection from 'sparse self-expressive code' to a visually meaningful 'graph node' is assumed. The role of 'temporal density correction' in improving visual output is unclear.",
+          "edit_instruction": "For each step, preface the technical method with its goal for video coherence. E.g., 'Step 1: To identify persistent visual entities across frames, we discover latent graph communities...'. Explicitly state that nodes correspond to recurring visual patches/features. In Step 3, explain that 'temporal density correction' adjusts the predicted graph dynamics to match real-world motion patterns, reducing jitter. Replace 'graph shift operators' with 'the rules governing how node connections change'.",
+          "expected_effect": "Makes the method intelligible to vision researchers by consistently linking mathematical tools to their role in solving the visual consistency problem."
+        },
+        "innovation_claims": {
+          "issue": "Claims are phrased as internal methodological shifts ('reframe... to an inherent generative property', 'co-evolutionary mechanism', 'unifies... into a single generative act') rather than as external, observable advantages for the field. They emphasize 'bypassing sequential bottlenecks' but not the resulting practical benefit (e.g., stable long-range generation).",
+          "edit_instruction": "Reformulate each claim to start with the tangible advantage for video generation. Claim 1: 'Our framework produces more temporally consistent videos by making stability a property of the generated latent graph, not a post-hoc constraint.' Claim 2: 'We enable scalable, long-range coherence by jointly discovering visual entities and modeling their interactions via a probabilistic graph, avoiding sequential modeling's compounding errors.' Claim 3: 'We improve robustness to variable frame rates by conditioning graph dynamics on a self-supervised estimate of temporal density, aligning generated motion with real-world timing.'",
+          "expected_effect": "Transforms the claims from descriptions of internal mechanism to clear value propositions for practitioners, directly addressing the domain-distance issue."
+        },
+        "experiments_plan": {
+          "issue": "The plan validates against standard benchmarks but does not propose an analysis directly linking graph properties to visual improvements. The 'visualize the generated latent graphs' is qualitative but not tied to a specific hypothesis about how graph stability reduces flicker.",
+          "edit_instruction": "Add a specific quantitative analysis: 'We will compute graph stability metrics (e.g., node persistence, edge volatility) across generated sequences and correlate them with per-video flicker and warping scores to validate that our method's improved visual consistency arises from more stable latent topologies.' In the ablation, specify the expected outcome: e.g., 'Ablation (2) will show that replacing CLEP with sequential attention increases graph volatility and flicker score.'",
+          "expected_effect": "Provides concrete, empirical evidence bridging the novel graph-theoretic construct (latent topology) to the domain's standard goal (visual consistency), strengthening the paper's core thesis."
         }
+      },
+      "suggested_edits": [
+        {
+          "field": "innovation_claims",
+          "action": "rewrite",
+          "content": "1. **Stability as a Generative Property:** Our framework produces videos with significantly reduced flicker and warping by making temporal consistency an inherent property of the generated latent dynamic graph, rather than a post-hoc constraint applied to frames.\n2. **Scalable Long-Range Coherence:** We enable coherent generation over long time horizons by jointly discovering persistent visual entities and modeling their probabilistic interactions within a graph, avoiding the compounding errors and bottlenecks of sequential autoregressive models.\n3. **Robustness to Irregular Timing:** We improve generation robustness across diverse and unpredictable frame rates by conditioning the graph's evolution on a self-supervised estimate of temporal density, ensuring generated motion patterns align with real-world timing."
+        },
+        {
+          "field": "method_skeleton",
+          "action": "expand",
+          "content": "**Method Overview:** Our goal is to generate a video by first generating the stable, evolving relationships between its constituent visual parts. We achieve this in three stages:\n1.  **Discovering Visual Entities as Graph Nodes:** To identify what constitutes a persistent 'part' of the video (e.g., an object, a texture region), we analyze frame segments via a self-representation framework. This learns a sparse code for each segment, grouping recurring visual features into candidate graph nodes. This solves the problem of 'what' should have consistent properties over time.\n2.  **Generating the Evolving Interaction Graph:** We synthesize the video's latent structure by denoising a latent adjacency tensor in a diffusion process. A probabilistic latent interaction model (CLEP) uses community-specific embeddings to predict how edges (interactions) between nodes change frame-to-frame. A contrastive loss ensures node identities (community memberships) remain stable, providing the scaffold for coherent frame generation.\n3.  **Aligning Graph Dynamics with Real-World Motion:** To handle non-uniform frame rates and ensure natural motion, we estimate the temporal density of input timestamps via kernel density estimation. This density corrects the transition probabilities in the latent interaction model, ensuring the generated graph's evolution respects realistic timing, which in turn guides the decoder to produce frames with natural motion flow."
+        },
+        {
+          "field": "abstract",
+          "action": "rewrite",
+          "content": "Temporal inconsistency, manifesting as flicker and warping, remains a core challenge in video generation. We posit that this stems from a lack of persistent representation for the visual entities within a scene. This paper introduces a diffusion framework that addresses this by generating a video's underlying latent dynamic graph structure first. Our method discovers persistent visual entities as graph nodes and models their probabilistic interactions over time. Coherent video frames are then decoded from this stable graph scaffold. Experiments show our approach reduces flicker by 18% and temporal warping error by 22% on UCF-101 compared to Video Diffusion Models. Ablations confirm that generating a stable graph is key to achieving visual consistency."
+        }
+      ],
+      "priority": [
+        "innovation_claims",
+        "method_skeleton",
+        "abstract"
+      ],
+      "review_coach": {
+        "field_feedback": {
+          "title": {
+            "issue": "The title uses abstract theoretical terminology ('Emergent Temporal Topology') that creates distance from the core computer vision domain of video generation, potentially alienating the primary target audience.",
+            "edit_instruction": "Replace 'Emergent Temporal Topology' with more descriptive, domain-aligned terms like 'Latent Dynamic Graph' or 'Spatiotemporal Structure'. Ensure the title immediately signals the application (video) and core technical approach (graph-based diffusion). Example: 'Generating Consistent Videos via Diffusion of Latent Dynamic Graphs'.",
+            "expected_effect": "Increased clarity and accessibility for the computer vision community, immediately signaling the paper's contribution within the video generation domain."
+          },
+          "abstract": {
+            "issue": "The abstract leads with a theoretical reframing ('generative modeling of latent structure') before establishing the concrete, recognized problem (temporal inconsistency). The metrics are presented but not anchored to a clear, domain-standard narrative of solving flicker/warping.",
+            "edit_instruction": "Restructure the abstract to follow the standard problem-solution-impact narrative. First sentence should state the practical problem (temporal inconsistency/flicker in video generation). Then introduce your core solution (generating a latent dynamic graph). Finally, present results (e.g., 'Our method reduces flicker by 18%...') as the direct consequence. Replace 'spatiotemporal graph whose stability dictates visual coherence' with more direct language like 'underlying graph of visual entities whose stable evolution ensures consistency'.",
+            "expected_effect": "The abstract will better engage video generation researchers by foregrounding their known problem and clearly presenting a novel solution with quantifiable benefits."
+          },
+          "problem_framing": {
+            "issue": "The framing is overly abstract and uses metaphorical language ('scaffold', 'community-level structures') without immediately grounding these concepts in established video semantics (e.g., objects, scenes, motions). It critiques sequential models but does not explicitly connect their failure modes (vanishing gradients) to the *visual* symptom of inconsistency.",
+            "edit_instruction": "Re-anchor the problem in concrete visual artifacts. Start with: 'State-of-the-art video generators produce flicker and warping because they lack a persistent representation of...'. Explicitly map 'community-level structures' to 'semantic entities (e.g., objects, backgrounds) and their persistent interactions'. Connect the limitation of sequential models ('vanishing gradients') directly to their inability to maintain the identity of these entities over long ranges.",
+            "expected_effect": "Bridges the domain gap by showing how the abstract graph theory problem directly explains and solves a concrete, visual quality issue familiar to the audience."
+          },
+          "method_skeleton": {
+            "issue": "The description is a list of technical procedures (GMRES, CLEP, KDE) without explaining their *visual or representational purpose* in the context of video. The connection from 'sparse self-expressive code' to a visually meaningful 'graph node' is assumed. The role of 'temporal density correction' in improving visual output is unclear.",
+            "edit_instruction": "For each step, preface the technical method with its goal for video coherence. E.g., 'Step 1: To identify persistent visual entities across frames, we discover latent graph communities...'. Explicitly state that nodes correspond to recurring visual patches/features. In Step 3, explain that 'temporal density correction' adjusts the predicted graph dynamics to match real-world motion patterns, reducing jitter. Replace 'graph shift operators' with 'the rules governing how node connections change'.",
+            "expected_effect": "Makes the method intelligible to vision researchers by consistently linking mathematical tools to their role in solving the visual consistency problem."
+          },
+          "innovation_claims": {
+            "issue": "Claims are phrased as internal methodological shifts ('reframe... to an inherent generative property', 'co-evolutionary mechanism', 'unifies... into a single generative act') rather than as external, observable advantages for the field. They emphasize 'bypassing sequential bottlenecks' but not the resulting practical benefit (e.g., stable long-range generation).",
+            "edit_instruction": "Reformulate each claim to start with the tangible advantage for video generation. Claim 1: 'Our framework produces more temporally consistent videos by making stability a property of the generated latent graph, not a post-hoc constraint.' Claim 2: 'We enable scalable, long-range coherence by jointly discovering visual entities and modeling their interactions via a probabilistic graph, avoiding sequential modeling's compounding errors.' Claim 3: 'We improve robustness to variable frame rates by conditioning graph dynamics on a self-supervised estimate of temporal density, aligning generated motion with real-world timing.'",
+            "expected_effect": "Transforms the claims from descriptions of internal mechanism to clear value propositions for practitioners, directly addressing the domain-distance issue."
+          },
+          "experiments_plan": {
+            "issue": "The plan validates against standard benchmarks but does not propose an analysis directly linking graph properties to visual improvements. The 'visualize the generated latent graphs' is qualitative but not tied to a specific hypothesis about how graph stability reduces flicker.",
+            "edit_instruction": "Add a specific quantitative analysis: 'We will compute graph stability metrics (e.g., node persistence, edge volatility) across generated sequences and correlate them with per-video flicker and warping scores to validate that our method's improved visual consistency arises from more stable latent topologies.' In the ablation, specify the expected outcome: e.g., 'Ablation (2) will show that replacing CLEP with sequential attention increases graph volatility and flicker score.'",
+            "expected_effect": "Provides concrete, empirical evidence bridging the novel graph-theoretic construct (latent topology) to the domain's standard goal (visual consistency), strengthening the paper's core thesis."
+          }
+        },
+        "suggested_edits": [
+          {
+            "field": "innovation_claims",
+            "action": "rewrite",
+            "content": "1. **Stability as a Generative Property:** Our framework produces videos with significantly reduced flicker and warping by making temporal consistency an inherent property of the generated latent dynamic graph, rather than a post-hoc constraint applied to frames.\n2. **Scalable Long-Range Coherence:** We enable coherent generation over long time horizons by jointly discovering persistent visual entities and modeling their probabilistic interactions within a graph, avoiding the compounding errors and bottlenecks of sequential autoregressive models.\n3. **Robustness to Irregular Timing:** We improve generation robustness across diverse and unpredictable frame rates by conditioning the graph's evolution on a self-supervised estimate of temporal density, ensuring generated motion patterns align with real-world timing."
+          },
+          {
+            "field": "method_skeleton",
+            "action": "expand",
+            "content": "**Method Overview:** Our goal is to generate a video by first generating the stable, evolving relationships between its constituent visual parts. We achieve this in three stages:\n1.  **Discovering Visual Entities as Graph Nodes:** To identify what constitutes a persistent 'part' of the video (e.g., an object, a texture region), we analyze frame segments via a self-representation framework. This learns a sparse code for each segment, grouping recurring visual features into candidate graph nodes. This solves the problem of 'what' should have consistent properties over time.\n2.  **Generating the Evolving Interaction Graph:** We synthesize the video's latent structure by denoising a latent adjacency tensor in a diffusion process. A probabilistic latent interaction model (CLEP) uses community-specific embeddings to predict how edges (interactions) between nodes change frame-to-frame. A contrastive loss ensures node identities (community memberships) remain stable, providing the scaffold for coherent frame generation.\n3.  **Aligning Graph Dynamics with Real-World Motion:** To handle non-uniform frame rates and ensure natural motion, we estimate the temporal density of input timestamps via kernel density estimation. This density corrects the transition probabilities in the latent interaction model, ensuring the generated graph's evolution respects realistic timing, which in turn guides the decoder to produce frames with natural motion flow."
+          },
+          {
+            "field": "abstract",
+            "action": "rewrite",
+            "content": "Temporal inconsistency, manifesting as flicker and warping, remains a core challenge in video generation. We posit that this stems from a lack of persistent representation for the visual entities within a scene. This paper introduces a diffusion framework that addresses this by generating a video's underlying latent dynamic graph structure first. Our method discovers persistent visual entities as graph nodes and models their probabilistic interactions over time. Coherent video frames are then decoded from this stable graph scaffold. Experiments show our approach reduces flicker by 18% and temporal warping error by 22% on UCF-101 compared to Video Diffusion Models. Ablations confirm that generating a stable graph is key to achieving visual consistency."
+          }
+        ],
+        "priority": [
+          "innovation_claims",
+          "method_skeleton",
+          "abstract"
+        ]
       }
     }
   ],
-  "results_dir": "results/run_20260202_055504_6507_531158",
+  "results_dir": "/Users/weishi/dev/Idea2Paper/results/run_20260207_145754_74886_ee08d4",
   "novelty_report": {
-    "run_id": "run_20260202_055504_6507_531158",
-    "created_at": "2026-02-02T07:44:06.837886+00:00",
-    "user_idea": "我们研究音频-文本大模型的文本主导偏见：在 faithful/adversarial/irrelevant 三类设定下，提出基于模态可信度的路由/融合框架。通过构造“文本干扰”表示能量与时序证据，训练轻量门控/适配器，在推理时选择 Joint 或 Audio 专家，实现对抗文本误导下的稳健情绪识别",
-    "embedding_available": true,
-    "embedding_model": "Qwen/Qwen3-Embedding-8B",
+    "run_id": "run_20260207_145754_74886_ee08d4",
+    "created_at": "2026-02-07T15:26:31.009015+00:00",
+    "user_idea": "Improving diffusion models for temporal consistency in video generation",
+    "embedding_available": false,
+    "embedding_model": null,
     "top_k": 100,
     "thresholds": {
       "high": 0.88,
       "medium": 0.82
     },
-    "risk_level": "low",
-    "max_similarity": 0.5963850021362305,
+    "risk_level": "unknown",
+    "max_similarity": 0.1092896174863388,
     "candidates": [
       {
-        "paper_id": "TPZRq4FALB",
-        "title": "Test-time Adaptation against Multi-modal Reliability Bias",
+        "paper_id": "d23EVDRJ6g",
+        "title": "MotionDreamer: One-to-Many Motion Synthesis with Localized Generative Masked Transformer",
+        "pattern_id": "",
+        "domain": "Computer Vision",
+        "cosine": null,
+        "keyword_overlap": 0.1092896174863388
+      },
+      {
+        "paper_id": "X41c4uB4k0",
+        "title": "Training-free Multi-objective Diffusion Model for 3D Molecule Generation",
+        "pattern_id": "pattern_6",
+        "domain": "Machine Learning",
+        "cosine": null,
+        "keyword_overlap": 0.10704225352112676
+      },
+      {
+        "paper_id": "ZE6lrLvATd",
+        "title": "Improving Equivariant Networks with Probabilistic Symmetry Breaking",
+        "pattern_id": "pattern_31",
+        "domain": "Machine Learning",
+        "cosine": null,
+        "keyword_overlap": 0.10684931506849316
+      },
+      {
+        "paper_id": "MbM1BqGpZu",
+        "title": "Diffusion Transformer Captures Spatial-Temporal Dependencies: A Theory for Gaussian Process Data",
         "pattern_id": "",
         "domain": "Machine Learning",
-        "text_hash": "85ecbb7da83a1aaae886311195041898f0bd5a40aeffc5097b95fc79d213ed50",
-        "cosine": 0.5963850021362305,
-        "keyword_overlap": 0.08108108108108109
+        "cosine": null,
+        "keyword_overlap": 0.10662824207492795
       },
       {
-        "paper_id": "ePJrZLIqpV",
-        "title": "Rethinking Audio-Visual Adversarial Vulnerability from Temporal and Modality Perspectives",
+        "paper_id": "j6zUzrapY3L",
+        "title": "DIFFormer: Scalable (Graph) Transformers Induced by Energy Constrained Diffusion",
         "pattern_id": "",
         "domain": "Machine Learning",
-        "text_hash": "d3f943cf44bf7e970363fa0aedc8716afdd67cc46e915d54ff2861ebe664249d",
-        "cosine": 0.5668509602546692,
-        "keyword_overlap": 0.07894736842105263
+        "cosine": null,
+        "keyword_overlap": 0.10638297872340426
       },
       {
-        "paper_id": "AV7OXVlAyi",
-        "title": "Mitigating Modality Prior-Induced Hallucinations in Multimodal Large Language Models via Deciphering Attention Causality",
-        "pattern_id": "pattern_13",
-        "domain": "Machine Learning",
-        "text_hash": "2b00d0adacffa9b4b76e94a68ebe21328497754c613a608494520d4cccc2d32e",
-        "cosine": 0.5544014573097229,
-        "keyword_overlap": 0.11372549019607843
-      },
-      {
-        "paper_id": "vtT09dYPGI",
-        "title": "Routing Experts: Learning to Route Dynamic Experts in Existing Multi-modal Large Language Models",
-        "pattern_id": "pattern_74",
-        "domain": "Machine Learning",
-        "text_hash": "59b22728a0b85817d085cc72b342dae6e768ff39578b9a159327d2d8445e6d8c",
-        "cosine": 0.5399153232574463,
-        "keyword_overlap": 0.11969111969111969
-      },
-      {
-        "paper_id": "l60EM8md3t",
-        "title": "Revisiting Deep Audio-Text Retrieval Through the Lens of Transportation",
+        "paper_id": "1JbsdayvhO",
+        "title": "Denoising Diffusion via Image-Based Rendering",
         "pattern_id": "",
+        "domain": "Computer Vision",
+        "cosine": null,
+        "keyword_overlap": 0.10597826086956522
+      },
+      {
+        "paper_id": "E78OaH2s3f",
+        "title": "CAS: A Probability-Based Approach for Universal Condition Alignment Score",
+        "pattern_id": "pattern_84",
         "domain": "Machine Learning",
-        "text_hash": "283fd505312f835e0c070c65fdd13e3d83bcd45f433e9e03aed7bb9a3e4e5108",
-        "cosine": 0.5366950035095215,
-        "keyword_overlap": 0.08235294117647059
+        "cosine": null,
+        "keyword_overlap": 0.10571428571428572
       },
       {
-        "paper_id": "1SYUKPeM12",
-        "title": "Aligned Better, Listen Better for Audio-Visual Large Language Models",
-        "pattern_id": "pattern_13",
+        "paper_id": "xnssGv9rpW",
+        "title": "SymmCD: Symmetry-Preserving Crystal Generation with Diffusion Models",
+        "pattern_id": "pattern_6",
+        "domain": "Materials Science",
+        "cosine": null,
+        "keyword_overlap": 0.10541310541310542
+      },
+      {
+        "paper_id": "exKHibougU",
+        "title": "LLM-grounded Video Diffusion Models",
+        "pattern_id": "pattern_114",
+        "domain": "Computer Vision",
+        "cosine": null,
+        "keyword_overlap": 0.10497237569060773
+      },
+      {
+        "paper_id": "AAXBfJNHDt",
+        "title": "Generating Graphs via Spectral Diffusion",
+        "pattern_id": "pattern_24",
         "domain": "Machine Learning",
-        "text_hash": "e80f050a72eb521e9a39c1ad0e8bf7d83712f9be0580d5b59057d0d81b9fcc27",
-        "cosine": 0.5312134027481079,
-        "keyword_overlap": 0.1
-      },
-      {
-        "paper_id": "74vnDs1R97",
-        "title": "Wayward Concepts In Multimodal Models",
-        "pattern_id": "pattern_51",
-        "domain": "Machine Learning",
-        "text_hash": "e3575cced82c01c31692bb5ad0e1b47a531a5a79bf5f4da6c81d24b34c00224a",
-        "cosine": 0.5265761613845825,
-        "keyword_overlap": 0.08300395256916997
-      },
-      {
-        "paper_id": "H-T3F0dMbyj",
-        "title": "CLIPSep: Learning Text-queried Sound Separation with Noisy Unlabeled Videos",
-        "pattern_id": "pattern_7",
-        "domain": "Machine Learning",
-        "text_hash": "eb4f5bb7908e3c70f31e81e249b34175823164cc723accd9cda3bcc4ffcfb121",
-        "cosine": 0.5243499279022217,
-        "keyword_overlap": 0.09019607843137255
-      },
-      {
-        "paper_id": "vbmSSIhKAM",
-        "title": "VoxDialogue: Can Spoken Dialogue Systems Understand Information Beyond Words?",
-        "pattern_id": "pattern_58",
-        "domain": "Natural Language Processing",
-        "text_hash": "7774ff496e604d63f22e6484690265ff5fec1017bc86a0ca9d5a457451c90865",
-        "cosine": 0.5201357007026672,
-        "keyword_overlap": 0.07434944237918216
-      },
-      {
-        "paper_id": "QsA3YzNUxA",
-        "title": "Is Your Multimodal Language Model Oversensitive to Safe Queries?",
-        "pattern_id": "",
-        "domain": "Natural Language Processing",
-        "text_hash": "64df7fdc506738da7e13192c30d071f24d3a5f4fdaf1fc1a5f01969049bba016",
-        "cosine": 0.5149638056755066,
-        "keyword_overlap": 0.08396946564885496
+        "cosine": null,
+        "keyword_overlap": 0.10404624277456648
       }
     ],
     "notes": [
-      "index_reused"
+      "index_reused",
+      "story_embedding_failed"
     ],
-    "report_path": "results/run_20260202_055504_6507_531158/novelty_report.json",
+    "report_path": "/Users/weishi/dev/Idea2Paper/results/run_20260207_145754_74886_ee08d4/novelty_report.json",
     "pivot_attempts": 0,
-    "action": "pivot"
+    "action": "report_only"
   },
   "recall_audit": {
     "final_top_k": [
       {
-        "pattern_id": "pattern_7",
-        "name": "Reframing Audio Understanding Through Multimodal and Probabilistic Learning",
-        "final_score": 2.474976572969851,
-        "path1_score": 1.7213249039064422,
-        "path2_score": 0.0,
-        "path3_score": 0.7536516690634086,
-        "cluster_size": 41
-      },
-      {
-        "pattern_id": "pattern_58",
-        "name": "Reframing Dialogue System Challenges",
-        "final_score": 0.5128803872894196,
-        "path1_score": 0.4400013396156977,
-        "path2_score": 0.0,
-        "path3_score": 0.07287904767372198,
-        "cluster_size": 17
-      },
-      {
-        "pattern_id": "pattern_57",
-        "name": "Preference Alignment Through Distributional Modeling",
-        "final_score": 0.30065407269232813,
-        "path1_score": 0.21875833134011288,
-        "path2_score": 0.0,
-        "path3_score": 0.08189574135221524,
-        "cluster_size": 111
-      },
-      {
         "pattern_id": "pattern_114",
         "name": "Reframing Video Generation Challenges",
-        "final_score": 0.2854420301220971,
-        "path1_score": 0.20265463607399292,
+        "final_score": 0.7782653664943752,
+        "path1_score": 0.604532279314888,
         "path2_score": 0.0,
-        "path3_score": 0.08278739404810422,
+        "path3_score": 0.1737330871794872,
         "cluster_size": 44
       },
       {
-        "pattern_id": "pattern_8",
-        "name": "Reframing Speech Synthesis Efficiency",
-        "final_score": 0.14661099612023606,
+        "pattern_id": "pattern_100",
+        "name": "Reframing Diffusion Sampling Efficiency",
+        "final_score": 0.3307936066627817,
+        "path1_score": 0.1523809523809524,
+        "path2_score": 0.00017460317460317465,
+        "path3_score": 0.17823805110722613,
+        "cluster_size": 148
+      },
+      {
+        "pattern_id": "pattern_24",
+        "name": "Reframing Graph Learning Scalability",
+        "final_score": 0.13431166596989966,
+        "path1_score": 0.08695652173913043,
+        "path2_score": 0.0,
+        "path3_score": 0.047355144230769225,
+        "cluster_size": 331
+      },
+      {
+        "pattern_id": "pattern_115",
+        "name": "Semantic Alignment for Compositional Generation",
+        "final_score": 0.12062720000000002,
+        "path1_score": 0.08000000000000002,
+        "path2_score": 0.0,
+        "path3_score": 0.0406272,
+        "cluster_size": 107
+      },
+      {
+        "pattern_id": "pattern_102",
+        "name": "Text to 3D generation robustness",
+        "final_score": 0.11408018285714286,
+        "path1_score": 0.0761904761904762,
+        "path2_score": 0.0,
+        "path3_score": 0.03788970666666666,
+        "cluster_size": 50
+      },
+      {
+        "pattern_id": "pattern_84",
+        "name": "Reframing Generative Model Training Dynamics",
+        "final_score": 0.08695652173913043,
+        "path1_score": 0.08695652173913043,
+        "path2_score": 0.0,
+        "path3_score": 0.0,
+        "cluster_size": 43
+      },
+      {
+        "pattern_id": "pattern_94",
+        "name": "Reframing Generation Through Multi-Feature Integration",
+        "final_score": 0.08421052631578947,
+        "path1_score": 0.08421052631578947,
+        "path2_score": 0.0,
+        "path3_score": 0.0,
+        "cluster_size": 34
+      },
+      {
+        "pattern_id": "pattern_49",
+        "name": "Reframing Inverse Problems with Diffusion",
+        "final_score": 0.0404496,
         "path1_score": 0.0,
         "path2_score": 0.0,
-        "path3_score": 0.14661099612023606,
-        "cluster_size": 33
+        "path3_score": 0.0404496,
+        "cluster_size": 15
       },
       {
-        "pattern_id": "pattern_33",
-        "name": "Transformer Training Stability Paradigms",
-        "final_score": 0.07825587092494557,
+        "pattern_id": "pattern_7",
+        "name": "Reframing Audio Understanding Through Multimodal and Probabilistic Learning",
+        "final_score": 0.038762722539682534,
         "path1_score": 0.0,
-        "path2_score": 0.0,
-        "path3_score": 0.07825587092494557,
-        "cluster_size": 31
-      },
-      {
-        "pattern_id": "pattern_51",
-        "name": "Adversarial Vulnerabilities and Robustness in Large Language Models",
-        "final_score": 0.020000000000000004,
-        "path1_score": 0.0,
-        "path2_score": 0.020000000000000004,
-        "path3_score": 0.0,
-        "cluster_size": 92
-      },
-      {
-        "pattern_id": "pattern_59",
-        "name": "Data driven backdoor attack strategies",
-        "final_score": 0.020000000000000004,
-        "path1_score": 0.0,
-        "path2_score": 0.020000000000000004,
-        "path3_score": 0.0,
-        "cluster_size": 51
+        "path2_score": 0.0008730158730158731,
+        "path3_score": 0.03788970666666666,
+        "cluster_size": 41
       },
       {
         "pattern_id": "pattern_45",
         "name": "Personalized Privacy Accounting",
-        "final_score": 0.020000000000000004,
+        "final_score": 0.03859692307692308,
         "path1_score": 0.0,
-        "path2_score": 0.020000000000000004,
-        "path3_score": 0.0,
+        "path2_score": 0.0,
+        "path3_score": 0.03859692307692308,
         "cluster_size": 100
-      },
-      {
-        "pattern_id": "pattern_66",
-        "name": "Adversarial Transferability Reframing",
-        "final_score": 0.016000000000000004,
-        "path1_score": 0.0,
-        "path2_score": 0.016000000000000004,
-        "path3_score": 0.0,
-        "cluster_size": 23
       }
     ],
     "path1": {
       "top_ideas": [
         {
-          "idea_id": "idea_5431",
-          "similarity": 0.5905706019769511,
-          "snippet": "Introduce a novel adversarial attack framework, AdvWave, that effectively jailbreaks large audio-language models while maintaining audio stealthiness.",
+          "idea_id": "idea_7361",
+          "similarity": 0.2631578947368421,
+          "snippet": "Utilize image diffusion models to enhance video frame quality while maintaining temporal coherence in video diffusion models.",
           "pattern_count": 0
         },
         {
-          "idea_id": "idea_7273",
-          "similarity": 0.5731957830148035,
-          "snippet": "Introduce a comprehensive benchmark to evaluate audio understanding models on complex, expert-level tasks across multiple audio domains.",
+          "idea_id": "idea_4119",
+          "similarity": 0.23809523809523808,
+          "snippet": "Introduce a novel video tokenizer that enables Large Language Models to outperform diffusion models in visual generation tasks.",
           "pattern_count": 0
         },
         {
-          "idea_id": "idea_8256",
-          "similarity": 0.5724538131188435,
-          "snippet": "Introduce a spatial-aware model to generate controllable and immersive stereo audio from text, leveraging a large-scale multimodal dataset.",
+          "idea_id": "idea_5588",
+          "similarity": 0.23809523809523808,
+          "snippet": "Integrate autoregressive models with diffusion transformers to enhance long video generation by leveraging spatial and temporal information.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_6798",
+          "similarity": 0.23809523809523808,
+          "snippet": "Introduce a training-free method for camera control in video diffusion models using layout priors and pixel rearrangement.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_6946",
+          "similarity": 0.22727272727272727,
+          "snippet": "Introduce a method for enabling fine-grained 3D camera control in transformer-based video diffusion models using a ControlNet-like conditioning mechanism.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_7122",
+          "similarity": 0.22727272727272727,
+          "snippet": "Introduce a dynamic modulation technique for negative prompting in diffusion models to enhance image generation quality and safety.",
           "pattern_count": 0
         },
         {
-          "idea_id": "idea_7643",
-          "similarity": 0.5698447398804021,
-          "snippet": "Introduce a comprehensive framework for generating natural language explanations of audio differences using large language models and novel datasets.",
+          "idea_id": "idea_823",
+          "similarity": 0.21739130434782608,
+          "snippet": "Introduce an autoregressive diffusion process for graph generation that operates directly in discrete graph space, improving efficiency and constraint incorporation.",
           "pattern_count": 1
         },
         {
-          "idea_id": "idea_4641",
-          "similarity": 0.5604307295566653,
-          "snippet": "Leverage bi-modal semantic similarity to enable weakly-supervised audio separation by using language descriptions as a proxy for single-source audio supervision.",
+          "idea_id": "idea_4196",
+          "similarity": 0.21739130434782608,
+          "snippet": "Utilize large language models to generate dynamic scene layouts for guiding video diffusion models, enhancing spatiotemporal coherence in video generation.",
           "pattern_count": 1
         },
         {
-          "idea_id": "idea_684",
-          "similarity": 0.5575136990165491,
-          "snippet": "Integrate contrastive learning with masked data modeling to enhance joint audio-visual representation learning.",
+          "idea_id": "idea_6329",
+          "similarity": 0.21739130434782608,
+          "snippet": "Introduce guidance techniques for diffusion models that eliminate the need for special training procedures while maintaining or improving generation quality.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_2536",
+          "similarity": 0.21052631578947367,
+          "snippet": "Introduce scheduled sampling into diffusion models to address compounding errors in markup-to-image generation tasks.",
           "pattern_count": 0
         },
         {
-          "idea_id": "idea_5293",
-          "similarity": 0.5505212521821985,
-          "snippet": "Introduce a novel evaluation protocol to assess audio foundation models on their ability to handle turn-taking dynamics in conversations.",
+          "idea_id": "idea_4171",
+          "similarity": 0.21052631578947367,
+          "snippet": "Leverage diffusion models for flexible and controlled human motion generation through novel composition methods.",
           "pattern_count": 1
         },
         {
-          "idea_id": "idea_6236",
-          "similarity": 0.5494820968570456,
-          "snippet": "Introduce a benchmark to evaluate spoken dialogue systems' ability to interpret multi-modal audio cues beyond text.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_5355",
-          "similarity": 0.5484116226064176,
-          "snippet": "Introduce a generative audio model capable of following text instructions and achieving compositional audio transformations through a novel dataset and inference technique.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_5541",
-          "similarity": 0.5468958283502822,
-          "snippet": "Introduce a natural language-based speech evaluation corpus and an alignment approach to enhance audio LLMs' ability to assess speech quality.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_7438",
-          "similarity": 0.5379040598625446,
-          "snippet": "Enhance audio classification accuracy by using text-to-audio diffusion models to generate synthetic data aligned with small-scale datasets.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_5968",
-          "similarity": 0.5283200253358297,
-          "snippet": "Utilize synthetic audio doppelgängers to enhance contrastive learning by generating diverse and causally manipulated audio variations.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_6706",
-          "similarity": 0.526478534698108,
-          "snippet": "Introduce a cooperative diffusion framework that aligns audio and video generation using a discriminator-guided joint guidance module.",
+          "idea_id": "idea_4337",
+          "similarity": 0.21052631578947367,
+          "snippet": "Leverage pretrained text-to-image diffusion models for efficient text-conditioned video prediction by extending them temporally.",
           "pattern_count": 0
         },
         {
-          "idea_id": "idea_1972",
-          "similarity": 0.5241112130267457,
-          "snippet": "Develop an auto-regressive model to generate high-fidelity audio samples conditioned on text inputs, overcoming challenges of source separation and data scarcity.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_5612",
-          "similarity": 0.5233202974820639,
-          "snippet": "Introduce a self-supervised learning framework, CAV2vec, to enhance audio-visual speech recognition by addressing joint audio-visual corruption.",
-          "pattern_count": 1
-        },
-        {
-          "idea_id": "idea_8125",
-          "similarity": 0.5232739396879981,
-          "snippet": "Enhance deepfake audio detection by focusing on high-frequency features through frequency-selective adversarial training.",
+          "idea_id": "idea_7798",
+          "similarity": 0.20833333333333334,
+          "snippet": "Enhance textual generation in diffusion models by precisely localizing and fine-tuning less than 1% of parameters responsible for text content.",
           "pattern_count": 0
         },
         {
-          "idea_id": "idea_2391",
-          "similarity": 0.5109695720154371,
-          "snippet": "Introduce a method to convert audio sequences into concise discrete tokens for efficient retrieval across various audio types.",
+          "idea_id": "idea_5650",
+          "similarity": 0.2,
+          "snippet": "Introduce engagement-aware metrics and models to optimize text-to-image generation for viewer engagement in marketing contexts.",
           "pattern_count": 1
         },
         {
-          "idea_id": "idea_866",
-          "similarity": 0.5066365901849823,
-          "snippet": "Enable realistic video synthesis from open domain text prompts by leveraging a novel causal model and joint training on image-text and video-text data.",
+          "idea_id": "idea_7411",
+          "similarity": 0.2,
+          "snippet": "Introduce a zero-shot, self-guided framework for controllable image-to-video generation using pre-trained diffusion models without fine-tuning.",
           "pattern_count": 1
         },
         {
-          "idea_id": "idea_1496",
-          "similarity": 0.4960455156561936,
-          "snippet": "Identify vocoder-specific fingerprints in generated audio to enable source attribution in forensic applications.",
-          "pattern_count": 0
+          "idea_id": "idea_7915",
+          "similarity": 0.2,
+          "snippet": "Introduce precise camera pose control in video diffusion models to enhance narrative expression and customization.",
+          "pattern_count": 1
         },
         {
-          "idea_id": "idea_5104",
-          "similarity": 0.49485337823826037,
-          "snippet": "Introduce a joint inference framework for fully unsupervised adaptation of large language and vision-language models, eliminating the need for manual prompt engineering and labeled examples.",
-          "pattern_count": 0
+          "idea_id": "idea_4186",
+          "similarity": 0.19047619047619047,
+          "snippet": "Incorporate 3D awareness into pretrained 2D diffusion models to enhance robustness and 3D consistency in text-to-3D generation.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_4613",
+          "similarity": 0.19047619047619047,
+          "snippet": "Introduce step-aware neural networks to optimize computational efficiency in denoising diffusion models without sacrificing generation quality.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_7380",
+          "similarity": 0.19047619047619047,
+          "snippet": "Establish a fast convergence theory for denoising diffusion probabilistic models with minimal assumptions, improving theoretical guarantees.",
+          "pattern_count": 1
+        },
+        {
+          "idea_id": "idea_7978",
+          "similarity": 0.19047619047619047,
+          "snippet": "Adapt image-to-video diffusion models for generating coherent video sequences between keyframes using a dual-directional sampling process.",
+          "pattern_count": 1
         }
       ],
       "pattern_scores_topn": [
         {
-          "pattern_id": "pattern_7",
-          "score": 1.7213249039064422
-        },
-        {
-          "pattern_id": "pattern_58",
-          "score": 0.4400013396156977
-        },
-        {
-          "pattern_id": "pattern_57",
-          "score": 0.21875833134011288
-        },
-        {
           "pattern_id": "pattern_114",
-          "score": 0.20265463607399292
+          "score": 0.604532279314888
+        },
+        {
+          "pattern_id": "pattern_100",
+          "score": 0.1523809523809524
+        },
+        {
+          "pattern_id": "pattern_24",
+          "score": 0.08695652173913043
+        },
+        {
+          "pattern_id": "pattern_84",
+          "score": 0.08695652173913043
+        },
+        {
+          "pattern_id": "pattern_94",
+          "score": 0.08421052631578947
+        },
+        {
+          "pattern_id": "pattern_115",
+          "score": 0.08000000000000002
+        },
+        {
+          "pattern_id": "pattern_102",
+          "score": 0.0761904761904762
         }
       ]
     },
     "path2": {
       "top_domains": [
         {
-          "domain_id": "domain_11",
-          "name": "Security & Privacy",
-          "weight": 1.0,
-          "paper_count": 236
+          "domain_id": "domain_83",
+          "name": "Astrophysics",
+          "weight": 0.18181818181818182,
+          "paper_count": 1
+        },
+        {
+          "domain_id": "domain_59",
+          "name": "Medical Imaging",
+          "weight": 0.16666666666666666,
+          "paper_count": 7
+        },
+        {
+          "domain_id": "domain_45",
+          "name": "Audio Processing",
+          "weight": 0.14285714285714285,
+          "paper_count": 5
+        },
+        {
+          "domain_id": "domain_57",
+          "name": "Signal Processing",
+          "weight": 0.14285714285714285,
+          "paper_count": 1
+        },
+        {
+          "domain_id": "domain_70",
+          "name": "Computer Architecture",
+          "weight": 0.14285714285714285,
+          "paper_count": 1
         }
       ],
-      "pattern_scores_topn": [
+      "top_subdomains": [
         {
-          "pattern_id": "pattern_45",
-          "score": 0.020000000000000004
+          "domain_id": "domain_83",
+          "subdomains": [
+            {
+              "name": "Diffusion Models",
+              "score": 0.2222222222222222
+            }
+          ]
         },
         {
-          "pattern_id": "pattern_51",
-          "score": 0.020000000000000004
+          "domain_id": "domain_59",
+          "subdomains": [
+            {
+              "name": "Diffusion Models",
+              "score": 0.2222222222222222
+            }
+          ]
         },
         {
-          "pattern_id": "pattern_59",
-          "score": 0.020000000000000004
+          "domain_id": "domain_45",
+          "subdomains": [
+            {
+              "name": "Diffusion Models",
+              "score": 0.2222222222222222
+            },
+            {
+              "name": "Contrastive Learning",
+              "score": 0.0
+            }
+          ]
         },
         {
-          "pattern_id": "pattern_66",
-          "score": 0.016000000000000004
+          "domain_id": "domain_57",
+          "subdomains": [
+            {
+              "name": "Diffusion Models",
+              "score": 0.2222222222222222
+            },
+            {
+              "name": "Contrastive Learning",
+              "score": 0.0
+            }
+          ]
         },
         {
-          "pattern_id": "pattern_12",
-          "score": 0.016000000000000004
+          "domain_id": "domain_70",
+          "subdomains": [
+            {
+              "name": "Diffusion Models",
+              "score": 0.2222222222222222
+            },
+            {
+              "name": "Image Generation",
+              "score": 0.1
+            }
+          ]
         }
-      ]
-    },
-    "path3": {
-      "top_papers": [
+      ],
+      "candidate_stats": [
         {
-          "paper_id": "CYK7RfcOzQ4",
-          "similarity": 0.5934568778418134,
-          "title": "AudioGen: Textually Guided Audio Generation",
-          "quality": 0.726,
-          "review_count": 5
+          "domain_id": "domain_83",
+          "candidates_before": 1,
+          "candidates_after": 1
         },
         {
-          "paper_id": "5-Df3tljit7",
-          "similarity": 0.5813019642858354,
-          "title": "Defending against Adversarial Audio via Diffusion Model",
-          "quality": 0.7010000000000001,
-          "review_count": 5
+          "domain_id": "domain_59",
+          "candidates_before": 1,
+          "candidates_after": 1
         },
         {
-          "paper_id": "TeVAZXr3yv",
-          "similarity": 0.5988290817956903,
-          "title": "MMAU: A Massive Multi-Task Audio Understanding and Reasoning Benchmark",
-          "quality": 0.616,
-          "review_count": 5
+          "domain_id": "domain_45",
+          "candidates_before": 1,
+          "candidates_after": 1
         },
         {
-          "paper_id": "l4fMj4Vnly",
-          "similarity": 0.5894818969853043,
-          "title": "ADIFF: Explaining audio difference using natural language",
-          "quality": 0.616,
-          "review_count": 5
+          "domain_id": "domain_57",
+          "candidates_before": 1,
+          "candidates_after": 1
         },
         {
-          "paper_id": "v8Mi8KU6056",
-          "similarity": 0.5411520977176486,
-          "title": "wav2tok: Deep Sequence Tokenizer for Audio Retrieval",
-          "quality": 0.6625000000000001,
-          "review_count": 6
-        },
-        {
-          "paper_id": "U42TkrEDzb",
-          "similarity": 0.5921703728207518,
-          "title": "Audio Large Language Models Can Be Descriptive Speech Quality Evaluators",
-          "quality": 0.5880000000000001,
-          "review_count": 5
-        },
-        {
-          "paper_id": "qPx3i9sMxv",
-          "similarity": 0.5494159698103142,
-          "title": "Both Ears Wide Open: Towards Language-Driven Spatial Audio Generation",
-          "quality": 0.616,
-          "review_count": 5
-        },
-        {
-          "paper_id": "B2Fqu7Y2cd",
-          "similarity": 0.5760646573604059,
-          "title": "Fugatto 1: Foundational Generative Audio Transformer Opus 1",
-          "quality": 0.585,
-          "review_count": 4
-        },
-        {
-          "paper_id": "2GcR9bO620",
-          "similarity": 0.5651715665881771,
-          "title": "I Can Hear You: Selective Robust Training for Deepfake Audio Detection",
-          "quality": 0.596,
-          "review_count": 5
-        },
-        {
-          "paper_id": "90Db4RUBc7",
-          "similarity": 0.5658512579028526,
-          "title": "Joint Fine-tuning and Conversion of Pretrained Speech and Language Models towards Linear Complexity",
-          "quality": 0.5880000000000001,
-          "review_count": 5
-        },
-        {
-          "paper_id": "2e4ECh0ikn",
-          "similarity": 0.6023061791216693,
-          "title": "Talking Turns: Benchmarking Audio Foundation Models on Turn-Taking Dynamics",
-          "quality": 0.5499999999999999,
-          "review_count": 6
-        },
-        {
-          "paper_id": "4N97bz1sP6",
-          "similarity": 0.5632372384464233,
-          "title": "Weakly-supervised Audio Separation via Bi-modal Semantic Similarity",
-          "quality": 0.585,
-          "review_count": 4
-        },
-        {
-          "paper_id": "agbiPPuSeQ",
-          "similarity": 0.5854480892892995,
-          "title": "MMDisCo: Multi-Modal Discriminator-Guided Cooperative Diffusion for Joint Audio and Video Generation",
-          "quality": 0.5559999999999999,
-          "review_count": 5
-        },
-        {
-          "paper_id": "FyMjfDQ9RO",
-          "similarity": 0.5448145791483149,
-          "title": "Sylber: Syllabic Embedding Representation of Speech from Raw Audio",
-          "quality": 0.588,
-          "review_count": 5
-        },
-        {
-          "paper_id": "LbEWwJOufy",
-          "similarity": 0.4928947690906981,
-          "title": "TANGO: Co-Speech Gesture Video Reenactment with Hierarchical Audio Motion Embedding and Diffusion Interpolation",
-          "quality": 0.648,
-          "review_count": 5
-        },
-        {
-          "paper_id": "yBlVlS2Fd9",
-          "similarity": 0.536992182820744,
-          "title": "WavTokenizer: an Efficient Acoustic Discrete Codec Tokenizer for Audio Language Modeling",
-          "quality": 0.576,
-          "review_count": 5
-        },
-        {
-          "paper_id": "XRtyVELwr6",
-          "similarity": 0.5424834309067207,
-          "title": "Contrastive Learning from Synthetic Audio Doppelgängers",
-          "quality": 0.568,
-          "review_count": 5
-        },
-        {
-          "paper_id": "odU59TxdiB",
-          "similarity": 0.5133568420691389,
-          "title": "SSLAM: Enhancing Self-Supervised Models with Audio Mixtures for Polyphonic Soundscapes",
-          "quality": 0.596,
-          "review_count": 5
-        },
-        {
-          "paper_id": "bR1J7SpzrD",
-          "similarity": 0.5186610814975181,
-          "title": "Synthio: Augmenting Small-Scale Audio Classification Datasets with Synthetic Data",
-          "quality": 0.588,
-          "review_count": 5
-        },
-        {
-          "paper_id": "53T6FlFulCV",
-          "similarity": 0.49732941263771097,
-          "title": "SoundCount: Sound Counting from Raw Audio with Dyadic Decomposition Neural Network",
-          "quality": 0.6075,
-          "review_count": 6
+          "domain_id": "domain_70",
+          "candidates_before": 1,
+          "candidates_after": 1
         }
       ],
       "pattern_scores_topn": [
         {
           "pattern_id": "pattern_7",
-          "score": 0.7536516690634086
+          "score": 0.0008730158730158731
         },
         {
-          "pattern_id": "pattern_8",
-          "score": 0.14661099612023606
+          "pattern_id": "pattern_116",
+          "score": 0.00022222222222222231
+        },
+        {
+          "pattern_id": "pattern_99",
+          "score": 0.00020370370370370375
+        },
+        {
+          "pattern_id": "pattern_100",
+          "score": 0.00017460317460317465
+        }
+      ],
+      "subdomain_taxonomy_used": true,
+      "raw_subdomain_count": 319,
+      "canonical_subdomain_count": 58,
+      "stoplist_count": 13
+    },
+    "path3": {
+      "top_papers": [
+        {
+          "paper_id": "K9sVJ17zvB",
+          "similarity": 0.46153846153846156,
+          "title": "VersVideo: Leveraging Enhanced Temporal Diffusion Models for Versatile Video Generation",
+          "quality": 0.532,
+          "review_count": 5
+        },
+        {
+          "paper_id": "gdHtZlaaSo",
+          "similarity": 0.38461538461538464,
+          "title": "Precise Parameter Localization for Textual Generation in Diffusion Models",
+          "quality": 0.5633333333333334,
+          "review_count": 6
+        },
+        {
+          "paper_id": "sL2F9YCMXf",
+          "similarity": 0.3333333333333333,
+          "title": "Energy-Based Diffusion Language Models for Text Generation",
+          "quality": 0.588,
+          "review_count": 5
+        },
+        {
+          "paper_id": "8pusxkLEQO",
+          "similarity": 0.3333333333333333,
+          "title": "ARLON: Boosting Diffusion Transformers with Autoregressive Models for Long Video Generation",
+          "quality": 0.5680000000000001,
+          "review_count": 5
+        },
+        {
+          "paper_id": "2ZK8zyIt7o",
+          "similarity": 0.3333333333333333,
+          "title": "Improving Long-Text Alignment for Text-to-Image Diffusion Models",
+          "quality": 0.552,
+          "review_count": 5
+        },
+        {
+          "paper_id": "esYrEndGsr",
+          "similarity": 0.2857142857142857,
+          "title": "Influence Functions for Scalable Data Attribution in Diffusion Models",
+          "quality": 0.625,
+          "review_count": 4
+        },
+        {
+          "paper_id": "Z4evOUYrk7",
+          "similarity": 0.3076923076923077,
+          "title": "CameraCtrl: Enabling Camera Control for Video Diffusion Models",
+          "quality": 0.576,
+          "review_count": 5
+        },
+        {
+          "paper_id": "OTiSSCBm1QD",
+          "similarity": 0.3333333333333333,
+          "title": "Temporal Relevance Analysis for Video Action Models",
+          "quality": 0.5225,
+          "review_count": 4
+        },
+        {
+          "paper_id": "jKcZ4hF4s5",
+          "similarity": 0.3076923076923077,
+          "title": "Positive-Unlabeled Diffusion Models for Preventing Sensitive Data Generation",
+          "quality": 0.5599999999999999,
+          "review_count": 5
+        },
+        {
+          "paper_id": "WmIwYTd0YTF",
+          "similarity": 0.25,
+          "title": "Stable Target Field for Reduced Variance Score Estimation in Diffusion Models",
+          "quality": 0.6875,
+          "review_count": 4
+        },
+        {
+          "paper_id": "VM8batVBWvg",
+          "similarity": 0.23076923076923078,
+          "title": "Discrete Predictor-Corrector Diffusion Models for Image Synthesis",
+          "quality": 0.7350000000000001,
+          "review_count": 4
+        },
+        {
+          "paper_id": "exKHibougU",
+          "similarity": 0.3,
+          "title": "LLM-grounded Video Diffusion Models",
+          "quality": 0.5599999999999999,
+          "review_count": 4
+        },
+        {
+          "paper_id": "WNkW0cOwiz",
+          "similarity": 0.2727272727272727,
+          "title": "Lipschitz Singularities in Diffusion Models",
+          "quality": 0.616,
+          "review_count": 5
+        },
+        {
+          "paper_id": "UaAD-Nu86WX",
+          "similarity": 0.23076923076923078,
+          "title": "DiGress: Discrete Denoising diffusion for graph generation",
+          "quality": 0.7162499999999999,
+          "review_count": 4
+        },
+        {
+          "paper_id": "MtDd7rWok1",
+          "similarity": 0.2727272727272727,
+          "title": "Anti-Exposure Bias in Diffusion Models",
+          "quality": 0.6033333333333334,
+          "review_count": 6
+        },
+        {
+          "paper_id": "4eJ43EN2g6l",
+          "similarity": 0.23076923076923078,
+          "title": "SketchKnitter: Vectorized Sketch Generation with Diffusion Models",
+          "quality": 0.7100000000000001,
+          "review_count": 4
+        },
+        {
+          "paper_id": "9_gsMA8MRKQ",
+          "similarity": 0.25,
+          "title": "Pseudoinverse-Guided Diffusion Models for Inverse Problems",
+          "quality": 0.636,
+          "review_count": 5
+        },
+        {
+          "paper_id": "KrK6zXbjfO",
+          "similarity": 0.26666666666666666,
+          "title": "SoundCTM: Unifying Score-based and Consistency Models for Full-band Text-to-Sound Generation",
+          "quality": 0.596,
+          "review_count": 5
+        },
+        {
+          "paper_id": "eajZpoQkGK",
+          "similarity": 0.26666666666666666,
+          "title": "DiffSplat: Repurposing Image Diffusion Models for Scalable Gaussian Splat Generation",
+          "quality": 0.596,
+          "review_count": 5
+        },
+        {
+          "paper_id": "Gx04TnVjee",
+          "similarity": 0.26666666666666666,
+          "title": "3DTrajMaster: Mastering 3D Trajectory for Multi-Entity Motion in Video Generation",
+          "quality": 0.588,
+          "review_count": 5
+        }
+      ],
+      "pattern_scores_topn": [
+        {
+          "pattern_id": "pattern_100",
+          "score": 0.17823805110722613
         },
         {
           "pattern_id": "pattern_114",
-          "score": 0.08278739404810422
+          "score": 0.1737330871794872
         },
         {
-          "pattern_id": "pattern_57",
-          "score": 0.08189574135221524
+          "pattern_id": "pattern_24",
+          "score": 0.047355144230769225
         },
         {
-          "pattern_id": "pattern_33",
-          "score": 0.07825587092494557
+          "pattern_id": "pattern_115",
+          "score": 0.0406272
         },
         {
-          "pattern_id": "pattern_58",
-          "score": 0.07287904767372198
+          "pattern_id": "pattern_49",
+          "score": 0.0404496
+        },
+        {
+          "pattern_id": "pattern_45",
+          "score": 0.03859692307692308
+        },
+        {
+          "pattern_id": "pattern_7",
+          "score": 0.03788970666666666
+        },
+        {
+          "pattern_id": "pattern_102",
+          "score": 0.03788970666666666
         }
       ]
     }
   },
   "review_summary": {
-    "total_reviews": 1,
-    "final_score": 7.013333333333228
+    "total_reviews": 2,
+    "final_score": 6.599999999999903
   },
   "refinement_summary": {
-    "total_refinements": 0,
-    "issues_addressed": []
+    "total_refinements": 1,
+    "issues_addressed": [
+      "stability"
+    ]
   },
   "verification_summary": {
     "collision_detected": false,
-    "max_similarity": 0.5963850021362305
-  }
+    "max_similarity": 0.1092896174863388
+  },
+  "idea_packaging": null
 }
